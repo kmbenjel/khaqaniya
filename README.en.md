@@ -8,6 +8,7 @@ as far as I know, to write on *tajwīd*”, the art of reciting the Qurʾān wel
 
 - **Play:** https://khaqaniya.benjelloun.dev (a parent opens the link)
 - **The full poem, vocalised, with meanings and recitation:** https://khaqaniya.benjelloun.dev/qasida/
+- **Watch the full walkthrough on YouTube:** https://youtu.be/pLyWzW7k520
 
 <p align="center"><img src="docs/readme/play.gif" width="300" alt="A few seconds of play: the rhyme radar, then a pearl flying to the necklace"></p>
 

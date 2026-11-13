@@ -10,6 +10,7 @@
 
 - **العبوا الآن (يفتح الرابط أحد الوالدين):** https://khaqaniya.benjelloun.dev
 - **القصيدة كاملة مضبوطة بالشكل، مع المعاني:** https://khaqaniya.benjelloun.dev/qasida/
+- **الحلقة كاملة على YouTube:** https://youtu.be/pLyWzW7k520
 
 <p align="center"><img src="docs/readme/play.gif" width="300" alt="لقطة متحركة من اللعب: رادار القافية، ثم الدرة تطير إلى العقد"></p>
 
