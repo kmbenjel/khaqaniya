@@ -481,7 +481,7 @@ html.amin-glow .lantern-art, html.amin-glow .home-hero .char-amin { filter: drop
 .splash-bg svg { width: 100%; height: 100%; }
 .splash-lantern { width: 90px; height: 135px; animation: swing 3s ease-in-out infinite; transform-origin: top center; }
 .splash-lantern svg { width: 100%; height: 100%; }
-.splash .logo { align-items: center; text-align: center; color: #3b1d18; }
+.splash .logo { align-items: center; text-align: center; color: #3b1d18; background: rgba(255, 247, 232, .86); border-radius: 22px; padding: 10px 22px 12px; box-shadow: 0 6px 24px rgba(20, 14, 40, .28); }  /* a light plaque: the dark title stays readable on the raster door art */
 .splash .logo-title { font-size: calc(44px * var(--k)); text-shadow: 0 2px 0 rgba(255,255,255,.5); }
 .splash .big-btn { width: min(100%, 420px); }
 .intro { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; background: linear-gradient(#0b1130, #283464); color: #fff; min-height: 100vh; min-height: 100dvh; }
