@@ -1,0 +1,562 @@
+{
+  "title": "الْخَاقَانِيَّةُ",
+  "fullTitle": "الْقَصِيدَةُ الْخَاقَانِيَّةُ فِي الْقُرَّاءِ وَحُسْنِ الْأَدَاءِ",
+  "author": "أَبُو مُزَاحِمٍ مُوسَى بْنُ عُبَيْدِ اللَّهِ الْخَاقَانِيُّ",
+  "authorDeath": "325",
+  "metre": "الطويل",
+  "rhyme": "ر",
+  "basis": "كَمَا ضَبَطَهُ الشَّيْخُ يَحْيَى الْغَوْثَانِيُّ فِي تَسْجِيلِهِ الْمَرْئِيِّ، مُقَابَلًا بِشَرْحِ أَبِي عَمْرٍو الدَّانِيِّ وَبِطَبَعَاتِ الْقَصِيدَةِ الْمُحَقَّقَةِ",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "الْمُقَدِّمَةُ",
+      "from": 1,
+      "to": 4,
+      "theme": "افتتاح القصيدة: الناظم يخاطب أصحاب العقول بلا فخر، ويستعيذ بالله من المباهاة، ويسأله العون والثبات على الدين والعفو يوم القيامة."
+    },
+    {
+      "id": "s2",
+      "title": "حُسْنُ الْأَدَاءِ وَالْقِرَاءَةِ",
+      "from": 5,
+      "to": 7,
+      "theme": "نداء لقارئ القرآن أن يحسن أداءه فيضاعف الله أجره؛ ليس كل تالٍ متقنًا ولا كل معلّم مقرئًا، وأخذ القراءة سنة بالتلقي عن الشيوخ الأوائل."
+    },
+    {
+      "id": "s3",
+      "title": "ذِكْرُ الْقُرَّاءِ السَّبْعَةِ",
+      "from": 8,
+      "to": 11,
+      "theme": "حق القراء السبعة على الناس، وأين كانوا: ابن كثير ونافع في مكة والمدينة، أبو عمرو في البصرة، ابن عامر في الشام، عاصم وحمزة والكسائي في الكوفة."
+    },
+    {
+      "id": "s4",
+      "title": "مَرَاتِبُ التِّلَاوَةِ",
+      "from": 12,
+      "to": 22,
+      "theme": "الماهر يعطي كل حرف حقه بطيئًا (ترتيل) أو سريعًا (حدر)، والترتيل أفضل والحدر رخصة؛ الناظم يقدّم قصيدته (51 بيتًا) ويرجو بها الأجر؛ قارئ القرآن يطيع الله، والمداومة تجعل اللسان فصيحًا."
+    },
+    {
+      "id": "s5",
+      "title": "أَهَمِّيَّةُ حِفْظِ الْقُرْآنِ وَمَعْرِفَةِ اللَّحْنِ",
+      "from": 23,
+      "to": 27,
+      "theme": "أول العلم إتقان الحفظ ومعرفة الخطأ (اللحن) لإزالته؛ تحقيق القراءة بلا زيادة، ووزن كل حرف بميزانه، والمعلم لا يزيد طالبه على عشر آيات."
+    },
+    {
+      "id": "s6",
+      "title": "أَحْكَامُ الْإِظْهَارِ وَالْإِدْغَامِ وَالْإِخْفَاءِ",
+      "from": 28,
+      "to": 29,
+      "theme": "أظهِرْ ما يُظهَر، وأدغِم وأخفِ بلا تكلّف؛ والإخفاء غير الإدغام فميّز بينهما."
+    },
+    {
+      "id": "s7",
+      "title": "الْحُرُوفُ السَّوَاكِنُ وَالْمُتَحَرِّكَةُ",
+      "from": 30,
+      "to": 31,
+      "theme": "السكون علامة الجزم والحركات للرفع والنصب والجر؛ حرّك وسكّن، واقطع وصِل، وميّز بين المدّ والقصر."
+    },
+    {
+      "id": "s8",
+      "title": "الْمَدُّ",
+      "from": 32,
+      "to": 36,
+      "theme": "حروف المد ثلاثة: الألف والياء والواو الساكنات؛ التخفيف والتشديد بلا إفراط في الحركات؛ همز المهموز وحده؛ والياء والواو بعد فتحة وقبل همزة."
+    },
+    {
+      "id": "s9",
+      "title": "تَنْبِيهَاتٌ عَلَى بَعْضِ الْحُرُوفِ الْمُفْرَدَةِ",
+      "from": 37,
+      "to": 41,
+      "theme": "وصايا لحروف بعينها: تلطيف الراء واللام، بيان العين والهاء، الوقف على تمام المعنى كما في المصحف، لا تدغم الميم في غيرها، وإشباع الضمة قبل الواو كما في «إيّاك نعبد»."
+    },
+    {
+      "id": "s10",
+      "title": "الْمَدُّ اللَّازِمُ",
+      "from": 42,
+      "to": 43,
+      "theme": "حرف المد قبل الحرف المشدَّد يُمَدّ، مثل آخر الفاتحة «ولا الضالّين»، لأن ساكنين التقيا فصار المد كالحركة بينهما."
+    },
+    {
+      "id": "s11",
+      "title": "الْإِظْهَارُ",
+      "from": 44,
+      "to": 48,
+      "theme": "حروف الحلق الستة (الحاء والخاء والهاء والهمزة والعين والغين) تُظهَر قبلها النون الساكنة والتنوين بلا تشديد، مثل «مِنْ خيلٍ»."
+    },
+    {
+      "id": "s12",
+      "title": "الْخَاتِمَةُ",
+      "from": 49,
+      "to": 51,
+      "theme": "بقيت لطائف تؤخذ من الشيوخ بالصبر؛ ودعاء متبادل بين الناظم ومن تعلّم منه بالمغفرة والنصر."
+    }
+  ],
+  "verses": [
+    {
+      "n": 1,
+      "section": "s1",
+      "sadr": "أَقُولُ مَقَالًا مُعْجِبًا لِأُولِي الْحِجْرِ",
+      "ajz": "وَلَا فَخْرَ إِنَّ الْفَخْرَ يَدْعُو إِلَى الْكِبْرِ",
+      "rhymeWord": "الْكِبْرِ",
+      "notes": "مصرَّع: the sadr rhymes too, so its ʿarūḍ is مفاعيلن like the ḍarb. Quoted by al-Dhahabī (معجم الشيوخ 2/150) and Ibn al-Jazarī (غاية النهاية)."
+    },
+    {
+      "n": 2,
+      "section": "s1",
+      "sadr": "أُعَلِّمُ فِي الْقَوْلِ التِّلَاوَةَ عَائِذًا",
+      "ajz": "بِمَوْلَايَ مِنْ شَرِّ الْمُبَاهَاةِ وَالْفَخْرِ",
+      "rhymeWord": "وَالْفَخْرِ",
+      "notes": "Hamad's Chester Beatty MS «والفجر» (slip); al-Dhahabī quotes «لِمَوْلَايَ»."
+    },
+    {
+      "n": 3,
+      "section": "s1",
+      "sadr": "وَأَسْأَلُهُۥ عَوْنِي عَلَى مَا نَوَيْتُهُۥ",
+      "ajz": "وَحِفْظِيَ فِي دِينِي إِلَى مُنْتَهَى عُمْرِي",
+      "rhymeWord": "عُمْرِي",
+      "notes": "Ghouthani reads «وَأَسْأَلُهُو» (ṣila, metre). Hamad's first edition «عِلْمَ مَا» is a misreading (corrected to «عَلَى مَا»)."
+    },
+    {
+      "n": 4,
+      "section": "s1",
+      "sadr": "وَأَسْأَلُهُۥ عَنِّي التَّجَاوُزَ فِي غَدٍ",
+      "ajz": "فَمَا زَالَ ذَا عَفْوٍ جَمِيلٍ وَذَا غَفْرِ",
+      "rhymeWord": "غَفْرِ",
+      "notes": "Dani's riwaya (al-ʿUmarī ed.): «وَذَا سِتْرِ»; Ghouthani and every other witness «وَذَا غَفْرِ» (in his 2026 lesson: «قرأتُ: غَفْرِ»)."
+    },
+    {
+      "n": 5,
+      "section": "s2",
+      "sadr": "أَيَا قَارِئَ الْقُرْآنِ أَحْسِنْ أَدَاءَهُۥ",
+      "ajz": "يُضَاعِفْ لَكَ اللَّهُ الْجَزِيلَ مِنَ الْأَجْرِ",
+      "rhymeWord": "الْأَجْرِ"
+    },
+    {
+      "n": 6,
+      "section": "s2",
+      "sadr": "فَمَا كُلُّ مَنْ يَتْلُو الْكِتَابَ يُقِيمُهُۥ",
+      "ajz": "وَمَا كُلُّ مَنْ فِي النَّاسِ يُقْرِئُهُمْ مُقْرِي",
+      "rhymeWord": "مُقْرِي",
+      "notes": "«وَمَا كُلُّ» (Ghouthani, al-Ājurrī's Ẓāhiriyya MS per Hayman, Hady al-Majid, Awlad al-Shaykh, Shamela quotations); «وَلَا كُلُّ» (Dani/al-ʿUmarī, Hamad, Obaid, Hayman's text). «مُقْرِي» = مُقْرِئ with the hamza eased in rhyme.",
+      "variants": [
+        {
+          "where": "ajz",
+          "main": "وَمَا كُلُّ",
+          "alt": "وَلَا كُلُّ",
+          "source": "main: Ghouthani slide + recitation (al-Ājurrī riwaya); alt: al-Dānī/al-ʿUmarī and six editions"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "section": "s2",
+      "sadr": "وَإِنَّ لَنَا أَخْذَ الْقِرَاءَةِ سُنَّةٌ",
+      "ajz": "عَنِ الْأَوَّلِينَ الْمُقْرِئِينَ ذَوِي السِّتْرِ",
+      "rhymeWord": "السِّتْرِ",
+      "variants": [
+        {
+          "where": "sadr",
+          "main": "سُنَّةٌ",
+          "alt": "سُنَّةً",
+          "source": "شريحة الغوثاني (بالأحمر)؛ «سنةً» في طبعة غانم قدوري الحمد الأولى"
+        },
+        {
+          "where": "ajz",
+          "main": "السِّتْرِ",
+          "alt": "السَّتْرِ",
+          "source": "main = his recitation (L1: 12/12 model runs + formants) and Hayman, al-Qāriʾ, ketabonline; alt = his slide (black) and al-Dānī/al-ʿUmarī; his lecture: «يجوز» both"
+        }
+      ],
+      "notes": "سُنَّةٌ = khabar of إِنَّ; سُنَّةً = ḥāl (Ghouthani explains both). السَّتْر (fatḥ) as in Dani/al-ʿUmarī, Hady al-Majid and Awlad al-Shaykh; a third reading «السَّبْر» (Hamad, Obaid, al-Bawwāb), which Ghouthani mentions in his 2026 lesson. al-Miṣbāḥ: «الْمُقْرِئِينَ الْأَوَّلِينَ». His recitation (one take) says «السِّتْرِ», the red reading (acoustic probe, SOURCES.md §5): the main reading here follows the black slide; proposal P1 to switch. The video has a silent recap slide after this verse (119–133 s). Main reading «السِّتْرِ» follows his recitation (orchestrator, after L1)."
+    },
+    {
+      "n": 8,
+      "section": "s3",
+      "sadr": "فَلِلسَّبْعَةِ الْقُرَّاءِ حَقٌّ عَلَى الْوَرَى",
+      "ajz": "لِإِقْرَائِهِمْ قُرْآنَ رَبِّهِمُ الْوِتْرِ",
+      "rhymeWord": "الْوِتْرِ",
+      "variants": [
+        {
+          "where": "ajz",
+          "main": "الْوِتْرِ",
+          "alt": "الْوَتْرِ",
+          "source": "شريحة الغوثاني (بالأحمر)؛ وذكر الوجهين في دروسه؛ وكل الطبعات «الوِتر»"
+        }
+      ],
+      "notes": "The ajz is recited twice in the video (143.1–148.2 and 148.2–152.8 s); take 1, used by the game clip, has the black «الْوِتْرِ» (acoustic probe)."
+    },
+    {
+      "n": 9,
+      "section": "s3",
+      "sadr": "فَبِالْحَرَمَيْنِ ابْنُ الْكَثِيرِ وَنَافِعٌ",
+      "ajz": "وَبِالْبَصْرَةِ ابْنٌ لِلْعَلَاءِ أَبُو عَمْرِو",
+      "rhymeWord": "عَمْرِو",
+      "notes": "«ابْنُ الْكَثِيرِ» = Ibn Kathīr (the article keeps مفاعيلن sound; Hamad's Azhar MS «ابن كثير»). «ابْنٌ لِلْعَلَاءِ» = Ibn al-ʿAlāʾ; «ابْنُ الْعَلَاءِ» (Hamad, Hady, Awlad al-Shaykh) breaks the metre unless the hamzat al-waṣl is pronounced (al-ʿUmarī's footnote). «وَنَافِعٌ» needs its tanwīn (ʿarūḍ مفاعلن). The sadr is recited twice in the video: take 1 (153.8–158.3 s) seems to say «ابنُ كثيرٍ» (two ASR passes), take 2 (158.3–162.4 s) «ابنُ الكثيرِ» as on the slide: see SOURCES.md, needs listening."
+    },
+    {
+      "n": 10,
+      "section": "s3",
+      "sadr": "وَبِالشَّامِ عَبْدُ اللَّهِ وَهْوَ ابْنُ عَامِرٍ",
+      "ajz": "وَعَاصِمٌ الْكُوفِيُّ وَهْوَ أَبُو بَكْرِ",
+      "rhymeWord": "بَكْرِ",
+      "notes": "Read «وَعَاصِمُنِ الْكُوفِيُّ»: the tanwīn takes a kasra before the waṣl (Ghouthani's slide writes a small red «نِ»); the tanwīn is needed for the metre (Hady prints «وَعَاصِمُ», unmetrical). Abū Bakr is ʿĀṣim's kunya. «وَهْوَ» with sukūn on the hāʾ in both places."
+    },
+    {
+      "n": 11,
+      "section": "s3",
+      "sadr": "وَحَمْزَةُ أَيْضًا وَالْكِسَائِيُّ بَعْدَهُۥ",
+      "ajz": "أَخُو الْحِذْقِ بِالْقُرْآنِ وَالنَّحْوِ وَالشِّعْرِ",
+      "rhymeWord": "وَالشِّعْرِ",
+      "notes": "Hamad's Azhar MS «حوى» for «أخو»."
+    },
+    {
+      "n": 12,
+      "section": "s4",
+      "sadr": "فَذُو الْحِذْقِ مُعْطٍ لِلْحُرُوفِ حُقُوقَهَا",
+      "ajz": "إِذَا رَتَّلَ الْقُرْآنَ أَوْ كَانَ ذَا حَدْرِ",
+      "rhymeWord": "حَدْرِ",
+      "notes": "Quoted by al-Sakhāwī (جمال القراء)."
+    },
+    {
+      "n": 13,
+      "section": "s4",
+      "sadr": "وَتَرْتِيلُنَا الْقُرْآنَ أَفْضَلُ لِلَّذِي",
+      "ajz": "أُمِرْنَا بِهِۦ مِنْ مُكْثِنَا فِيهِ وَالْفِكْرِ",
+      "rhymeWord": "وَالْفِكْرِ",
+      "notes": "Ibn Umm Qāsim (المفيد) and a quotation in إذهاب الحزن: «لُبْثِنَا» for «مُكْثِنَا»."
+    },
+    {
+      "n": 14,
+      "section": "s4",
+      "sadr": "وَإِمَّا حَدَرْنَا دَرْسَنَا فَمُرَخَّصٌ",
+      "ajz": "لَنَا فِيهِ إِذْ دِينُ الْعِبَادِ إِلَى الْيُسْرِ",
+      "rhymeWord": "الْيُسْرِ",
+      "notes": "«وَإِمَّا» = إِنْ + مَا (conditional; al-ʿUmarī prints «وَإِنْ مَا», Obaid and Hayman «وَإِمَّا»). Hamad «وَأَمَّا», Awlad al-Shaykh «وَمَهْمَا», Hady «وَأَمَّا إِنْ» (unmetrical). The recitation has «وَإِمَّا» (acoustic probe)."
+    },
+    {
+      "n": 15,
+      "section": "s4",
+      "sadr": "أَلَا فَاحْفَظُوا وَصْفِي لَكُمْ مَا اخْتَصَرْتُهُۥ",
+      "ajz": "لِيَدْرِيَهُۥ مَنْ لَمْ يَكُنْ مِنْكُمُۥ يَدْرِي",
+      "rhymeWord": "يَدْرِي",
+      "notes": "«لِيَدْرِيَهُ» (Ghouthani, Hamad, al-Ājurrī per Hayman); «لِيَدْرِيَ بِهِ» (Dani/al-ʿUmarī, Obaid, Hady, Awlad al-Shaykh). «مِنْكُمُ» with ṣilat al-mīm (mū) for the metre, as on the slide."
+    },
+    {
+      "n": 16,
+      "section": "s4",
+      "sadr": "فَفِي شَرْبَةٍ لَوْ كَانَ عِلْمِي سَقَيْتُكُمْ",
+      "ajz": "وَلَمْ أُخْفِ عَنْكُمْ ذَٰلِكَ الْعِلْمَ بِالذَّخْرِ",
+      "rhymeWord": "بِالذَّخْرِ",
+      "variants": [
+        {
+          "where": "ajz",
+          "main": "بِالذَّخْرِ",
+          "alt": "بِالذُّخْرِ",
+          "source": "شريحة الغوثاني (بالأحمر)؛ «الذُّخر» عند الحمد والعبيد وهدي المجيد وأولاد الشيخ"
+        }
+      ],
+      "notes": "الذَّخْر (fatḥ) = hoarding, a maṣdar (Ghouthani: «الذخر هو الادّخار»), as in Dani/al-ʿUmarī and Hayman. The ajz is recited twice in the video (246.7–252.1 and 252.1–256.8 s); take 1 (game clip) has «الذَّخْرِ» (acoustic probe)."
+    },
+    {
+      "n": 17,
+      "section": "s4",
+      "sadr": "فَقَدْ قُلْتُ فِي حُسْنِ الْأَدَاءِ قَصِيدَةً",
+      "ajz": "رَجَوْتُ إِلَٰهِي أَنْ يَحُطَّ بِهَا وِزْرِي",
+      "rhymeWord": "وِزْرِي"
+    },
+    {
+      "n": 18,
+      "section": "s4",
+      "sadr": "وَأَبْيَاتُهَا خَمْسُونَ بَيْتًا وَوَاحِدٌ",
+      "ajz": "تُنَظَّمُ بَيْتًا بَعْدَ بَيْتٍ عَلَى الْإِثْرِ",
+      "rhymeWord": "الْإِثْرِ",
+      "variants": [
+        {
+          "where": "ajz",
+          "main": "تُنَظَّمُ",
+          "alt": "تَنَظَّمُ",
+          "source": "شريحة الغوثاني (بالأحمر)؛ «تَنَظَّمُ» عند غانم قدوري الحمد"
+        }
+      ],
+      "notes": "The poet's own count: 51 verses (matches the video and all complete witnesses). The ajz is recited twice in the video (273.7–278.8 and 278.8–283.4 s); take 1 (game clip) has «تُنَظَّمُ» (acoustic probe)."
+    },
+    {
+      "n": 19,
+      "section": "s4",
+      "sadr": "وَبِاللَّهِ تَوْفِيقِي وَأَجْرِي عَلَيْهِ فِي",
+      "ajz": "إِقَامَتِنَا إِعْرَابَ آيَاتِهِ الزُّهْرِ",
+      "rhymeWord": "الزُّهْرِ",
+      "notes": "Awlad al-Shaykh and Hady: «أَبْيَاتَ إِعْرَابِهِ» (corrupt)."
+    },
+    {
+      "n": 20,
+      "section": "s4",
+      "sadr": "وَمَنْ يُقِمِ الْقُرْآنَ كَالْقِدْحِ فَلْيَكُنْ",
+      "ajz": "مُطِيعًا لِأَمْرِ اللَّهِ فِي السِّرِّ وَالْجَهْرِ",
+      "rhymeWord": "وَالْجَهْرِ"
+    },
+    {
+      "n": 21,
+      "section": "s4",
+      "sadr": "أَلَا اعْلَمْ أَخِي أَنَّ الْفَصَاحَةَ زَيَّنَتْ",
+      "ajz": "تِلَاوَةَ تَالٍ أَدْمَنَ الدَّرْسَ لِلذِّكْرِ",
+      "rhymeWord": "لِلذِّكْرِ",
+      "notes": "Hamad's Azhar MS: «أَلَا فَاعْلَمَنْ أَنَّ التِّلَاوَةَ زَيَّنَتْ»."
+    },
+    {
+      "n": 22,
+      "section": "s4",
+      "sadr": "إِذَا مَا تَلَا التَّالِي أَرَقَّ لِسَانَهُۥ",
+      "ajz": "وَأَذْهَبَ بِالْإِدْمَانِ عَنْهُۥ أَذَى الصَّدْرِ",
+      "rhymeWord": "الصَّدْرِ",
+      "notes": "Ghouthani reads «عَنْهُو» (ṣila, marked on the slide); without it the foot is فعولُ, also correct."
+    },
+    {
+      "n": 23,
+      "section": "s5",
+      "sadr": "فَأَوَّلُ عِلْمِ الذِّكْرِ إِتْقَانُ حِفْظِهِۦ",
+      "ajz": "وَمَعْرِفَةٌ بِاللَّحْنِ فِيهِ إِذَا يَجْرِي",
+      "rhymeWord": "يَجْرِي",
+      "notes": "«فِيهِ إِذَا يَجْرِي» (Ghouthani, Dani/al-ʿUmarī, Hayman, al-Samāṭī per Hamad), read «فِيهِي»; «مِنْ فِيكَ إِذْ يَجْرِي» (Hamad's Chester Beatty MS, Ibn Umm Qāsim, Obaid, Awlad al-Shaykh); «مِنْهُ إِذَا يَجْرِي» (the Azhar MS). Ṣila mark of the slide dropped on «فِيهِ»: he recites it short (L1 listening)."
+    },
+    {
+      "n": 24,
+      "section": "s5",
+      "sadr": "فَكُنْ عَارِفًا بِاللَّحْنِ كَيْمَا تُزِيلَهُۥ",
+      "ajz": "وَمَا لِلَّذِي لَا يَعْرِفُ اللَّحْنَ مِنْ عُذْرِ",
+      "rhymeWord": "عُذْرِ",
+      "notes": "«وَمَا» (Ghouthani, al-Ājurrī's Ẓāhiriyya MS per Hayman, Dani/al-ʿUmarī, Hady, Awlad al-Shaykh); «فَمَا» (Obaid, Hayman's text, Hamad's Chester Beatty MS, al-Samāṭī)."
+    },
+    {
+      "n": 25,
+      "section": "s5",
+      "sadr": "وَإِنْ أَنْتَ حَقَّقْتَ الْقِرَاءَةَ فَاحْذَرِ الزْ",
+      "ajz": "زِيَادَةَ فِيهَا وَاسْأَلِ الْعَوْنَ ذَا الْقَهْرِ",
+      "rhymeWord": "الْقَهْرِ",
+      "notes": "Run-on verse (مُدَوَّر): the word «الزِّيَادَةَ» is split between the hemistichs, «الزْ | زِيَادَةَ», as Ghouthani, Obaid and Hayman write it; the video shows it on one slide. Hamad's Chester Beatty MS «فَإِنْ أَنْتَ»; the Azhar MS «وَإِنْ خَفِيَتْ عَنْكَ الْقِرَاءَةُ فَاحْذَرِ»."
+    },
+    {
+      "n": 26,
+      "section": "s5",
+      "sadr": "زِنِ الْحَرْفَ لَا تُخْرِجْهُ عَنْ حَدِّ وَزْنِهِۦ",
+      "ajz": "فَوَزْنُ حُرُوفِ الذِّكْرِ مِنْ أَفْضَلِ الْبِرِّ",
+      "rhymeWord": "الْبِرِّ",
+      "notes": "Hamad's Azhar MS «أَعْظَمِ» for «أَفْضَلِ»."
+    },
+    {
+      "n": 27,
+      "section": "s5",
+      "sadr": "وَحُكْمُكَ بِالتَّحْقِيقِ إِنْ كُنْتَ آخِذًا",
+      "ajz": "عَلَى أَحَدٍ أَلَّا تَزِيدَ عَلَى عَشْرِ",
+      "rhymeWord": "عَشْرِ",
+      "notes": "«أَلَّا» = أَنْ لَا (al-ʿUmarī, Hamad and Hayman print «أَنْ لَا»). Hamad's Azhar MS «عَلَى أَخْذٍ»."
+    },
+    {
+      "n": 28,
+      "section": "s6",
+      "sadr": "فَبَيِّنْ إِذًا مَا يَنْبَغِي أَنْ تُبِينَهُۥ",
+      "ajz": "وَأَدْغِمْ وَأَخْفِ الْحَرْفَ فِي غَيْرِ مَا عُسْرِ",
+      "rhymeWord": "عُسْرِ",
+      "notes": "«إِذًا» (Ghouthani, Hayman) = «إِذَنْ» (Dani/al-ʿUmarī, Hamad, Obaid, Hady, Awlad al-Shaykh): spelling only, same sound."
+    },
+    {
+      "n": 29,
+      "section": "s6",
+      "sadr": "وَإِنَّ الَّذِي تُخْفِيهِ لَيْسَ بِمُدْغَمٍ",
+      "ajz": "وَبَيْنَهُمَا فَرْقٌ فَفَرِّقْهُ بِالْيُسْرِ",
+      "rhymeWord": "بِالْيُسْرِ",
+      "notes": "«فَفَرِّقْهُ» (Ghouthani, Dani/al-ʿUmarī, Hamad, Obaid); «فَعَرِّفْهُ» (al-Ājurrī per Hayman, Hady, Awlad al-Shaykh, some Dani MSS); some MSS of al-Miṣbāḥ «بِالنَّشْرِ». Same rhyme word as v14 (إيطاء at 15 verses' distance, allowed)."
+    },
+    {
+      "n": 30,
+      "section": "s7",
+      "sadr": "وَقُلْ إِنَّ تَسْكِينَ الْحُرُوفِ لِجَزْمِهَا",
+      "ajz": "وَتَحْرِيكَهَا لِلرَّفْعِ وَالنَّصْبِ وَالْجَرِّ",
+      "rhymeWord": "وَالْجَرِّ",
+      "notes": "«لِجَزْمِهَا … لِلرَّفْعِ» (Ghouthani, al-Ājurrī per Hayman, Hady, Awlad al-Shaykh); «بِجَزْمِهَا … بِالرَّفْعِ» (Dani/al-ʿUmarī, Hamad, Obaid). «وَتَحْرِيكَهَا» is coordinated with the ism of إِنَّ (Hamad prints «وَتَحْرِيكُهَا»)."
+    },
+    {
+      "n": 31,
+      "section": "s7",
+      "sadr": "فَحَرِّكْ وَسَكِّنْ وَاقْطَعَنْ تَارَةً وَصِلْ",
+      "ajz": "وَمَكِّنْ وَمَيِّزْ بَيْنَ مَدِّكَ وَالْقَصْرِ",
+      "rhymeWord": "وَالْقَصْرِ",
+      "notes": "al-Miṣbāḥ: «فَسَكِّنْ وَحَرِّكْ»."
+    },
+    {
+      "n": 32,
+      "section": "s8",
+      "sadr": "وَمَا الْمَدُّ إِلَّا فِي ثَلَاثَةِ أَحْرُفٍ",
+      "ajz": "تُسَمَّى حُرُوفَ اللِّينِ بَاحَ بِهَا ذِكْرِي",
+      "rhymeWord": "ذِكْرِي"
+    },
+    {
+      "n": 33,
+      "section": "s8",
+      "sadr": "هِيَ الْأَلِفُ الْمَعْرُوفُ فِيهَا سُكُونُهَا",
+      "ajz": "وَيَاءٌ وَوَاوٌ تَسْكُنَانِ مَعًا فَادْرِ",
+      "rhymeWord": "فَادْرِ",
+      "variants": [
+        {
+          "where": "ajz",
+          "main": "تَسْكُنَانِ",
+          "alt": "يَسْكُنَانِ",
+          "source": "شريحة الغوثاني (بالأحمر)؛ «يسكنان» عند العبيد وابن هيمان وهدي المجيد وأولاد الشيخ والحمد"
+        }
+      ],
+      "notes": "«الْمَعْرُوفُ فِيهَا سُكُونُهَا»: naʿt sababī (agrees with سُكُونُهَا). Hamad's MS: «وَوَاوٌ وَيَاءٌ». The ajz is recited twice in the video (476.4–481.6 and 481.6–486.1 s); take 1 (game clip) has «تَسْكُنَانِ» (acoustic probe)."
+    },
+    {
+      "n": 34,
+      "section": "s8",
+      "sadr": "وَخَفِّفْ وَثَقِّلْ وَاشْدُدِ الْفَكَّ عَامِدًا",
+      "ajz": "وَلَا تُفْرِطَنْ فِي فَتْحِكَ الْحَرْفَ وَالْكَسْرِ",
+      "rhymeWord": "وَالْكَسْرِ",
+      "notes": "«الْفَكَّ عَامِدًا … فَتْحِكَ الْحَرْفَ وَالْكَسْرِ» (Ghouthani, Dani/al-ʿUmarī, Hayman, Hady, Awlad al-Shaykh); «الْحَرْفَ عَامِدًا … فِي الْفَتْحِ وَالضَّمِّ وَالْكَسْرِ» (Obaid; al-Qāriʾ and ʿUzayr Shams per al-Shehri); Hamad «الْفَكَّ مُذْ أَتَى … فِي الْفَتْحِ وَالضَّمِّ وَالْكَسْرِ»."
+    },
+    {
+      "n": 35,
+      "section": "s8",
+      "sadr": "وَمَا كَانَ مَهْمُوزًا فَكُنْ هَامِزًا لَهُۥ",
+      "ajz": "وَلَا تَهْمِزَنْ مَا كَانَ لَحْنًا لَدَى النَّبْرِ",
+      "rhymeWord": "النَّبْرِ",
+      "notes": "«لَحْنًا» (Ghouthani, Dani/al-ʿUmarī, Hamad, Obaid, Hayman); «يَخْفَى» (Hady, Awlad al-Shaykh, a copy cited by Obaid). Obaid misprints «النَّثْرِ»."
+    },
+    {
+      "n": 36,
+      "section": "s8",
+      "sadr": "وَإِنْ يَكُ قَبْلَ الْيَاءِ وَالْوَاوِ فَتْحَةٌ",
+      "ajz": "وَبَعْدَهُمَا هَمْزٌ هَمَزْتَ عَلَى قَدْرِ",
+      "rhymeWord": "قَدْرِ",
+      "variants": [
+        {
+          "where": "sadr",
+          "main": "يَكُ",
+          "alt": "تَكُ",
+          "source": "شريحة الغوثاني (بالأحمر)؛ «تَكُ» عند العبيد وابن هيمان (رواية الآجري) وهدي المجيد وأولاد الشيخ"
+        }
+      ],
+      "notes": "«يَكُ» is Dani's riwaya (al-ʿUmarī; Hayman's note); Hamad «فَإِنْ يَكُ»; al-Saʿīdī's Tanbīh (per Hamad) «فَإِنْ تَكُ». Masculine verb with a feminine non-real subject separated from it: correct. The recitation has «يَكُ» (acoustic probe)."
+    },
+    {
+      "n": 37,
+      "section": "s9",
+      "sadr": "وَرَقِّقْ بَيَانَ الرَّاءِ وَاللَّامِ يَنْذَرِبْ",
+      "ajz": "لِسَانُكَ حَتَّى تَنْظِمَ الْقَوْلَ كَالدُّرِّ",
+      "rhymeWord": "كَالدُّرِّ",
+      "notes": "«وَرَقِّقْ» (Ghouthani, al-ʿUmarī's text from the copies of the poem, Obaid, Hady, Awlad al-Shaykh); «وَأَرْقِقْ» (Dani's commentary MSS ر/س and al-Ājurrī per Hayman; Hamad): same metre. «يَنْذَرِبْ» jussive (jawāb al-ṭalab); a copy cited by Obaid «يَنْدَرِبْ», Hamad «تَنْدَرِبْ». Quoted with v38 by al-Hudhalī (الكامل)."
+    },
+    {
+      "n": 38,
+      "section": "s9",
+      "sadr": "وَأَنْعِمْ بَيَانَ الْعَيْنِ وَالْهَاءِ كُلَّمَا",
+      "ajz": "دَرَسْتَ وَكُنْ فِي الدَّرْسِ مُعْتَدِلَ الْأَمْرِ",
+      "rhymeWord": "الْأَمْرِ"
+    },
+    {
+      "n": 39,
+      "section": "s9",
+      "sadr": "وَقِفْ عِنْدَ إِتْمَامِ الْكَلَامِ مُوَافِقًا",
+      "ajz": "لِمُصْحَفِنَا الْمَتْلُوِّ فِي الْبَرِّ وَالْبَحْرِ",
+      "rhymeWord": "وَالْبَحْرِ",
+      "notes": "Quoted by Ibn al-Jazarī (النشر 2/129) and al-Qasṭallānī (لطائف الإشارات 2/403)."
+    },
+    {
+      "n": 40,
+      "section": "s9",
+      "sadr": "وَلَا تُدْغِمَنَّ الْمِيمَ إِنْ جِئْتَ بَعْدَهَا",
+      "ajz": "بِحَرْفٍ سِوَاهَا وَاقْبَلِ الْعِلْمَ بِالشُّكْرِ",
+      "rhymeWord": "بِالشُّكْرِ",
+      "notes": "Hady and Awlad al-Shaykh «جِيتَ» (eased hamza). al-Saʿīdī «فَلَا تُدْغِمَنَّ»; al-ʿUmarī's base MS «وَلَا تُدْغِمِ»."
+    },
+    {
+      "n": 41,
+      "section": "s9",
+      "sadr": "وَضَمُّكَ قَبْلَ الْوَاوِ كُنْ مُشْبِعًا لَهُۥ",
+      "ajz": "كَمَا أَشْبَعُوا إِيَّاكَ نَعْبُدُ فِي الْمَرِّ",
+      "rhymeWord": "الْمَرِّ",
+      "notes": "«إِيَّاكَ نَعْبُدُ» quotes al-Fātiḥa 1:5 (blue on the slide; editions put it in brackets)."
+    },
+    {
+      "n": 42,
+      "section": "s10",
+      "sadr": "وَإِنْ حَرْفُ لِينٍ كَانَ مِنْ قَبْلِ مُدْغَمٍ",
+      "ajz": "كَآخِرِ مَا فِي الْحَمْدِ فَامْدُدْهُ وَاسْتَجْرِ",
+      "rhymeWord": "وَاسْتَجْرِ",
+      "notes": "«مُدْغَمٍ» (Ghouthani, Dani/al-ʿUmarī, Obaid, Hayman, Awlad al-Shaykh); «سَاكِنٍ» (Hamad); «مُدْغَمَا» (Hady). «حَرْفُ مَدٍّ» in al-Jājānī's quotation (النشر 1/317) and al-Qasṭallānī. «وَاسْتَجْرِ» (all witnesses, Ghouthani's slide); Dani's riwaya «وَاسْتَحْرِ» with ḥāʾ (from التحرّي; Ghouthani gives both in his 2021 lesson; Hayman's «وَاسْتَحِرْ» does not scan). «الْحَمْدِ» = al-Fātiḥa, whose last word is «وَلَا الضَّالِّينَ»."
+    },
+    {
+      "n": 43,
+      "section": "s10",
+      "sadr": "مَدَدْتَّ لِأَنَّ السَّاكِنَيْنِ تَلَاقَيَا",
+      "ajz": "فَصَارَا كَتَحْرِيكٍ كَذَا قَالَ ذُو الْخُبْرِ",
+      "rhymeWord": "الْخُبْرِ",
+      "notes": "«مَدَدتَّ» = مَدَدْتَ with the dāl assimilated into the tāʾ, spelt so by Ghouthani and Obaid. «فَصَارَا» (Ghouthani's slide and video take, Hamad, Obaid); «فَصَارَ» (Dani/al-ʿUmarī, Hady, Awlad al-Shaykh, Hayman, al-Nashr 1/317; Ghouthani's 2021 lesson). al-Nashr prints «ذُو الْخَبَرِ»."
+    },
+    {
+      "n": 44,
+      "section": "s11",
+      "sadr": "وَأُسْمِي حُرُوفًا سِتَّةً لِتَخُصَّهَا",
+      "ajz": "بِإِظْهَارِ نُونٍ قَبْلَهَا أَبَدَ الدَّهْرِ",
+      "rhymeWord": "الدَّهْرِ",
+      "notes": "Hamad's Azhar MS unclear («ايمدا الدهر»), restored «أَبَدَ الدَّهْرِ» by al-Qāriʾ. al-ʿUmarī prints «وَأَسْمِي» (fatḥa, apparently a slip)."
+    },
+    {
+      "n": 45,
+      "section": "s11",
+      "sadr": "فَحَاءٌ وَخَاءٌ ثُمَّ هَاءٌ وَهَمْزَةٌ",
+      "ajz": "وَعَيْنٌ وَغَيْنٌ لَيْسَ قَوْلِيَ بِالنُّكْرِ",
+      "rhymeWord": "بِالنُّكْرِ"
+    },
+    {
+      "n": 46,
+      "section": "s11",
+      "sadr": "فَهَٰذِي حُرُوفُ الْحَلْقِ يَخْفَى بَيَانُهَا",
+      "ajz": "فَدُونَكَ بَيِّنْهَا وَلَا تَعْصِيَنْ أَمْرِي",
+      "rhymeWord": "أَمْرِي",
+      "notes": "Dani/al-ʿUmarī: «فَدَيْتُكَ بَيِّنْهَا»; all others «فَدُونَكَ»; margin of Hamad's Azhar MS «فَدُونَكَ أَظْهِرْهَا»."
+    },
+    {
+      "n": 47,
+      "section": "s11",
+      "sadr": "وَلَا تَشْدُدِ النُّونَ الَّتِي يُظْهِرُونَهَا",
+      "ajz": "كَقَوْلِكَ مِنْ خَيْلٍ لَدَى سُورَةِ الْحَشْرِ",
+      "rhymeWord": "الْحَشْرِ",
+      "notes": "Order 47/48 as in Ghouthani, al-Ājurrī (Hayman), Hamad, Obaid, Hady, Awlad al-Shaykh; Dani's commentary has «وَإِظْهَارُكَ التَّنْوِينَ» first (47) and this verse second (48). «مِنْ خَيْلٍ» quotes al-Ḥashr 59:6. Hamad prints «تُشْدِدِ»."
+    },
+    {
+      "n": 48,
+      "section": "s11",
+      "sadr": "وَإِظْهَارُكَ التَّنْوِينَ فَهْوَ قِيَاسُهَا",
+      "ajz": "فَقِسْهُ عَلَيْهَا فُزْتَ بِالْكَاعِبِ الْبِكْرِ",
+      "rhymeWord": "الْبِكْرِ",
+      "notes": "«فَقِسْهُ» (all but Hamad's MS: «فَنَبِّهْ»), read «فَقِسْهُو» (ṣila on the slide). Ṣila mark of the slide dropped on «فَقِسْهُ»: he recites it short (L1 listening)."
+    },
+    {
+      "n": 49,
+      "section": "s12",
+      "sadr": "وَقَدْ بَقِيَتْ أَشْيَاءُ بَعْدُ لَطِيفَةٌ",
+      "ajz": "يُلَقَّنُهَا بَاغِي التَّعَلُّمِ بِالصَّبْرِ",
+      "rhymeWord": "بِالصَّبْرِ",
+      "notes": "«أَشْيَاءُ» (al-ʿUmarī prints «أسماء», but Dani explains «الأشياء اللطيفة»). «يُلَقَّنُهَا بَاغِي» (Ghouthani, Obaid, Hady, Awlad al-Shaykh, Hayman; al-Bawwāb and the Indian MS «بَاغِي»); «يُبَيِّنُهَا رَاعِي» (Hamad); «يُلَقَّنُهَا رَاعِي» (al-Qāriʾ and ʿUzayr Shams per al-Shehri)."
+    },
+    {
+      "n": 50,
+      "section": "s12",
+      "sadr": "فَلِابْنِ عُبَيْدِ اللَّهِ مُوسَى عَلَى الَّذِي",
+      "ajz": "يُعَلِّمُهُ الْخَيْرَ الدُّعَاءُ لَدَى الْفَجْرِ",
+      "rhymeWord": "الْفَجْرِ",
+      "notes": "«عَلَى الَّذِي يُعَلِّمُهُ الْخَيْرَ» is a parenthesis (Ghouthani's slide sets it between dashes): the duʿāʾ at dawn is owed to Ibn ʿUbayd Allāh Mūsā (the poet) by whoever he teaches good. «الدُّعَاءُ» = mubtadaʾ (Hamad prints «الدُّعَاءَ»)."
+    },
+    {
+      "n": 51,
+      "section": "s12",
+      "sadr": "أَجَابَكَ فِينَا رَبُّنَا وَأَجَابَنَا",
+      "ajz": "أَخِي فِيكَ بِالْغُفْرَانِ مِنْهُۥ وَبِالنَّصْرِ",
+      "rhymeWord": "وَبِالنَّصْرِ",
+      "notes": "«أَخِي» (vocative) is missing in Hamad's Azhar MS (restored from the Berlin catalogue); the metre needs it. Ghouthani reads «مِنْهُو» (ṣila on the slide)."
+    }
+  ],
+  "conventions": "Plain alif for hamzat al-wasl (no ٱ). Silah marks U+06E5 ۥ / U+06E6 ۦ exactly where Ghouthani's slides have them. Dagger alif U+0670 only in ذَٰلِكَ، إِلَٰهِي، فَهَٰذِي. NFC, no tatweel, no punctuation."
+}

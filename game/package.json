@@ -1,0 +1,25 @@
+{
+  "name": "khaqaniya-game",
+  "private": true,
+  "version": "1.0.0",
+  "description": "رحلة أمين في مدينة القرّاء — a game to learn al-Khaqaniyya (static PWA, RTL, offline).",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "fixture": "node scripts/make-fixture.mjs",
+    "prepare-data": "node scripts/prepare-data.mjs",
+    "dev": "node scripts/prepare-data.mjs && vite",
+    "build": "node scripts/prepare-data.mjs && tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "test": "playwright test",
+    "test:unit": "node --test scripts/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}

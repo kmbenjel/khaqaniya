@@ -1,0 +1,21 @@
+{
+  "name": "khaqaniya-qasida",
+  "private": true,
+  "version": "1.0.0",
+  "description": "الخاقانية — the poem as a shatr site (kashida layout, PWA), with per-bayt meanings and audio.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "gen": "node ../scripts/gen-site.mjs",
+    "build": "node ../scripts/gen-site.mjs && node scripts/build.mjs",
+    "test": "node ../scripts/gen-site.mjs && node --test test/*.test.mjs",
+    "e2e": "node e2e/check.mjs",
+    "icons": "node tools/make-brand.mjs",
+    "upstream-patch": "node tools/upstream-patch.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "esbuild": "^0.23.0",
+    "playwright": "^1.49.0"
+  }
+}

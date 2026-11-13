@@ -1,0 +1,271 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "shatr poem.config.json",
+  "type": "object",
+  "required": [
+    "title",
+    "author",
+    "domain",
+    "description"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Poem title (Arabic). Used as the H1, page title, OG/JSON-LD name."
+    },
+    "shortName": {
+      "type": "string",
+      "description": "Optional short name for the PWA (defaults to title)."
+    },
+    "author": {
+      "type": "string",
+      "description": "Poet's name (Arabic)."
+    },
+    "editor": {
+      "type": "string",
+      "description": "Optional editor/vocaliser name."
+    },
+    "lang": {
+      "type": "string",
+      "default": "ar",
+      "description": "BCP-47 language tag, e.g. \"ar\" or \"ar-MA\"."
+    },
+    "dir": {
+      "type": "string",
+      "enum": [
+        "rtl",
+        "ltr"
+      ],
+      "default": "rtl"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "single",
+        "paged"
+      ],
+      "default": "single",
+      "description": "single = one page (a Table of Contents appears for multi-section poems). paged = an index page + one page per ## chapter, with prev/next nav — use this for long works (alfiyyas)."
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[^/]+\\.[^/]+$",
+      "description": "Bare custom domain host (no https://), e.g. \"poem.example.com\". Becomes CNAME + canonical URL."
+    },
+    "siteName": {
+      "type": "string",
+      "description": "Optional og:site_name."
+    },
+    "showcase": {
+      "type": "boolean",
+      "description": "Framework-internal (shatr demo only): also ship the showcase/ gallery at /showcase/. Leave unset for a normal poem site."
+    },
+    "description": {
+      "type": "string",
+      "description": "Meta + OG + JSON-LD description (Arabic)."
+    },
+    "manifestDescription": {
+      "type": "string",
+      "description": "Optional PWA manifest description (defaults to description)."
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "JSON-LD keywords."
+    },
+    "about": {
+      "type": "string",
+      "description": "Optional JSON-LD topical 'about' line."
+    },
+    "dates": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "published": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "signatureLine": {
+          "type": "string",
+          "description": "Free-text date/place line shown under the first section's signature."
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "preset": {
+          "type": "string",
+          "enum": [
+            "stone",
+            "sepia",
+            "midnight",
+            "rawda"
+          ],
+          "default": "stone",
+          "description": "Colour preset (light + dark palettes). Sets the page colours and PWA chrome. See engine/themes.json."
+        },
+        "themeColor": {
+          "type": "string",
+          "description": "Override the browser toolbar colour (defaults to the preset's)."
+        },
+        "splashColor": {
+          "type": "string",
+          "description": "Override the PWA splash background (defaults to the preset's)."
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "Optional links. Each rendered as a card + a scroll button; omit to hide.",
+      "properties": {
+        "soundcloud": {
+          "type": "string",
+          "format": "uri"
+        },
+        "whatsapp": {
+          "description": "true = auto share text from title/author/url; or a custom string.",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "pdf": {
+          "type": "string",
+          "description": "PDF filename placed in content/ (copied to the site root)."
+        },
+        "links": {
+          "type": "array",
+          "description": "Extra same-tab link cards (e.g. a companion game on the same origin).",
+          "items": {
+            "type": "object",
+            "required": [
+              "href",
+              "label"
+            ],
+            "properties": {
+              "href": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string",
+                "enum": [
+                  "game",
+                  "web"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "credit": {
+          "type": "string",
+          "description": "e.g. \"قرأه وضبطه\"."
+        },
+        "name": {
+          "type": "string"
+        },
+        "facebook": {
+          "type": "string",
+          "format": "uri"
+        },
+        "dateLine": {
+          "type": "string"
+        }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "properties": {
+        "ga4": {
+          "type": "string",
+          "description": "GA4 measurement id, e.g. G-XXXXXXX. Omit to ship zero analytics."
+        }
+      }
+    },
+    "social": {
+      "type": "object",
+      "properties": {
+        "card": {
+          "type": "string",
+          "description": "1200x630 JPG in content/, used as og:image. If omitted, the 512 icon is used."
+        }
+      }
+    },
+    "labels": {
+      "type": "object",
+      "description": "Optional overrides for Arabic UI strings (listen, send, pdf, web …; and, for per-bayt tools: play, stop, meaning, meanings, hardWords, more, credits)."
+    },
+    "basePath": {
+      "type": "string",
+      "default": "/",
+      "description": "Where the site lives on the host, e.g. \"/qasida/\" when it is served at https://DOMAIN/qasida/. Every URL (canonical, OG, sitemap, manifest scope/start_url/icons, service-worker registration + scope, assets) is built from it. No CNAME/robots.txt is written when set (the root site owns them). Env override: SHATR_BASE_PATH."
+    },
+    "cachePrefix": {
+      "type": "string",
+      "description": "Prefix of every service-worker cache this site owns (the worker deletes only caches with this prefix, so apps sharing an origin do not wipe each other). Default: first label of domain (+ base path)."
+    },
+    "signature": {
+      "type": "string",
+      "enum": [
+        "each",
+        "last",
+        "none"
+      ],
+      "default": "each",
+      "description": "Poet signature after every section (each), only after the last (last) or never (none). Single layout only."
+    },
+    "continuousNumbering": {
+      "type": "boolean",
+      "default": false,
+      "description": "Number the bayts 1..N across the whole poem instead of restarting in every section."
+    },
+    "credits": {
+      "type": "object",
+      "description": "Credits block under the link cards (recitation, sources …).",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

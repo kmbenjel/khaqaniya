@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "shatr content/bayts.json",
+  "description": "Optional per-bayt meaning and audio. n is the 1-based bayt number counted over the whole poem, in poem.txt order. Panels render outside the kashida grid; audio is cached by the service worker on first play, never precached.",
+  "type": "object",
+  "required": [
+    "bayts"
+  ],
+  "properties": {
+    "bayts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "n"
+        ],
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "kid": {
+            "type": "string",
+            "description": "Short meaning shown first."
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "w",
+                "m"
+              ],
+              "properties": {
+                "w": {
+                  "type": "string"
+                },
+                "m": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "more": {
+            "type": "string",
+            "description": "Fuller text, collapsed behind «المزيد»."
+          },
+          "audio": {
+            "type": "string",
+            "description": "Path relative to content/, e.g. audio/001.mp3 (copied to dist/ as is)."
+          }
+        }
+      }
+    }
+  }
+}

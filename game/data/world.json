@@ -1,0 +1,15 @@
+{
+  "_doc": "Districts in order (GAME_DESIGN §2.5, §3.3). to = last verse; from = previous to + 1. Names/intros come from copy (district.<id>.*).",
+  "districts": [
+    { "id": "gate",     "to": 7,  "sky": "sunset",    "boss": "manfoukh", "bossVerse": 1,  "special": null },
+    { "id": "seven",    "to": 11, "sky": "dusk",      "boss": "khallat",  "bossVerse": 8,  "special": { "verse": 11, "game": "caravan" } },
+    { "id": "garden",   "to": 14, "sky": "evening",   "boss": "ajoul",    "bossVerse": 12, "special": null },
+    { "id": "fountain", "to": 22, "sky": "starry",    "boss": "kaslan",   "bossVerse": 22, "special": null },
+    { "id": "market",   "to": 27, "sky": "night",     "boss": "mattat",   "bossVerse": 26, "special": null },
+    { "id": "workshop", "to": 31, "sky": "deepnight", "boss": "qallab",   "bossVerse": 30, "special": { "verse": 31, "game": "hats" } },
+    { "id": "bridge",   "to": 36, "sky": "moonlit",   "boss": "fuwaq",    "bossVerse": 35, "special": null },
+    { "id": "lane",     "to": 43, "sky": "latenight", "boss": "duhrouj",  "bossVerse": 39, "special": null },
+    { "id": "cave",     "to": 48, "sky": "firstlight","boss": "khafiyy",  "bossVerse": 46, "special": null },
+    { "id": "hill",     "to": 51, "sky": "dawn",      "boss": "nasyan",   "bossVerse": 49, "special": null, "final": true }
+  ]
+}

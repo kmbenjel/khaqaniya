@@ -1,0 +1,5696 @@
+{
+  "_meta": {
+    "file": "design/copy.ar.json: every Arabic string of «رحلة أمين في مدينة القراء», keyed by the ids of design/GAME_DESIGN.md. Never type Arabic UI text in code.",
+    "version": 1,
+    "date": "2026-11-13",
+    "author": "D1b game copy & style sheet (Opus max), completing D1 game design (Fable max). To be proofread by A1 and the cross-model reviewers.",
+    "lang": "ar",
+    "dir": "rtl",
+    "keys": "Flat dotted ids. A key can be a string and also the prefix of other keys (game.recite / game.recite.how), so the file is flat, not nested. Numbered siblings (.1 .2 …) are rotating variants of one moment: pick with the seeded RNG (§3.5), no repeat until all were used.",
+    "fields": {
+      "text": "what the screen shows (caption, bubble, label). Full tashkeel on every child-facing line and every voiced line.",
+      "say": "what TTS reads, present only when it differs from text: every word before a pause (، : . ؟ ! ؛ … and the end) in its waqf form (no trailing short vowel; -an before alif read -ā; ta marbuta read as a resting hā'); Mishmish's rhyme jokes end on «ـرِي» (the rhyme's ishbā', as the reciter does); glyphs and cut words spelled out.",
+      "voice": "true = a TTS clip is generated from say/text; the line is also always shown as a caption.",
+      "who": "speaker of a character line (voiced or not): amin | mishmish | laqlaq | narrator | a gang id (manfoukh khallat ajoul kaslan mattat qallab fuwaq duhrouj khafiyy nasyan).",
+      "aud": "child = the child reads it (child sizes, full tashkeel) · adult = grown-ups' text (UI font 16 px, tashkeel only where a word could be misread).",
+      "p": "voice priority (§7.3): 1 = generate for v1 · 2 = v1+.",
+      "tags": "joke-rhyme: Mishmish's «ـرِ» verses about food or sleep · joke-term: puns on a tajwid term, always followed by its real meaning (the owner may drop the family) · fact-verify: a fact to check against the شروح (§14.8) · owner: waits for an owner's decision.",
+      "layer": "cheers only: the voices to render and layer with small offsets (§7.2 cheer).",
+      "note": "for builders and proofreaders; never shown."
+    },
+    "rules": [
+      "Show text; send say (or text) to TTS; voice:true lines are always also captions.",
+      "aud:adult lines use the UI font at 16 px.",
+      "Never concatenate strings to build a sentence. Never inflect a placeholder: a name stands alone or after a colon.",
+      "Placeholders are {name}-style only. Voiced lines have no placeholder (their audio is made at build time).",
+      "Numbers shown to the player are digits after a label and a colon («الدُّرَرُ: {n}»), so no number-noun agreement depends on a value.",
+      "No verse, hemistich or rhyme word of the poem in this file: they come from text/khaqaniya.json. The poem's title and author shown in about/cert come from data too.",
+      "Gender-neutral by construction: nobody addresses the player in the second person singular. Amin says «نَحْنُ» (let's), Laqlaq, Mishmish and the gang speak to the whole team (Amin, Mishmish and the player) in the plural, buttons are in the child's own voice (first person: «أَسْمَعُ»، «فَهِمْتُ»), praise is a noun or an exclamation («مَا شَاءَ اللَّهُ!»، «بِالضَّبْطِ!»), never «أَحْسَنْتَ». No string has a feminine variant.",
+      "The second person singular is used only towards a named male character (يَا أَمِينُ، يَا مِشْمِشُ، يَا قَلَّابُ). Amin, Mishmish, Laqlaq and the ten gang members are grammatically masculine.",
+      "Names: أَمِينٌ، مِشْمِشٌ، لَقْلَقٌ، مَنْفُوخٌ، خَلَّاطٌ، عَجُولٌ، مَطَّاطٌ، قَلَّابٌ، فُوَاقٌ، دُحْرُوجٌ، خَفِيٌّ are fully declined (tanwin); كَسْلَانُ and نَسْيَانُ are diptotes (proper name + added alif-nun): «تَحَدِّي كَسْلَانَ»، «تَحَدِّي نَسْيَانَ».",
+      "«خَطَأ» is never a verdict on the player. Wrong answers get a soft line («نُجَرِّبُ مَرَّةً أُخْرَى»). Jokes are on the kitten or on a gang member himself, never on the Qur'an, reciters, scholars, the poet, prayer, or the player's mistakes.",
+      "Spelling conventions: hamzat al-wasl and the article's alif bare; sun-letter lam bare with shadda on the next letter; moon-letter lam with sukun; long vowels bare; tanwin fath on the letter before the alif («مَعًا»); no alif wasla «ٱ» (Tajawal has no glyph for it); «هَذَا، هَذِهِ، ذَلِكَ، لَكِنَّ» without dagger alif.",
+      "Bubbles: one idea, ≤ 14 words and three lines; child lines ≤ ~10 words where possible."
+    ],
+    "tts": {
+      "model": "gemini-3.8-flash-tts",
+      "input": "say if present, else text, exactly: no instructions, no tags, no stage directions (they would be read aloud).",
+      "style": "delivery notes go in speech_metadata.style from speakers.<who>.style, never in the text.",
+      "cache": "one clip per line, keyed by hash(model, voice, input).",
+      "batch": "one request per speaker, lines separated by blank lines, split back at the silences (as musammi-promo/video/tts.py does); a retake is one line alone.",
+      "never": "the prayer finale.dua.text is never voiced; captions keep the full tashkeel of text."
+    },
+    "speakers": {
+      "amin": {
+        "role": "the guide, a boy of about nine with a lantern",
+        "voice": "Puck",
+        "alt": [
+          "Fenrir",
+          "Sadachbia"
+        ],
+        "style": "a bright, energetic boy of nine; warm and encouraging; quick but clear; smiling voice; standard Arabic with every case ending; never shouts"
+      },
+      "mishmish": {
+        "role": "Amin's apricot kitten, comic relief",
+        "voice": "Leda",
+        "alt": [
+          "Laomedeia",
+          "Zephyr"
+        ],
+        "style": "a small squeaky kitten, mock-dramatic; boasts then turns sheepish; a tiny pause before each punchline; cheeky, never mean"
+      },
+      "laqlaq": {
+        "role": "the old white stork with round glasses; explains meanings and lessons",
+        "voice": "Algenib",
+        "alt": [
+          "Charon",
+          "Gacrux"
+        ],
+        "style": "an old, warm, unhurried storyteller with a gentle smile; clear diction; slow enough for an eight-year-old"
+      },
+      "narrator": {
+        "role": "storyteller of the intro panels; base voice of the cheers",
+        "voice": "Sulafat",
+        "alt": [
+          "Achernar",
+          "Sadaltager"
+        ],
+        "style": "a warm bedtime-story narrator, a little wonder in the voice, calm pace"
+      },
+      "manfoukh": {
+        "role": "gang 1, the boaster",
+        "voice": "Orus",
+        "style": "pompous and puffed-up, grand words, chest out; deflates comically when answered right"
+      },
+      "khallat": {
+        "role": "gang 2, the mixer-up",
+        "voice": "Zubenelgenubi",
+        "style": "cheerful and muddled, trips over his own words, delighted by chaos"
+      },
+      "ajoul": {
+        "role": "gang 3, the rusher",
+        "voice": "Fenrir",
+        "style": "very fast and breathless, words tumbling, never finishes; calm and slow once corrected"
+      },
+      "kaslan": {
+        "role": "gang 4, the lazy one",
+        "voice": "Enceladus",
+        "style": "sleepy, yawning, slow and soft; wakes up a little with each right answer"
+      },
+      "mattat": {
+        "role": "gang 5, the over-stretcher",
+        "voice": "Umbriel",
+        "style": "rubbery and stretchy, drags long vowels too long, very pleased with himself"
+      },
+      "qallab": {
+        "role": "gang 6, the vowel-flipper",
+        "voice": "Iapetus",
+        "style": "acrobatic and bouncy, upside-down energy, little hops in the voice"
+      },
+      "fuwaq": {
+        "role": "gang 7, the hiccupper",
+        "voice": "Achird",
+        "style": "friendly and jittery; the hiccups are written in the line, do not add more"
+      },
+      "duhrouj": {
+        "role": "gang 8, the roller who cannot stop",
+        "voice": "Alnilam",
+        "style": "rolling, run-on delivery, no breath at the commas, then a soft bump"
+      },
+      "khafiyy": {
+        "role": "gang 9, the hider of sounds",
+        "voice": "Achernar",
+        "style": "whispery and shy, almost inaudible at first; clear and bright once corrected"
+      },
+      "nasyan": {
+        "role": "gang 10, the forgetful leader",
+        "voice": "Schedar",
+        "style": "drowsy, absent-minded grand villain who keeps losing his thread; kindly once corrected"
+      }
+    },
+    "placeholders": {
+      "n": "a number (digits per settings.numerals); total: the number of verses from data",
+      "name": "a player's name: render with dir=auto, never inside a phrase that would inflect it",
+      "a, b": "the parent gate's two factors",
+      "from, to": "first and last verse of a district",
+      "titles": "the data's section title(s) of a district, joined by map.district.section.sep",
+      "district": "a district name (district.<id>.name), standing alone",
+      "reciter, author, fullTitle, metre, basis, death, sources": "values from text/khaqaniya.json, text/meanings.json, audio/timings.json",
+      "url, v, license, fonts, size": "build values",
+      "hijri, gregorian": "dates from Intl.DateTimeFormat (ar-u-ca-islamic-umalqura / ar)",
+      "w": "a word token of the verse (aria only)",
+      "s": "a star count (aria only)",
+      "boss": "a gang member's name (boss.<id>.name), aria only",
+      "sticker": "a sticker name (sticker.<id> or district.<id>.name), aria only",
+      "size": "download size with its unit, e.g. «12 MB»"
+    },
+    "open": [
+      "dedication.from is empty until the owner says who signs (§14.1).",
+      "Praise by a synthetic voice with «مَا شَاءَ اللَّهُ / تَبَارَكَ اللَّهُ» and the gang's plain «هِييييه!» cheer: owner to confirm (§14.3); lines tagged owner.",
+      "joke-term lines (joke.21, joke.22 and their .real) may be dropped as a family (§14.4)."
+    ],
+    "overlaps": "Words that also occur in the poem and are kept on purpose: «الْفَجْرُ» (district.hill and the finale: the design's dawn), the reciters' names (أَبُو عَمْرٍو، أَبُو بَكْرٍ) needed by S1 and the facts, the numeral «عَشْرُ» (necklace.sleep.10, sticker.days14), «الشكر / البحر» in adult text. No poem word is game content here: G4's rhyme words come from data, the radar's decoys (decoy.*) do not end in «ـرِ».",
+    "counts": {
+      "strings": 845,
+      "voiced": 294,
+      "voicedP1": 156,
+      "voicedP2": 138,
+      "child": 678,
+      "adult": 167,
+      "perNamespace": {
+        "app": 15,
+        "btn": 27,
+        "home": "22/9 voiced",
+        "intro": "8/7 voiced",
+        "char": "8/5 voiced",
+        "district": "22/11 voiced",
+        "map": "15/3 voiced",
+        "step": 5,
+        "level": "12/8 voiced",
+        "listen": "9/4 voiced",
+        "meaning": "15/4 voiced",
+        "lahn": "3/3 voiced",
+        "game": "80/42 voiced",
+        "fb": "24/24 voiced",
+        "reward": "11/11 voiced",
+        "joke": "26/26 voiced",
+        "mishmish": "11/11 voiced",
+        "rate": 3,
+        "listener": 3,
+        "boss": "118/83 voiced",
+        "stickers": 6,
+        "sticker": 65,
+        "polish": "11/7 voiced",
+        "necklace": "21/1 voiced",
+        "days": "4/1 voiced",
+        "heroes": 15,
+        "profile": "28/3 voiced",
+        "finale": "10/7 voiced",
+        "dedication": "8/5 voiced",
+        "cert": 14,
+        "share": 7,
+        "ai": "40/4 voiced",
+        "error": 9,
+        "decoy": 8,
+        "fact": "15/15 voiced",
+        "reciter": 7,
+        "city": 5,
+        "grown": 30,
+        "settings": 37,
+        "privacy": 7,
+        "about": 19,
+        "aria": 42
+      }
+    }
+  },
+  "app.title": {
+    "text": "رِحْلَةُ أَمِينٍ فِي مَدِينَةِ الْقُرَّاءِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "app.title.logo": {
+    "text": "رِحْلَةُ أَمِينٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "app.subtitle": {
+    "text": "نَحْفَظُ قَصِيدَةَ الْخَاقَانِيِّ دُرَّةً دُرَّةً",
+    "voice": false,
+    "aud": "child"
+  },
+  "app.start": {
+    "text": "هَيَّا بِنَا!",
+    "voice": false,
+    "aud": "child",
+    "note": "splash button; the tap unlocks audio"
+  },
+  "app.loading": {
+    "text": "نُشْعِلُ الْفَوَانِيسَ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "app.update": {
+    "text": "نسخة جديدة من اللعبة جاهزة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.update.btn": {
+    "text": "تحديث",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.install": {
+    "text": "تثبيت اللعبة على الشاشة الرئيسية، لتعمل بلا شبكة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.install.btn": {
+    "text": "تثبيت",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.install.ios": {
+    "text": "عَلَى iPhone أَوْ iPad: افْتَحُوا اللُّعْبَةَ فِي Safari، ثُمَّ اخْتَارُوا «مُشَارَكَةٌ» ← «إِضَافَةٌ إِلَى الشَّاشَةِ الرَّئِيسِيَّةِ».",
+    "voice": false,
+    "aud": "adult",
+    "note": "shown instead of app.install where the browser has no install prompt (iOS Safari); the two quoted names are the iOS menu items"
+  },
+  "app.offlineReady": {
+    "text": "اللعبة جاهزة للعب بلا شبكة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.manifest.name": {
+    "text": "رحلة أمين في مدينة القراء",
+    "voice": false,
+    "aud": "adult",
+    "note": "PWA manifest name: no tashkeel (system fonts)"
+  },
+  "app.manifest.short": {
+    "text": "رحلة أمين",
+    "voice": false,
+    "aud": "adult",
+    "note": "PWA short_name"
+  },
+  "app.manifest.description": {
+    "text": "لعبة لحفظ القصيدة الخاقانية وفهمها، بيتًا بيتًا، بصوت القارئ.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "app.meta.description": {
+    "text": "رحلة أمين في مدينة القراء: لعبة عربية للصغار والكبار، لحفظ الخاقانية وفهم معانيها، بلا موسيقى ولا إعلانات، وتعمل بلا شبكة.",
+    "voice": false,
+    "aud": "adult",
+    "note": "HTML meta description and share preview"
+  },
+  "btn.next": {
+    "text": "التَّالِي",
+    "voice": false,
+    "aud": "child",
+    "note": "with a left-pointing arrow"
+  },
+  "btn.back": {
+    "text": "أَرْجِعُ",
+    "voice": false,
+    "aud": "child",
+    "note": "with a right-pointing arrow"
+  },
+  "btn.replay": {
+    "text": "أُعِيدُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.map": {
+    "text": "الْخَرِيطَةُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.help": {
+    "text": "سَاعِدْنِي",
+    "voice": false,
+    "aud": "child",
+    "note": "the help lantern; the child speaks to the lantern"
+  },
+  "btn.help.label": {
+    "text": "مُسَاعَدَةٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "one-word visible label under the help lantern (its aria-label stays aria.help)"
+  },
+  "btn.skip": {
+    "text": "أَحْفَظُهُ",
+    "voice": false,
+    "aud": "child",
+    "note": "grown-up mode, on INTRO: 'I know it' → PLAY C + RECITE"
+  },
+  "btn.skipStep": {
+    "text": "أَتَخَطَّى",
+    "voice": false,
+    "aud": "child",
+    "note": "grown-up mode: skip LISTEN or MEANING"
+  },
+  "btn.pause": {
+    "text": "اسْتِرَاحَةٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "also the pause menu's title"
+  },
+  "btn.resume": {
+    "text": "أُكْمِلُ اللَّعِبَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.exitMap": {
+    "text": "إِلَى الْخَرِيطَةِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.home": {
+    "text": "الْبِدَايَةُ",
+    "voice": false,
+    "aud": "child",
+    "note": "never «البيت» (= verse in this game)"
+  },
+  "btn.print": {
+    "text": "أَطْبَعُ الشَّهَادَةَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.share": {
+    "text": "أُشَارِكُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.saveImage": {
+    "text": "أَحْفَظُ الصُّورَةَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.close": {
+    "text": "أُغْلِقُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.ok": {
+    "text": "حَسَنًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.yes": {
+    "text": "نَعَمْ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.no": {
+    "text": "لَا",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.cancel": {
+    "text": "إِلْغَاءٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.continue": {
+    "text": "أُكْمِلُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.again": {
+    "text": "مَرَّةً أُخْرَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.done": {
+    "text": "انْتَهَيْتُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.more": {
+    "text": "الْمَزِيدُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.listen": {
+    "text": "أَسْمَعُ",
+    "voice": false,
+    "aud": "child",
+    "note": "the ear button's visible label where one is shown"
+  },
+  "btn.go": {
+    "text": "هَيَّا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "btn.later": {
+    "text": "لَاحِقًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.greet.1": {
+    "text": "أَهْلًا وَسَهْلًا! فَانُوسِي جَاهِزٌ… هَيَّا لِنَجْمَعَ الدُّرَرَ!",
+    "say": "أَهْلًا وَسَهْلَا! فَانُوسِي جَاهِزْ… هَيَّا لِنَجْمَعَ الدُّرَرْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "home.greet.2": {
+    "text": "السَّلَامُ عَلَيْكُمْ! الدُّرَرُ تَنْتَظِرُنَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "home.greet.3": {
+    "text": "مَرْحَبًا! مِشْمِشٌ نَائِمٌ… كَالْعَادَةِ.",
+    "say": "مَرْحَبَا! مِشْمِشٌ نَائِمْ… كَالْعَادَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "home.greet.4": {
+    "text": "عُدْنَا إِلَى الرِّحْلَةِ! أَيْنَ وَصَلْنَا؟",
+    "say": "عُدْنَا إِلَى الرِّحْلَهْ! أَيْنَ وَصَلْنَا؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "home.greet.5": {
+    "text": "صَبَاحُ الْخَيْرِ… أَوْ مَسَاءُ الْخَيْرِ! الْمُهِمُّ أَنْ نَجْمَعَ الدُّرَرَ!",
+    "say": "صَبَاحُ الْخَيْرْ… أَوْ مَسَاءُ الْخَيْرْ! الْمُهِمُّ أَنْ نَجْمَعَ الدُّرَرْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "home.greet.6": {
+    "text": "فَانُوسِي يَلْمَعُ… الْيَوْمُ يَوْمُ دُرَرٍ!",
+    "say": "فَانُوسِي يَلْمَعْ… الْيَوْمُ يَوْمُ دُرَرْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "home.continue": {
+    "text": "أُكْمِلُ الدُّرَّةَ",
+    "voice": false,
+    "aud": "child",
+    "note": "big button when a verse was left open"
+  },
+  "home.next": {
+    "text": "الدُّرَّةُ التَّالِيَةُ",
+    "voice": false,
+    "aud": "child",
+    "note": "big button (or the small one after home.enough)"
+  },
+  "home.next.verse": {
+    "text": "الْبَيْتُ {n}",
+    "voice": false,
+    "aud": "child",
+    "note": "small line under home.next / home.continue"
+  },
+  "home.polish": {
+    "text": "أُلَمِّعُ الدُّرَرَ",
+    "voice": false,
+    "aud": "child",
+    "note": "big button when 3+ verses are due"
+  },
+  "home.polish.title": {
+    "text": "وَقْتُ التَّلْمِيعِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.polish.count": {
+    "text": "دُرَرٌ عَلَيْهَا غُبَارٌ: {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.enough": {
+    "text": "جَمَعْنَا الْيَوْمَ مَا يَكْفِي. نَسْمَعُ الْعِقْدَ قَبْلَ النَّوْمِ؟",
+    "say": "جَمَعْنَا الْيَوْمَ مَا يَكْفِي. نَسْمَعُ الْعِقْدَ قَبْلَ النَّوْمْ؟",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "home.listenNecklace": {
+    "text": "أَسْمَعُ عِقْدِي",
+    "voice": false,
+    "aud": "child",
+    "note": "big button after home.enough"
+  },
+  "home.comeback": {
+    "text": "أَخِيرًا رَجَعْتُمْ! اشْتَقْتُ إِلَيْكُمْ… وَإِلَى السَّرْدِينِ.",
+    "say": "أَخِيرًا رَجَعْتُمْ! اشْتَقْتُ إِلَيْكُمْ… وَإِلَى السَّرْدِينْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "after 3+ days away"
+  },
+  "home.allDone": {
+    "text": "الْعِقْدُ كَامِلٌ! نُلَمِّعُهُ قَلِيلًا كُلَّ يَوْمٍ.",
+    "say": "الْعِقْدُ كَامِلْ! نُلَمِّعُهُ قَلِيلًا كُلَّ يَوْمْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "home greeting after the finale"
+  },
+  "home.map": {
+    "text": "الْخَرِيطَةُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.necklace": {
+    "text": "الْعِقْدُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.stickers": {
+    "text": "الْمُلْصَقَاتُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.heroes": {
+    "text": "الْأَبْطَالُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.grownups": {
+    "text": "لِلْكِبَارِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "home.dedication": {
+    "text": "الْإِهْدَاءُ",
+    "voice": false,
+    "aud": "child",
+    "note": "the heart-lantern"
+  },
+  "intro.1": {
+    "text": "قَبْلَ أَكْثَرَ مِنْ أَلْفِ سَنَةٍ، صَنَعَ عَالِمٌ شَاعِرٌ عِقْدًا عَجِيبًا مِنَ الشِّعْرِ.",
+    "say": "قَبْلَ أَكْثَرَ مِنْ أَلْفِ سَنَهْ، صَنَعَ عَالِمٌ شَاعِرٌ عِقْدًا عَجِيبًا مِنَ الشِّعْرْ.",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 1: the poet stringing pearls (never his face or figure in detail)"
+  },
+  "intro.2": {
+    "text": "كُلُّ دُرَّةٍ فِيهِ بَيْتٌ يُعَلِّمُنَا كَيْفَ نَقْرَأُ الْقُرْآنَ قِرَاءَةً حَسَنَةً.",
+    "say": "كُلُّ دُرَّةٍ فِيهِ بَيْتٌ يُعَلِّمُنَا كَيْفَ نَقْرَأُ الْقُرْآنَ قِرَاءَةً حَسَنَهْ.",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 2: the necklace glowing over the city"
+  },
+  "intro.3": {
+    "text": "وَفِي لَيْلَةٍ، جَاءَتْ عِصَابَةُ اللَّحْنِ… فَقَطَعَتِ الْخَيْطَ!",
+    "say": "وَفِي لَيْلَهْ، جَاءَتْ عِصَابَةُ اللَّحْنْ… فَقَطَعَتِ الْخَيْطْ!",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 3: the gang snaps the string"
+  },
+  "intro.lahn": {
+    "text": "اللَّحْنُ: الْخَطَأُ فِي الْقِرَاءَةِ.",
+    "say": "اللَّحْنْ: الْخَطَأُ فِي الْقِرَاءَهْ.",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "footnote bubble on panel 3"
+  },
+  "intro.4": {
+    "text": "فَتَدَحْرَجَتِ الدُّرَرُ فِي الْمَدِينَةِ… وَمِشْمِشٌ يَلْعَبُ بِهَا كَالْكُرَاتِ!",
+    "say": "فَتَدَحْرَجَتِ الدُّرَرُ فِي الْمَدِينَهْ… وَمِشْمِشٌ يَلْعَبُ بِهَا كَالْكُرَاتْ!",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 4: Mishmish batting pearls"
+  },
+  "intro.5": {
+    "text": "فَرَفَعَ أَمِينٌ فَانُوسَهُ وَقَالَ: «سَنُعِيدُهَا دُرَّةً دُرَّةً!»",
+    "say": "فَرَفَعَ أَمِينٌ فَانُوسَهُ وَقَالْ: «سَنُعِيدُهَا دُرَّةً دُرَّهْ!»",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 5: Amin lifts the lantern"
+  },
+  "intro.6": {
+    "text": "وَالرِّحْلَةُ تَبْدَأُ الْآنَ، مِنْ بَابِ الْمَدِينَةِ. هَيَّا بِنَا!",
+    "say": "وَالرِّحْلَةُ تَبْدَأُ الْآنْ، مِنْ بَابِ الْمَدِينَهْ. هَيَّا بِنَا!",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "note": "panel 6: the map, first pearl blinking"
+  },
+  "intro.skip": {
+    "text": "أَبْدَأُ الْآنَ",
+    "voice": false,
+    "aud": "child",
+    "note": "always visible on the intro"
+  },
+  "char.amin.name": {
+    "text": "أَمِينٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "char.mishmish.name": {
+    "text": "مِشْمِشٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "char.laqlaq.name": {
+    "text": "لَقْلَقٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "char.amin.hello": {
+    "text": "السَّلَامُ عَلَيْكُمْ! أَنَا أَمِينٌ. سَنَجْمَعُ الدُّرَرَ مَعًا!",
+    "say": "السَّلَامُ عَلَيْكُمْ! أَنَا أَمِينْ. سَنَجْمَعُ الدُّرَرَ مَعَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "char.amin.meetMishmish": {
+    "text": "وَهَذَا مِشْمِشٌ، قِطِّي. هُوَ شُجَاعٌ جِدًّا… وَهُوَ نَائِمٌ!",
+    "say": "وَهَذَا مِشْمِشْ، قِطِّي. هُوَ شُجَاعٌ جِدَّا… وَهُوَ نَائِمْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "char.amin.meetLaqlaq": {
+    "text": "وَهَذَا لَقْلَقٌ، صَدِيقُنَا الْحَكِيمُ. يَعْرِفُ مَعْنَى كُلِّ بَيْتٍ!",
+    "say": "وَهَذَا لَقْلَقْ، صَدِيقُنَا الْحَكِيمْ. يَعْرِفُ مَعْنَى كُلِّ بَيْتْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "char.laqlaq.hello": {
+    "text": "أَهْلًا بِكُمْ يَا أَصْدِقَائِي! مَعَ كُلِّ دُرَّةٍ، أَحْكِي لَكُمْ مَعْنَاهَا.",
+    "say": "أَهْلًا بِكُمْ يَا أَصْدِقَائِي! مَعَ كُلِّ دُرَّهْ، أَحْكِي لَكُمْ مَعْنَاهَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "char.mishmish.hello": {
+    "text": "مِيَاوْ! أَنَا حَارِسُ الدُّرَرِ… وَحَارِسُ السَّرْدِينِ أَيْضًا!",
+    "say": "مِيَاوْ! أَنَا حَارِسُ الدُّرَرْ… وَحَارِسُ السَّرْدِينِ أَيْضَا!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "optional fourth bubble after char.laqlaq.hello"
+  },
+  "district.gate.name": {
+    "text": "بَابُ النِّيَّةِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.gate.intro": {
+    "text": "هُنَا نَبْدَأُ بِنِيَّةٍ طَيِّبَةٍ: نَتَعَلَّمُ لِلَّهِ، لَا لِلتَّفَاخُرِ.",
+    "say": "هُنَا نَبْدَأُ بِنِيَّةٍ طَيِّبَهْ: نَتَعَلَّمُ لِلَّهْ، لَا لِلتَّفَاخُرْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.seven.name": {
+    "text": "سَاحَةُ الْقُرَّاءِ السَّبْعَةِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.seven.intro": {
+    "text": "سَبْعَةُ فَوَانِيسَ، بِأَسْمَاءِ سَبْعَةِ قُرَّاءٍ عَلَّمُوا النَّاسَ الْقُرْآنَ.",
+    "say": "سَبْعَةُ فَوَانِيسْ، بِأَسْمَاءِ سَبْعَةِ قُرَّاءٍ عَلَّمُوا النَّاسَ الْقُرْآنْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.garden.name": {
+    "text": "حَدِيقَةُ التَّرْتِيلِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.garden.intro": {
+    "text": "حَدِيقَةٌ هَادِئَةٌ… هُنَا نَتَعَلَّمُ أَنْ نَقْرَأَ عَلَى مَهْلٍ، وَنَتَفَكَّرَ.",
+    "say": "حَدِيقَةٌ هَادِئَهْ… هُنَا نَتَعَلَّمُ أَنْ نَقْرَأَ عَلَى مَهْلْ، وَنَتَفَكَّرْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.fountain.name": {
+    "text": "سِقَايَةُ الْعِلْمِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.fountain.intro": {
+    "text": "هُنَا يَسْقِينَا الشَّاعِرُ عِلْمَهُ، كَشَرْبَةِ مَاءٍ بَارِدٍ.",
+    "say": "هُنَا يَسْقِينَا الشَّاعِرُ عِلْمَهْ، كَشَرْبَةِ مَاءٍ بَارِدْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.market.name": {
+    "text": "سُوقُ الْمِيزَانِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.market.intro": {
+    "text": "فِي هَذِهِ السُّوقِ مَوَازِينُ… وَلَكِنَّنَا هُنَا نَزِنُ الْحُرُوفَ!",
+    "say": "فِي هَذِهِ السُّوقِ مَوَازِينْ… وَلَكِنَّنَا هُنَا نَزِنُ الْحُرُوفْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.workshop.name": {
+    "text": "وَرْشَةُ الْحَرَكَاتِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.workshop.intro": {
+    "text": "فِي هَذِهِ الْوَرْشَةِ نَتَعَلَّمُ مَتَى يَتَحَرَّكُ الْحَرْفُ، وَمَتَى يَسْكُنُ.",
+    "say": "فِي هَذِهِ الْوَرْشَةِ نَتَعَلَّمُ مَتَى يَتَحَرَّكُ الْحَرْفْ، وَمَتَى يَسْكُنْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.bridge.name": {
+    "text": "جِسْرُ الْمَدِّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.bridge.intro": {
+    "text": "ثَلَاثَةُ جُسُورٍ طَوِيلَةٍ، لِثَلَاثَةِ حُرُوفٍ نَمُدُّهَا: الْأَلِفِ وَالْوَاوِ وَالْيَاءِ.",
+    "say": "ثَلَاثَةُ جُسُورٍ طَوِيلَهْ، لِثَلَاثَةِ حُرُوفٍ نَمُدُّهَا: الْأَلِفِ وَالْوَاوِ وَالْيَاءْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.lane.name": {
+    "text": "دَرْبُ الْحُرُوفِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.lane.intro": {
+    "text": "فِي هَذَا الدَّرْبِ لِكُلِّ حَرْفٍ بَابٌ… وَلِكُلِّ بَابٍ سِرٌّ!",
+    "say": "فِي هَذَا الدَّرْبِ لِكُلِّ حَرْفٍ بَابْ… وَلِكُلِّ بَابٍ سِرّْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.cave.name": {
+    "text": "مَغَارَةُ الصَّدَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.cave.intro": {
+    "text": "فِي الْمَغَارَةِ سِتَّةُ أَبْوَابٍ، لِسِتَّةِ حُرُوفٍ تَخْرُجُ مِنَ الْحَلْقِ.",
+    "say": "فِي الْمَغَارَةِ سِتَّةُ أَبْوَابْ، لِسِتَّةِ حُرُوفٍ تَخْرُجُ مِنَ الْحَلْقْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "district.hill.name": {
+    "text": "تَلَّةُ الْفَجْرِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "district.hill.intro": {
+    "text": "اقْتَرَبَ الْفَجْرُ! الدُّرَرُ الْأَخِيرَةُ هُنَا، فَوْقَ التَّلَّةِ.",
+    "say": "اقْتَرَبَ الْفَجْرْ! الدُّرَرُ الْأَخِيرَةُ هُنَا، فَوْقَ التَّلَّهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "district.alley.name": {
+    "text": "زُقَاقُ الْفَوَانِيسِ",
+    "voice": false,
+    "aud": "child",
+    "note": "generic skin of the fallback builder (§3.3 rule 3)"
+  },
+  "district.alley.intro": {
+    "text": "زُقَاقٌ هَادِئٌ… وَفِيهِ دُرَرٌ تَنْتَظِرُنَا.",
+    "say": "زُقَاقٌ هَادِئْ… وَفِيهِ دُرَرٌ تَنْتَظِرُنَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2
+  },
+  "map.title": {
+    "text": "خَرِيطَةُ الْمَدِينَةِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "map.pearl": {
+    "text": "الدُّرَّةُ {n}",
+    "voice": false,
+    "aud": "child",
+    "note": "banner on the level's INTRO"
+  },
+  "map.pearl.locked": {
+    "text": "هَذِهِ الدُّرَّةُ لَمْ يَأْتِ دَوْرُهَا بَعْدُ.",
+    "say": "هَذِهِ الدُّرَّةُ لَمْ يَأْتِ دَوْرُهَا بَعْدْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "a locked pearl node is tapped (with the lock effect)"
+  },
+  "map.gate": {
+    "text": "التَّحَدِّي",
+    "voice": false,
+    "aud": "child",
+    "note": "label of an open gate node"
+  },
+  "map.gate.locked": {
+    "text": "يُفْتَحُ هَذَا الْبَابُ عِنْدَمَا نَجْمَعُ دُرَرَ الْحَيِّ كُلَّهَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "map.gate.done": {
+    "text": "صَارَ صَدِيقًا!",
+    "voice": false,
+    "aud": "child",
+    "note": "gate node after the correction"
+  },
+  "map.district.locked": {
+    "text": "نَصِلُ إِلَى هَذَا الْحَيِّ بَعْدَ الَّذِي قَبْلَهُ.",
+    "say": "نَصِلُ إِلَى هَذَا الْحَيِّ بَعْدَ الَّذِي قَبْلَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "map.district.done": {
+    "text": "اكْتَمَلَ الْحَيُّ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "map.district.range": {
+    "text": "الْأَبْيَاتُ: مِنْ {from} إِلَى {to}",
+    "voice": false,
+    "aud": "child",
+    "note": "district title card and header chip"
+  },
+  "map.district.section": {
+    "text": "تَعَالَوْا نَكْتَشِفْ: {titles}",
+    "voice": false,
+    "aud": "child",
+    "note": "subtitle = the data's section title(s)"
+  },
+  "map.district.section.sep": {
+    "text": " · ",
+    "voice": false,
+    "aud": "child",
+    "note": "joins several section titles"
+  },
+  "map.dusty": {
+    "text": "دُرَّةٌ عَلَيْهَا غُبَارٌ: نُلَمِّعُهَا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "map.today": {
+    "text": "أَيْنَ أَنَا؟",
+    "voice": false,
+    "aud": "child",
+    "note": "floating button: scroll to the current node"
+  },
+  "map.download": {
+    "text": "نُحَضِّرُ أَصْوَاتَ هَذَا الْحَيِّ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "map.downloaded": {
+    "text": "هَذَا الْحَيُّ جَاهِزٌ بِلَا شَبَكَةٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "step.listen": {
+    "text": "أَسْمَعُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "step.meaning": {
+    "text": "أَفْهَمُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "step.play": {
+    "text": "أَلْعَبُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "step.recite": {
+    "text": "أُسَمِّعُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "step.reward": {
+    "text": "دُرَّتِي!",
+    "voice": false,
+    "aud": "child"
+  },
+  "level.start.1": {
+    "text": "دُرَّةٌ جَدِيدَةٌ! هَيَّا لِنُعِيدَهَا إِلَى الْعِقْدِ.",
+    "say": "دُرَّةٌ جَدِيدَهْ! هَيَّا لِنُعِيدَهَا إِلَى الْعِقْدْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "level.start.2": {
+    "text": "انْظُرْ يَا مِشْمِشُ: دُرَّةٌ تَتَدَحْرَجُ نَحْوَنَا!",
+    "say": "انْظُرْ يَا مِشْمِشْ: دُرَّةٌ تَتَدَحْرَجُ نَحْوَنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "level.start.3": {
+    "text": "فَانُوسِي يَلْمَعُ… هُنَاكَ دُرَّةٌ قَرِيبَةٌ!",
+    "say": "فَانُوسِي يَلْمَعْ… هُنَاكَ دُرَّةٌ قَرِيبَهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "level.start.4": {
+    "text": "بَيْتٌ جَدِيدٌ، وَدُرَّةٌ جَدِيدَةٌ!",
+    "say": "بَيْتٌ جَدِيدْ، وَدُرَّةٌ جَدِيدَهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "level.start.5": {
+    "text": "نَسْمَعُ، ثُمَّ نَفْهَمُ، ثُمَّ نَلْعَبُ… وَالدُّرَّةُ لَنَا!",
+    "say": "نَسْمَعْ، ثُمَّ نَفْهَمْ، ثُمَّ نَلْعَبْ… وَالدُّرَّةُ لَنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "level.start.6": {
+    "text": "هَذِهِ الدُّرَّةُ تَنْتَظِرُنَا مُنْذُ أَلْفِ سَنَةٍ!",
+    "say": "هَذِهِ الدُّرَّةُ تَنْتَظِرُنَا مُنْذُ أَلْفِ سَنَهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "level.start.first": {
+    "text": "أَوَّلُ دُرَّةٍ فِي رِحْلَتِنَا! نَسْمَعُهَا مَعًا.",
+    "say": "أَوَّلُ دُرَّةٍ فِي رِحْلَتِنَا! نَسْمَعُهَا مَعَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "verse 1, first time only (instead of level.start.*)"
+  },
+  "level.replay": {
+    "text": "نُلَمِّعُ هَذِهِ الدُّرَّةَ مِنْ جَدِيدٍ!",
+    "say": "نُلَمِّعُ هَذِهِ الدُّرَّةَ مِنْ جَدِيدْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "replaying a learned verse"
+  },
+  "level.leave": {
+    "text": "نَخْرُجُ الْآنَ؟ تَبْقَى هَذِهِ الدُّرَّةُ مَفْتُوحَةً لِلْمَرَّةِ الْقَادِمَةِ.",
+    "voice": false,
+    "aud": "child",
+    "note": "confirm when leaving mid-level"
+  },
+  "level.leave.yes": {
+    "text": "أَخْرُجُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "level.leave.no": {
+    "text": "أَبْقَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "level.verse": {
+    "text": "الْبَيْتُ {n}",
+    "voice": false,
+    "aud": "child",
+    "note": "top bar / verse card label"
+  },
+  "listen.title": {
+    "text": "أَسْمَعُ الْبَيْتَ",
+    "voice": false,
+    "aud": "child",
+    "note": "goal banner"
+  },
+  "listen.how": {
+    "text": "نَسْمَعُ الْبَيْتَ بِصَوْتِ الْقَارِئِ… بِأُذُنَيْنِ مَفْتُوحَتَيْنِ!",
+    "say": "نَسْمَعُ الْبَيْتَ بِصَوْتِ الْقَارِئْ… بِأُذُنَيْنِ مَفْتُوحَتَيْنْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "listen.echo": {
+    "text": "وَالْآنَ نُرَدِّدُ: يَقْرَأُ الْقَارِئُ، ثُمَّ نَقُولُ مِثْلَهُ.",
+    "say": "وَالْآنَ نُرَدِّدْ: يَقْرَأُ الْقَارِئْ، ثُمَّ نَقُولُ مِثْلَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "before pass 2"
+  },
+  "listen.yourTurn": {
+    "text": "دَوْرِي!",
+    "voice": false,
+    "aud": "child",
+    "note": "caption of the silent echo window (never voiced: the window is for the child)"
+  },
+  "listen.again": {
+    "text": "أَسْمَعُ مَرَّةً أُخْرَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "listen.slow": {
+    "text": "بِبُطْءٍ",
+    "voice": false,
+    "aud": "child",
+    "note": "toggle: playbackRate 0.8"
+  },
+  "listen.reader": {
+    "text": "الْقَارِئُ: {reciter}",
+    "voice": false,
+    "aud": "child"
+  },
+  "listen.tip.shatr": {
+    "text": "الشَّطْرُ نِصْفُ الْبَيْتِ، وَلِكُلِّ بَيْتٍ شَطْرَانِ. نُرَدِّدُ كُلَّ شَطْرٍ وَحْدَهُ.",
+    "say": "الشَّطْرُ نِصْفُ الْبَيْتْ، وَلِكُلِّ بَيْتٍ شَطْرَانْ. نُرَدِّدُ كُلَّ شَطْرٍ وَحْدَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "first verse ever, before pass 2"
+  },
+  "listen.done": {
+    "text": "سَمِعْنَاهُ مَرَّتَيْنِ! وَالْآنَ نَفْهَمُهُ.",
+    "say": "سَمِعْنَاهُ مَرَّتَيْنْ! وَالْآنَ نَفْهَمُهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "meaning.title": {
+    "text": "مَعْنَى الْبَيْتِ",
+    "voice": false,
+    "aud": "child",
+    "note": "goal banner"
+  },
+  "meaning.intro.1": {
+    "text": "تَعَالَوْا نَفْهَمْ هَذَا الْبَيْتَ.",
+    "say": "تَعَالَوْا نَفْهَمْ هَذَا الْبَيْتْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "before the meaning clip; rotating"
+  },
+  "meaning.intro.2": {
+    "text": "هَذَا الْبَيْتُ يَقُولُ لَنَا شَيْئًا جَمِيلًا.",
+    "say": "هَذَا الْبَيْتُ يَقُولُ لَنَا شَيْئًا جَمِيلَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "meaning.intro.3": {
+    "text": "أَتَعْرِفُونَ مَاذَا يَقُولُ هَذَا الْبَيْتُ؟",
+    "say": "أَتَعْرِفُونَ مَاذَا يَقُولُ هَذَا الْبَيْتْ؟",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2
+  },
+  "meaning.hear": {
+    "text": "أَسْمَعُ الْمَعْنَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "meaning.gotIt": {
+    "text": "فَهِمْتُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "meaning.lesson": {
+    "text": "الْفَائِدَةُ:",
+    "voice": false,
+    "aud": "child",
+    "note": "label before meanings.lesson"
+  },
+  "meaning.words": {
+    "text": "كَلِمَاتٌ جَدِيدَةٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "label of the hard-word chips"
+  },
+  "meaning.more": {
+    "text": "كَلِمَاتٌ أُخْرَى",
+    "voice": false,
+    "aud": "child",
+    "note": "the «…» chip"
+  },
+  "meaning.word.tap": {
+    "text": "نَلْمِسُ الْكَلِمَةَ، فَيَظْهَرُ مَعْنَاهَا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "meaning.empty": {
+    "text": "مَعْنَى هَذَا الْبَيْتِ قَادِمٌ قَرِيبًا. نَسْمَعُهُ مَرَّةً أُخْرَى؟",
+    "say": "مَعْنَى هَذَا الْبَيْتِ قَادِمٌ قَرِيبَا. نَسْمَعُهُ مَرَّةً أُخْرَى؟",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "note": "meanings.json missing or partial"
+  },
+  "meaning.cite": {
+    "text": "المصادر:",
+    "voice": false,
+    "aud": "adult"
+  },
+  "meaning.adult": {
+    "text": "الشرح:",
+    "voice": false,
+    "aud": "adult",
+    "note": "grown-up mode: label of meanings.adult"
+  },
+  "meaning.showKid": {
+    "text": "المعنى المختصر",
+    "voice": false,
+    "aud": "adult",
+    "note": "grown-up mode toggle"
+  },
+  "meaning.showAdult": {
+    "text": "الشرح الأوسع",
+    "voice": false,
+    "aud": "adult",
+    "note": "grown-up mode toggle"
+  },
+  "lahn.what": {
+    "text": "اللَّحْنُ هُوَ الْخَطَأُ فِي الْقِرَاءَةِ.",
+    "say": "اللَّحْنُ هُوَ الْخَطَأُ فِي الْقِرَاءَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ],
+    "note": "after MEANING of a lahnTip verse, once per profile"
+  },
+  "lahn.kinds": {
+    "text": "وَهُوَ نَوْعَانِ: جَلِيٌّ يَعْرِفُهُ الْقُرَّاءُ وَغَيْرُهُمْ، وَخَفِيٌّ لَا يَعْرِفُهُ إِلَّا الْمُتْقِنُونَ.",
+    "say": "وَهُوَ نَوْعَانْ: جَلِيٌّ يَعْرِفُهُ الْقُرَّاءُ وَغَيْرُهُمْ، وَخَفِيٌّ لَا يَعْرِفُهُ إِلَّا الْمُتْقِنُونْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "lahn.fix": {
+    "text": "نَعْرِفُ اللَّحْنَ لِنَتْرُكَهُ، كَمَا نَعْرِفُ الْحُفْرَةَ لِنَقْفِزَ فَوْقَهَا!",
+    "say": "نَعْرِفُ اللَّحْنَ لِنَتْرُكَهْ، كَمَا نَعْرِفُ الْحُفْرَةَ لِنَقْفِزَ فَوْقَهَا!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "game.listenPick": {
+    "text": "أَسْمَعُ وَأَخْتَارُ",
+    "voice": false,
+    "aud": "child",
+    "note": "G1 goal banner"
+  },
+  "game.listenPick.how": {
+    "text": "نَسْمَعُ أَوَّلَ الْبَيْتِ، ثُمَّ نَخْتَارُ آخِرَهُ.",
+    "say": "نَسْمَعُ أَوَّلَ الْبَيْتْ، ثُمَّ نَخْتَارُ آخِرَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.listenPick.how.audio": {
+    "text": "نَلْمِسُ كُلَّ بِطَاقَةٍ لِنَسْمَعَهَا، ثُمَّ نَخْتَارُ.",
+    "say": "نَلْمِسُ كُلَّ بِطَاقَةٍ لِنَسْمَعَهَا، ثُمَّ نَخْتَارْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "rung 1: the cards are audio buttons"
+  },
+  "game.listenPick.how.rev": {
+    "text": "نَسْمَعُ آخِرَ الْبَيْتِ، ثُمَّ نَخْتَارُ أَوَّلَهُ.",
+    "say": "نَسْمَعُ آخِرَ الْبَيْتْ، ثُمَّ نَخْتَارُ أَوَّلَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "rung 3: reversed"
+  },
+  "game.listenPick.choose": {
+    "text": "أَخْتَارُهُ",
+    "voice": false,
+    "aud": "child",
+    "note": "the ✓ button on an audio card"
+  },
+  "game.orderHalves": {
+    "text": "أُرَتِّبُ الشَّطْرَيْنِ",
+    "voice": false,
+    "aud": "child",
+    "note": "G2 goal banner"
+  },
+  "game.orderHalves.how": {
+    "text": "شَطْرَانِ مُخْتَلِطَانِ! أَيُّهُمَا الْأَوَّلُ؟",
+    "say": "شَطْرَانِ مُخْتَلِطَانْ! أَيُّهُمَا الْأَوَّلْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.orderHalves.how.many": {
+    "text": "نُرَتِّبُ الْأَشْطُرَ كَمَا هِيَ فِي الْقَصِيدَةِ.",
+    "say": "نُرَتِّبُ الْأَشْطُرَ كَمَا هِيَ فِي الْقَصِيدَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "rungs 2–3 (4 or 6 cards)"
+  },
+  "game.orderHalves.many": {
+    "text": "أُرَتِّبُ أَنْصَافَ الْأَبْيَاتِ",
+    "voice": false,
+    "aud": "child",
+    "note": "G2 goal banner at rungs 2–3 (4 or 6 cards = two or three verses), instead of game.orderHalves"
+  },
+  "game.orderHalves.first": {
+    "text": "الْأَوَّلُ",
+    "voice": false,
+    "aud": "child",
+    "note": "slot 1"
+  },
+  "game.orderHalves.second": {
+    "text": "الثَّانِي",
+    "voice": false,
+    "aud": "child",
+    "note": "slot 2"
+  },
+  "game.missingWord": {
+    "text": "الْكَلِمَةُ الْهَارِبَةُ",
+    "voice": false,
+    "aud": "child",
+    "note": "G3 goal banner"
+  },
+  "game.missingWord.how": {
+    "text": "كَلِمَةٌ هَرَبَتْ مِنَ الْبَيْتِ! نُرْجِعُهَا إِلَى مَكَانِهَا.",
+    "say": "كَلِمَةٌ هَرَبَتْ مِنَ الْبَيْتْ! نُرْجِعُهَا إِلَى مَكَانِهَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.missingWord.how.many": {
+    "text": "كَلِمَاتٌ هَرَبَتْ! نُرْجِعُهَا وَاحِدَةً بَعْدَ وَاحِدَةٍ.",
+    "say": "كَلِمَاتٌ هَرَبَتْ! نُرْجِعُهَا وَاحِدَةً بَعْدَ وَاحِدَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.missingWord.mishmish": {
+    "text": "أَنَا؟ لَمْ آخُذْ شَيْئًا… حَسَنًا، أَخَذْتُ كَلِمَةً صَغِيرَةً!",
+    "say": "أَنَا؟ لَمْ آخُذْ شَيْئَا… حَسَنَا، أَخَذْتُ كَلِمَةً صَغِيرَهْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "first G3 only; paw prints on the blank"
+  },
+  "game.rhyme": {
+    "text": "صَيَّادُ الْقَافِيَةِ",
+    "voice": false,
+    "aud": "child",
+    "note": "G4 goal banner"
+  },
+  "game.rhyme.how": {
+    "text": "دُرَرٌ تَنْزِلُ! نَلْتَقِطُ الدُّرَّةَ الَّتِي تُكْمِلُ الْبَيْتَ.",
+    "say": "دُرَرٌ تَنْزِلْ! نَلْتَقِطُ الدُّرَّةَ الَّتِي تُكْمِلُ الْبَيْتْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.rhyme.tip": {
+    "text": "كُلُّ أَبْيَاتِ قَصِيدَتِنَا تَنْتَهِي بِرَاءٍ مَكْسُورَةٍ: «ـرِ»!",
+    "say": "كُلُّ أَبْيَاتِ قَصِيدَتِنَا تَنْتَهِي بِرَاءٍ مَكْسُورَهْ: رِي!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "before the radar (verse 1)"
+  },
+  "game.rhyme.wave2": {
+    "text": "وَالْآنَ دُرَّةٌ مِنْ بَيْتٍ سَابِقٍ!",
+    "say": "وَالْآنَ دُرَّةٌ مِنْ بَيْتٍ سَابِقْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "second wave: an earlier verse"
+  },
+  "game.rhyme.reduced": {
+    "text": "نَخْتَارُ الْكَلِمَةَ الَّتِي تُكْمِلُ الْبَيْتَ.",
+    "say": "نَخْتَارُ الْكَلِمَةَ الَّتِي تُكْمِلُ الْبَيْتْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "reduced motion: three still choices"
+  },
+  "game.rhyme.socket": {
+    "text": "…ـرِ",
+    "voice": false,
+    "aud": "child",
+    "note": "the empty socket at the end of the verse (tatweel on purpose)"
+  },
+  "game.rhyme.lanes": {
+    "text": "نَلْمِسُ الطَّرِيقَ، أَوْ نَسْحَبُ السَّلَّةَ.",
+    "voice": false,
+    "aud": "child",
+    "note": "hint under the lanes"
+  },
+  "game.rhymeRadar": {
+    "text": "رَادَارُ الْقَافِيَةِ",
+    "voice": false,
+    "aud": "child",
+    "note": "G4r goal banner (verse 1 only)"
+  },
+  "game.rhymeRadar.how": {
+    "text": "نَلْتَقِطُ كُلَّ كَلِمَةٍ تَنْتَهِي بِصَوْتِ «ـرِ»!",
+    "say": "نَلْتَقِطُ كُلَّ كَلِمَةٍ تَنْتَهِي بِصَوْتِ رِي!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "for the radar's five real words, prefer rhyme words whose last written letter is ر (skip endings in «ـرِي» such as a final possessive ya), so the rule «تَنْتَهِي بِصَوْتِ ـرِ» holds on screen (the word ends in a written ر)"
+  },
+  "game.rhymeRadar.done": {
+    "text": "سَهْلٌ! وَأَنَا أَيْضًا شَاعِرٌ: أَنَامُ عَلَى الْحَصِيرِ… وَأَحْلُمُ بِالْفَطِيرِ!",
+    "say": "سَهْلْ! وَأَنَا أَيْضًا شَاعِرْ: أَنَامُ عَلَى الْحَصِيرِي… وَأَحْلُمُ بِالْفَطِيرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "game.rhymeRadar.sardine": {
+    "text": "سَرْدِينٌ؟ لَيْسَ آخِرُهُ رَاءً… لَكِنَّهُ لَذِيذٌ!",
+    "say": "سَرْدِينْ؟ لَيْسَ آخِرُهُ رَاءَا… لَكِنَّهُ لَذِيذْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "the decoy decoy.1 (sardines) was tapped"
+  },
+  "game.rhymeRadar.miss": {
+    "text": "هَذِهِ لَيْسَ آخِرُهَا رَاءً… نَبْحَثُ عَنْ غَيْرِهَا!",
+    "say": "هَذِهِ لَيْسَ آخِرُهَا رَاءَا… نَبْحَثُ عَنْ غَيْرِهَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "another decoy was tapped"
+  },
+  "game.meaningMatch": {
+    "text": "الْبَيْتُ وَمَعْنَاهُ",
+    "voice": false,
+    "aud": "child",
+    "note": "G5 goal banner"
+  },
+  "game.meaningMatch.how": {
+    "text": "نَسْمَعُ الْمَعْنَى، ثُمَّ نَخْتَارُ بَيْتَهُ.",
+    "say": "نَسْمَعُ الْمَعْنَى، ثُمَّ نَخْتَارُ بَيْتَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "G5a"
+  },
+  "game.meaningMatch.how.b": {
+    "text": "نَقْرَأُ الْبَيْتَ، ثُمَّ نَخْتَارُ مَعْنَاهُ.",
+    "say": "نَقْرَأُ الْبَيْتْ، ثُمَّ نَخْتَارُ مَعْنَاهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "G5b"
+  },
+  "game.wordMatch": {
+    "text": "الْكَلِمَةُ وَمَعْنَاهَا",
+    "voice": false,
+    "aud": "child",
+    "note": "G5c goal banner"
+  },
+  "game.wordMatch.how": {
+    "text": "نَصِلُ كُلَّ كَلِمَةٍ بِمَعْنَاهَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.build": {
+    "text": "أَنْظِمُ الدُّرَرَ",
+    "voice": false,
+    "aud": "child",
+    "note": "G6 goal banner"
+  },
+  "game.build.how": {
+    "text": "نَنْظِمُ الْكَلِمَاتِ فِي الْخَيْطِ، كَلِمَةً بَعْدَ كَلِمَةٍ.",
+    "say": "نَنْظِمُ الْكَلِمَاتِ فِي الْخَيْطْ، كَلِمَةً بَعْدَ كَلِمَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.build.how.half": {
+    "text": "نَبْدَأُ بِالشَّطْرِ الْأَوَّلِ، ثُمَّ الثَّانِي.",
+    "say": "نَبْدَأُ بِالشَّطْرِ الْأَوَّلْ، ثُمَّ الثَّانِي.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "rungs 1–2"
+  },
+  "game.build.how.extra": {
+    "text": "انْتِبَاهٌ! هُنَا دُرَّتَانِ لَيْسَتَا مِنْ هَذَا الْبَيْتِ.",
+    "say": "انْتِبَاهْ! هُنَا دُرَّتَانِ لَيْسَتَا مِنْ هَذَا الْبَيْتْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "rung 4: two extra words"
+  },
+  "game.build.knot": {
+    "text": "عُقْدَةٌ! صَارَ الْبَيْتُ خَيْطًا مِنَ الدُّرَرِ.",
+    "say": "عُقْدَهْ! صَارَ الْبَيْتُ خَيْطًا مِنَ الدُّرَرْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "after the thread plays and ties its knot"
+  },
+  "game.recite": {
+    "text": "مِنْ حِفْظِي",
+    "voice": false,
+    "aud": "child",
+    "note": "G7 goal banner"
+  },
+  "game.recite.how": {
+    "text": "النَّصُّ مُخْتَبِئٌ! نَقُولُ الْبَيْتَ مِنْ حِفْظِنَا، بِصَوْتٍ مَسْمُوعٍ.",
+    "say": "النَّصُّ مُخْتَبِئْ! نَقُولُ الْبَيْتَ مِنْ حِفْظِنَا، بِصَوْتٍ مَسْمُوعْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.recite.firstWord": {
+    "text": "أَوَّلُ كَلِمَةٍ:",
+    "voice": false,
+    "aud": "child",
+    "note": "rung 1: followed by the verse's first word (data)"
+  },
+  "game.recite.reveal": {
+    "text": "أَرِنِي الْبَيْتَ",
+    "voice": false,
+    "aud": "child",
+    "note": "the child asks the game"
+  },
+  "game.recite.compare": {
+    "text": "نَسْمَعُ الْقَارِئَ… هَلْ قُلْنَاهُ مِثْلَهُ؟",
+    "say": "نَسْمَعُ الْقَارِئْ… هَلْ قُلْنَاهُ مِثْلَهْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "plays before the clip, never over it"
+  },
+  "game.recite.rate": {
+    "text": "كَيْفَ كَانَ تَسْمِيعِي؟",
+    "voice": false,
+    "aud": "child",
+    "note": "above the three faces"
+  },
+  "game.recite.again": {
+    "text": "مَرَّةً أُخْرَى! النَّصُّ اخْتَبَأَ مِنْ جَدِيدٍ.",
+    "say": "مَرَّةً أُخْرَى! النَّصُّ اخْتَبَأَ مِنْ جَدِيدْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "after rate.again"
+  },
+  "game.recite.listener": {
+    "text": "مَعِي مَنْ يَسْمَعُنِي",
+    "voice": false,
+    "aud": "child",
+    "note": "toggle on the RECITE screen"
+  },
+  "game.recite.listener.how": {
+    "text": "لمن يسمع: النص ظاهر هنا. المسوا الكلمة التي فاتت، ثم اختاروا النتيجة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "game.recite.record": {
+    "text": "أُسَجِّلُ صَوْتِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "game.recite.stop": {
+    "text": "أَتَوَقَّفُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "game.recite.myVoice": {
+    "text": "صَوْتِي",
+    "voice": false,
+    "aud": "child",
+    "note": "bar 1"
+  },
+  "game.recite.reciter": {
+    "text": "الْقَارِئُ",
+    "voice": false,
+    "aud": "child",
+    "note": "bar 2"
+  },
+  "game.recite.recordHow": {
+    "text": "نُسَجِّلُ صَوْتَنَا، ثُمَّ نَسْمَعُهُ بِجَانِبِ صَوْتِ الْقَارِئِ.",
+    "say": "نُسَجِّلُ صَوْتَنَا، ثُمَّ نَسْمَعُهُ بِجَانِبِ صَوْتِ الْقَارِئْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.recite.local": {
+    "text": "يبقى التسجيل في ذاكرة الجهاز وقت اللعب فقط، ويُمحى عند الخروج.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "game.recite.micDenied": {
+    "text": "الميكروفون غير متاح. يمكن السماح به من إعدادات المتصفح، أو التسميع بدونه.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "game.next": {
+    "text": "مَاذَا بَعْدَهُ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "G8 goal banner"
+  },
+  "game.next.how": {
+    "text": "هَذَا الْبَيْتُ السَّابِقُ. أَيُّ بَيْتٍ يَأْتِي بَعْدَهُ؟",
+    "say": "هَذَا الْبَيْتُ السَّابِقْ. أَيُّ بَيْتٍ يَأْتِي بَعْدَهْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "game.next.thread": {
+    "text": "خَيْطٌ يَجْمَعُ الْبَيْتَيْنِ!",
+    "say": "خَيْطٌ يَجْمَعُ الْبَيْتَيْنْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.chain": {
+    "text": "سِلْسِلَةُ الدُّرَرِ",
+    "voice": false,
+    "aud": "child",
+    "note": "G9 goal banner"
+  },
+  "game.chain.how": {
+    "text": "نُرَتِّبُ الْأَبْيَاتَ كَمَا جَاءَتْ فِي الْقَصِيدَةِ.",
+    "say": "نُرَتِّبُ الْأَبْيَاتَ كَمَا جَاءَتْ فِي الْقَصِيدَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.help.listen": {
+    "text": "نَسْمَعُ مَرَّةً أُخْرَى، بِهُدُوءٍ.",
+    "say": "نَسْمَعُ مَرَّةً أُخْرَى، بِهُدُوءْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "help lantern, first press"
+  },
+  "game.help.remove": {
+    "text": "فَانُوسِي أَبْعَدَ خِيَارًا. بَقِيَ الْقَلِيلُ!",
+    "say": "فَانُوسِي أَبْعَدَ خِيَارَا. بَقِيَ الْقَلِيلْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "help lantern, second press (options)"
+  },
+  "game.help.place": {
+    "text": "فَانُوسِي وَضَعَ الدُّرَّةَ التَّالِيَةَ.",
+    "say": "فَانُوسِي وَضَعَ الدُّرَّةَ التَّالِيَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "help lantern, second press (tiles)"
+  },
+  "game.caravan": {
+    "text": "قَافِلَةُ الْقُرَّاءِ",
+    "voice": false,
+    "aud": "child",
+    "note": "S1 goal banner"
+  },
+  "game.caravan.how": {
+    "text": "نُوصِلُ كُلَّ فَانُوسٍ إِلَى مَدِينَتِهِ.",
+    "say": "نُوصِلُ كُلَّ فَانُوسٍ إِلَى مَدِينَتِهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.caravan.kufa": {
+    "text": "الْكُوفَةُ تَسْتَقْبِلُ ثَلَاثَةَ فَوَانِيسَ!",
+    "say": "الْكُوفَةُ تَسْتَقْبِلُ ثَلَاثَةَ فَوَانِيسْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "game.caravan.done": {
+    "text": "سَبْعَةُ قُرَّاءٍ فِي خَمْسِ مُدُنٍ… مَا أَجْمَلَ الْقَافِلَةَ!",
+    "say": "سَبْعَةُ قُرَّاءٍ فِي خَمْسِ مُدُنْ… مَا أَجْمَلَ الْقَافِلَهْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "game.hats": {
+    "text": "قُبَّعَاتُ الْحُرُوفِ",
+    "voice": false,
+    "aud": "child",
+    "note": "S2 goal banner"
+  },
+  "game.hats.how": {
+    "text": "كَلِمَةٌ فَقَدَتْ قُبَّعَتَهَا! نَخْتَارُ لَهَا الْقُبَّعَةَ الصَّحِيحَةَ.",
+    "say": "كَلِمَةٌ فَقَدَتْ قُبَّعَتَهَا! نَخْتَارُ لَهَا الْقُبَّعَةَ الصَّحِيحَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.hats.fatha": {
+    "text": "فَتْحَةٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "shown with the mark on a dotted circle"
+  },
+  "game.hats.damma": {
+    "text": "ضَمَّةٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "game.hats.kasra": {
+    "text": "كَسْرَةٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "game.hats.sukun": {
+    "text": "سُكُونٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "game.stop": {
+    "text": "أَيْنَ نَقِفُ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "S3 goal banner [later]"
+  },
+  "game.stop.btn": {
+    "text": "قِفْ!",
+    "voice": false,
+    "aud": "child",
+    "note": "the child calls the caravan to stop"
+  },
+  "game.stop.how": {
+    "text": "الْقَافِلَةُ تَمْشِي مَعَ الْقَارِئِ… نَضْغَطُ «قِفْ!» فِي آخِرِ الشَّطْرِ الْأَوَّلِ.",
+    "say": "الْقَافِلَةُ تَمْشِي مَعَ الْقَارِئْ… نَضْغَطُ «قِفْ» فِي آخِرِ الشَّطْرِ الْأَوَّلْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.stop.early": {
+    "text": "قَبْلَ الْمَكَانِ بِقَلِيلٍ… مَرَّةً أُخْرَى!",
+    "say": "قَبْلَ الْمَكَانِ بِقَلِيلْ… مَرَّةً أُخْرَى!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.stop.late": {
+    "text": "بَعْدَ الْمَكَانِ بِقَلِيلٍ… مَرَّةً أُخْرَى!",
+    "say": "بَعْدَ الْمَكَانِ بِقَلِيلْ… مَرَّةً أُخْرَى!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.throat": {
+    "text": "حُرُوفُ الْحَلْقِ",
+    "voice": false,
+    "aud": "child",
+    "note": "S4 goal banner [later]"
+  },
+  "game.throat.how": {
+    "text": "نَلْتَقِطُ الْحُرُوفَ الَّتِي تَخْرُجُ مِنَ الْحَلْقِ.",
+    "say": "نَلْتَقِطُ الْحُرُوفَ الَّتِي تَخْرُجُ مِنَ الْحَلْقْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "game.doors": {
+    "text": "أَبْوَابُ الْحُرُوفِ",
+    "voice": false,
+    "aud": "child",
+    "note": "S5 goal banner [later]"
+  },
+  "game.doors.how": {
+    "text": "عَلَى الْبَابِ حَرْفٌ. أَيُّ كَلِمَةٍ فِي الْبَيْتِ فِيهَا هَذَا الْحَرْفُ؟",
+    "say": "عَلَى الْبَابِ حَرْفْ. أَيُّ كَلِمَةٍ فِي الْبَيْتِ فِيهَا هَذَا الْحَرْفْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.1": {
+    "text": "مَا شَاءَ اللَّهُ!",
+    "say": "مَا شَاءَ اللَّهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "praise rotates; voiced on every second right answer at most"
+  },
+  "fb.right.2": {
+    "text": "تَبَارَكَ اللَّهُ!",
+    "say": "تَبَارَكَ اللَّهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.3": {
+    "text": "بِالضَّبْطِ!",
+    "say": "بِالضَّبْطْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.4": {
+    "text": "هُوَ ذَاكَ!",
+    "say": "هُوَ ذَاكْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.5": {
+    "text": "أَصَبْنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.6": {
+    "text": "صَحِيحٌ!",
+    "say": "صَحِيحْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.7": {
+    "text": "جَوَابٌ يَلْمَعُ!",
+    "say": "جَوَابٌ يَلْمَعْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.right.8": {
+    "text": "يَا سَلَامُ!",
+    "say": "يَا سَلَامْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.9": {
+    "text": "دُرَّةٌ فِي مَكَانِهَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.10": {
+    "text": "هَكَذَا تُنْظَمُ الدُّرَرُ!",
+    "say": "هَكَذَا تُنْظَمُ الدُّرَرْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.11": {
+    "text": "فَانُوسِي يَبْتَسِمُ!",
+    "say": "فَانُوسِي يَبْتَسِمْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.12": {
+    "text": "أَحْسَنَّا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.13": {
+    "text": "تَمَامًا كَالْقَارِئِ!",
+    "say": "تَمَامًا كَالْقَارِئْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.right.14": {
+    "text": "مِئَةٌ فِي الْمِئَةِ!",
+    "say": "مِئَةٌ فِي الْمِئَهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.retry.1": {
+    "text": "قَرِيبٌ! نُجَرِّبُ مَرَّةً أُخْرَى.",
+    "say": "قَرِيبْ! نُجَرِّبُ مَرَّةً أُخْرَى.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "voiced at most once in three wrong taps"
+  },
+  "fb.retry.2": {
+    "text": "نَسْمَعُ مَرَّةً أُخْرَى، وَنَجِدُهَا مَعًا.",
+    "say": "نَسْمَعُ مَرَّةً أُخْرَى، وَنَجِدُهَا مَعَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.retry.3": {
+    "text": "لَا بَأْسَ! نُحَاوِلُ مَرَّةً ثَانِيَةً.",
+    "say": "لَا بَأْسْ! نُحَاوِلُ مَرَّةً ثَانِيَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "fb.retry.4": {
+    "text": "اقْتَرَبْنَا! مَرَّةً أُخْرَى.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.retry.5": {
+    "text": "هِيَ قَرِيبَةٌ… فَانُوسِي يَرَاهَا!",
+    "say": "هِيَ قَرِيبَهْ… فَانُوسِي يَرَاهَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.retry.6": {
+    "text": "نُفَكِّرُ قَلِيلًا… ثُمَّ نَخْتَارُ.",
+    "say": "نُفَكِّرُ قَلِيلَا… ثُمَّ نَخْتَارْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.hint.glow": {
+    "text": "الدُّرَّةُ الصَّحِيحَةُ تَلْمَعُ الْآنَ!",
+    "say": "الدُّرَّةُ الصَّحِيحَةُ تَلْمَعُ الْآنْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "after 2 wrong tries (3 on strong)"
+  },
+  "fb.keepGoing": {
+    "text": "كُلُّ مُحَاوَلَةٍ تُقَرِّبُنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "fb.cheer.1": {
+    "text": "هِييييهْ!",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "layer": [
+      "amin",
+      "mishmish",
+      "narrator",
+      "laqlaq"
+    ],
+    "note": "the cheer effect (§7.2): 3–4 takes layered with small offsets, 1.5 s; no clapping"
+  },
+  "fb.cheer.2": {
+    "text": "مَا شَاءَ اللَّهُ!",
+    "say": "مَا شَاءَ اللَّهْ!",
+    "voice": true,
+    "who": "narrator",
+    "aud": "child",
+    "p": 1,
+    "layer": [
+      "amin",
+      "narrator",
+      "laqlaq"
+    ],
+    "note": "second cheer variant"
+  },
+  "reward.pearl.1": {
+    "text": "دُرَّةٌ جَدِيدَةٌ فِي الْعِقْدِ!",
+    "say": "دُرَّةٌ جَدِيدَةٌ فِي الْعِقْدْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.pearl.2": {
+    "text": "رَجَعَتِ الدُّرَّةُ إِلَى مَكَانِهَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.pearl.3": {
+    "text": "الْعِقْدُ يَكْبُرُ… وَيَلْمَعُ!",
+    "say": "الْعِقْدُ يَكْبُرْ… وَيَلْمَعْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.pearl.4": {
+    "text": "هَذِهِ الدُّرَّةُ صَارَتْ فِي حِفْظِنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.pearl.5": {
+    "text": "فَانُوسِي صَارَ أَقْوَى!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "reward.pearl.6": {
+    "text": "وَاحِدَةٌ أُخْرَى! عِصَابَةُ اللَّحْنِ لَنْ تُصَدِّقَ!",
+    "say": "وَاحِدَةٌ أُخْرَى! عِصَابَةُ اللَّحْنِ لَنْ تُصَدِّقْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "reward.stars.1": {
+    "text": "نَجْمَةٌ! وَالدُّرَّةُ لَنَا. نُلَمِّعُهَا غَدًا.",
+    "say": "نَجْمَهْ! وَالدُّرَّةُ لَنَا. نُلَمِّعُهَا غَدَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.stars.2": {
+    "text": "نَجْمَتَانِ! وَالثَّالِثَةُ تَنْتَظِرُنَا فِي التَّلْمِيعِ.",
+    "say": "نَجْمَتَانْ! وَالثَّالِثَةُ تَنْتَظِرُنَا فِي التَّلْمِيعْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.stars.3": {
+    "text": "ثَلَاثُ نَجَمَاتٍ: دُرَّةٌ ذَهَبِيَّةٌ!",
+    "say": "ثَلَاثُ نَجَمَاتْ: دُرَّةٌ ذَهَبِيَّهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.newSticker": {
+    "text": "مُلْصَقٌ جَدِيدٌ فِي الْكِتَابِ!",
+    "say": "مُلْصَقٌ جَدِيدٌ فِي الْكِتَابْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "reward.gateOpen": {
+    "text": "جَمَعْنَا دُرَرَ الْحَيِّ! انْفَتَحَ الْبَابُ… وَهُنَاكَ مَنْ يَنْتَظِرُنَا!",
+    "say": "جَمَعْنَا دُرَرَ الْحَيّْ! انْفَتَحَ الْبَابْ… وَهُنَاكَ مَنْ يَنْتَظِرُنَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "after the last verse of a district: the challenge opens"
+  },
+  "joke.1": {
+    "text": "شِعْرِي الْجَدِيدُ: أَنَا شُجَاعٌ كَالنَّمِرِ… وَأَخَافُ مِنَ الْمَطَرِ!",
+    "say": "شِعْرِي الْجَدِيدْ: أَنَا شُجَاعٌ كَالنَّمِرِي… وَأَخَافُ مِنَ الْمَطَرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.2": {
+    "text": "أَنَا لَا أَنَامُ فِي الدَّرْسِ… أُغْمِضُ عَيْنَيَّ لِأُفَكِّرَ فَقَطْ.",
+    "say": "أَنَا لَا أَنَامُ فِي الدَّرْسْ… أُغْمِضُ عَيْنَيَّ لِأُفَكِّرَ فَقَطْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.3": {
+    "text": "حَفِظْتُ الْبَيْتَ كُلَّهُ! أَيُّ بَيْتٍ؟ لَا أَذْكُرُ.",
+    "say": "حَفِظْتُ الْبَيْتَ كُلَّهْ! أَيُّ بَيْتْ؟ لَا أَذْكُرْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.4": {
+    "text": "أَنَا أَيْضًا عِنْدِي عِقْدٌ: مِنْ عِظَامِ السَّمَكِ!",
+    "say": "أَنَا أَيْضًا عِنْدِي عِقْدْ: مِنْ عِظَامِ السَّمَكْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.5": {
+    "text": "لَا تَخَافُوا! أَنَا أَحْرُسُكُمْ… مِنْ دَاخِلِ السَّلَّةِ.",
+    "say": "لَا تَخَافُوا! أَنَا أَحْرُسُكُمْ… مِنْ دَاخِلِ السَّلَّهْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "first challenge entrance only (Mishmish in a basket)"
+  },
+  "joke.6": {
+    "text": "أَنَا أَشْجَعُ قِطٍّ فِي الْمَدِينَةِ… إِلَّا أَمَامَ الْفِئْرَانِ.",
+    "say": "أَنَا أَشْجَعُ قِطٍّ فِي الْمَدِينَهْ… إِلَّا أَمَامَ الْفِئْرَانْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.7": {
+    "text": "سَأَحْفَظُ الْقَصِيدَةَ كُلَّهَا… بَعْدَ قَيْلُولَةٍ صَغِيرَةٍ.",
+    "say": "سَأَحْفَظُ الْقَصِيدَةَ كُلَّهَا… بَعْدَ قَيْلُولَةٍ صَغِيرَهْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.8": {
+    "text": "هَلْ تُؤْكَلُ الدُّرَرُ؟ لَا؟ حَسَنًا… سَأَحْفَظُهَا إِذَنْ!",
+    "say": "هَلْ تُؤْكَلُ الدُّرَرْ؟ لَا؟ حَسَنَا… سَأَحْفَظُهَا إِذَنْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.9": {
+    "text": "أَعُدُّ أَخْطَاءَ الْعِصَابَةِ: وَاحِدٌ، اثْنَانِ، ثَلَاثَةٌ… نِمْتُ.",
+    "say": "أَعُدُّ أَخْطَاءَ الْعِصَابَهْ: وَاحِدْ، اثْنَانْ، ثَلَاثَهْ… نِمْتْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.10": {
+    "text": "لَقْلَقٌ يَقُولُ: الْحِفْظُ يُحِبُّ التَّكْرَارَ. وَأَنَا أَقُولُ: وَالنَّوْمُ أَيْضًا!",
+    "say": "لَقْلَقٌ يَقُولْ: الْحِفْظُ يُحِبُّ التَّكْرَارْ. وَأَنَا أَقُولْ: وَالنَّوْمُ أَيْضَا!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.11": {
+    "text": "انْتَبِهُوا! رَأَيْتُ لَحْنًا هُنَاكَ… آهٍ، إِنَّهُ ظِلِّي.",
+    "say": "انْتَبِهُوا! رَأَيْتُ لَحْنًا هُنَاكْ… آهْ، إِنَّهُ ظِلِّي.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.12": {
+    "text": "رَأَيْتُمْ؟ خَافَ مِنِّي… فَصَارَ لَطِيفًا!",
+    "say": "رَأَيْتُمْ؟ خَافَ مِنِّي… فَصَارَ لَطِيفَا!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "sometimes after a correction"
+  },
+  "joke.13": {
+    "text": "سَأَقُولُ شِعْرًا: مِيَاوْ… مِيَاوْ… مِيَاوِرِ!",
+    "say": "سَأَقُولُ شِعْرَا: مِيَاوْ… مِيَاوْ… مِيَاوِرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.14": {
+    "text": "إِحْدَى وَخَمْسُونَ دُرَّةً؟ أَنَا أَعُدُّ حَتَّى ثَلَاثٍ… ثُمَّ أَنَامُ!",
+    "say": "إِحْدَى وَخَمْسُونَ دُرَّهْ؟ أَنَا أَعُدُّ حَتَّى ثَلَاثْ… ثُمَّ أَنَامْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "countJoke verse (the verse that states the number of verses)"
+  },
+  "joke.15": {
+    "text": "لَوْ كَانَ السَّرْدِينُ قَصِيدَةً… لَحَفِظْتُهُ فِي دَقِيقَةٍ!",
+    "say": "لَوْ كَانَ السَّرْدِينُ قَصِيدَهْ… لَحَفِظْتُهُ فِي دَقِيقَهْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.16": {
+    "text": "يَنَامُ أَكْثَرَ مِنِّي؟ مُسْتَحِيلٌ! هَذَا عَمَلِي أَنَا!",
+    "say": "يَنَامُ أَكْثَرَ مِنِّي؟ مُسْتَحِيلْ! هَذَا عَمَلِي أَنَا!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "Kaslan's entrance"
+  },
+  "joke.17": {
+    "text": "أَنَا أَسْرَعُ مِنَ الْعُصْفُورِ… إِلَى صَحْنِ الْفَطُورِ!",
+    "say": "أَنَا أَسْرَعُ مِنَ الْعُصْفُورِي… إِلَى صَحْنِ الْفَطُورِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.18": {
+    "text": "أَسْهَرُ تَحْتَ الْقَمَرِ… لِأَحْرُسَ صَحْنَ السُّكَّرِ!",
+    "say": "أَسْهَرُ تَحْتَ الْقَمَرِي… لِأَحْرُسَ صَحْنَ السُّكَّرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.19": {
+    "text": "أَنَامُ فَوْقَ السَّرِيرِ… وَأَحْلُمُ بِالْعَصِيرِ!",
+    "say": "أَنَامُ فَوْقَ السَّرِيرِي… وَأَحْلُمُ بِالْعَصِيرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.20": {
+    "text": "شَارِبِي أَطْوَلُ مِنَ الْجَزَرِ… وَبَطْنِي أَكْبَرُ مِنَ الْبَقَرِ!",
+    "say": "شَارِبِي أَطْوَلُ مِنَ الْجَزَرِي… وَبَطْنِي أَكْبَرُ مِنَ الْبَقَرِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-rhyme"
+    ]
+  },
+  "joke.21": {
+    "text": "الْمَدُّ؟ سَهْلٌ: أَمُدُّ يَدِي… إِلَى صَحْنِ السَّرْدِينِ!",
+    "say": "الْمَدّْ؟ سَهْلْ: أَمُدُّ يَدِي… إِلَى صَحْنِ السَّرْدِينْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-term"
+    ],
+    "note": "in or after the bridge district; always followed by joke.21.real"
+  },
+  "joke.21.real": {
+    "text": "الْمَدُّ فِي الْقِرَاءَةِ يَا مِشْمِشُ: أَنْ نُطِيلَ الصَّوْتَ بِحَرْفِ الْمَدِّ.",
+    "say": "الْمَدُّ فِي الْقِرَاءَةِ يَا مِشْمِشْ: أَنْ نُطِيلَ الصَّوْتَ بِحَرْفِ الْمَدّْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-term",
+      "fact-verify"
+    ]
+  },
+  "joke.22": {
+    "text": "الْإِخْفَاءُ؟ أَنَا بَطَلُهُ: أَخْتَبِئُ تَحْتَ السَّرِيرِ كُلَّ يَوْمٍ!",
+    "say": "الْإِخْفَاءْ؟ أَنَا بَطَلُهْ: أَخْتَبِئُ تَحْتَ السَّرِيرِ كُلَّ يَوْمْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-term"
+    ],
+    "note": "in or after the workshop district; always followed by joke.22.real"
+  },
+  "joke.22.real": {
+    "text": "الْإِخْفَاءُ يَا مِشْمِشُ: نُخْفِي النُّونَ السَّاكِنَةَ كَأَنَّهَا خَلْفَ سِتَارَةٍ، وَتَبْقَى غُنَّتُهَا.",
+    "say": "الْإِخْفَاءُ يَا مِشْمِشْ: نُخْفِي النُّونَ السَّاكِنَةَ كَأَنَّهَا خَلْفَ سِتَارَهْ، وَتَبْقَى غُنَّتُهَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "joke-term",
+      "fact-verify"
+    ]
+  },
+  "joke.23": {
+    "text": "فَتَّشْتُ عَنِ السَّرْدِينَةِ سَاعَةً… وَكَانَتْ فِي فَمِي!",
+    "say": "فَتَّشْتُ عَنِ السَّرْدِينَةِ سَاعَهْ… وَكَانَتْ فِي فَمِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "joke.24": {
+    "text": "أَنَا لَا أَخَافُ مِنَ الظَّلَامِ… أَنَا فَقَطْ أَمْشِي قُرْبَ الْفَانُوسِ.",
+    "say": "أَنَا لَا أَخَافُ مِنَ الظَّلَامْ… أَنَا فَقَطْ أَمْشِي قُرْبَ الْفَانُوسْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.1": {
+    "text": "مِيَاوْ؟",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "single taps on the sleeping Mishmish (home)"
+  },
+  "mishmish.tap.2": {
+    "text": "أَنَا نَائِمٌ… لَا تُوقِظُونِي.",
+    "say": "أَنَا نَائِمْ… لَا تُوقِظُونِي.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.3": {
+    "text": "هَلْ مَعَكُمْ سَرْدِينٌ؟",
+    "say": "هَلْ مَعَكُمْ سَرْدِينْ؟",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.4": {
+    "text": "هَذَا يُدَغْدِغُنِي!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.5": {
+    "text": "أَنَا أَحْرُسُ الْعِقْدَ… وَعَيْنَايَ مُغْمَضَتَانِ.",
+    "say": "أَنَا أَحْرُسُ الْعِقْدْ… وَعَيْنَايَ مُغْمَضَتَانْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.6": {
+    "text": "مِيَاوْ! أَقْصِدُ: السَّلَامُ عَلَيْكُمْ!",
+    "say": "مِيَاوْ! أَقْصِدْ: السَّلَامُ عَلَيْكُمْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.7": {
+    "text": "خَمْسَ دَقَائِقَ أُخْرَى فَقَطْ…",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "mishmish.tap.8": {
+    "text": "لَمْسَةٌ أُخْرَى… وَتَحْدُثُ مُفَاجَأَةٌ!",
+    "say": "لَمْسَةٌ أُخْرَى… وَتَحْدُثُ مُفَاجَأَهْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "the ninth tap"
+  },
+  "mishmish.tap.ten": {
+    "text": "كُلُّ هَذِهِ اللَّمَسَاتِ؟ هَذِهِ سَرْدِينَتِي الذَّهَبِيَّةُ… هَدِيَّةٌ لَكُمْ!",
+    "say": "كُلُّ هَذِهِ اللَّمَسَاتْ؟ هَذِهِ سَرْدِينَتِي الذَّهَبِيَّهْ… هَدِيَّةٌ لَكُمْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "the sardine sticker"
+  },
+  "mishmish.idle.1": {
+    "text": "هَلْ نِمْتُمْ أَنْتُمْ أَيْضًا؟",
+    "say": "هَلْ نِمْتُمْ أَنْتُمْ أَيْضَا؟",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "after a long idle on a play screen"
+  },
+  "mishmish.idle.2": {
+    "text": "أَنَا جَائِعٌ… مَتَى وَقْتُ السَّرْدِينِ؟",
+    "say": "أَنَا جَائِعْ… مَتَى وَقْتُ السَّرْدِينْ؟",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "rate.good": {
+    "text": "حَفِظْتُهُ!",
+    "voice": false,
+    "aud": "child",
+    "note": "face 😀 (3)"
+  },
+  "rate.almost": {
+    "text": "تَقْرِيبًا",
+    "voice": false,
+    "aud": "child",
+    "note": "face 🙂 (2)"
+  },
+  "rate.again": {
+    "text": "أُحَاوِلُ مَرَّةً أُخْرَى",
+    "voice": false,
+    "aud": "child",
+    "note": "↺: replays the clip, hides the text, one more try"
+  },
+  "listener.ok": {
+    "text": "تسميع سليم",
+    "voice": false,
+    "aud": "adult",
+    "note": "the grown-up listening"
+  },
+  "listener.again": {
+    "text": "مرة أخرى",
+    "voice": false,
+    "aud": "adult"
+  },
+  "listener.mark": {
+    "text": "المسوا الكلمة التي فاتت، لتعود في الألعاب أولًا.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "boss.meter": {
+    "text": "قَطَرَاتُ الْحِبْرِ",
+    "voice": false,
+    "aud": "child",
+    "note": "label of the ink meter"
+  },
+  "boss.intro.amin": {
+    "text": "لَا نَخَافُ مِنْهُ! كُلُّ جَوَابٍ صَحِيحٍ يَغْسِلُ قَطْرَةَ حِبْرٍ.",
+    "say": "لَا نَخَافُ مِنْهْ! كُلُّ جَوَابٍ صَحِيحٍ يَغْسِلُ قَطْرَةَ حِبْرْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "every challenge entrance, after the member's intro"
+  },
+  "boss.rule": {
+    "text": "تَذَكَّرُوا: نَحْنُ لَا نَهْزِمُ أَحَدًا… نُصَحِّحُ الْخَطَأَ، فَيَصِيرُ صَدِيقًا.",
+    "say": "تَذَكَّرُوا: نَحْنُ لَا نَهْزِمُ أَحَدَا… نُصَحِّحُ الْخَطَأْ، فَيَصِيرُ صَدِيقَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "first challenge only"
+  },
+  "boss.final": {
+    "text": "آخِرُ قَطْرَةٍ! نَنْظِمُ هَذَا الْبَيْتَ كُلَّهُ.",
+    "say": "آخِرُ قَطْرَهْ! نَنْظِمُ هَذَا الْبَيْتَ كُلَّهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "announces the last question (G6 rung 3 on bossVerse)"
+  },
+  "boss.win": {
+    "text": "صَارَ صَدِيقَنَا! وَفَانُوسُ الْحَيِّ أَضَاءَ.",
+    "say": "صَارَ صَدِيقَنَا! وَفَانُوسُ الْحَيِّ أَضَاءْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.next": {
+    "text": "إِلَى الْحَيِّ التَّالِي!",
+    "voice": false,
+    "aud": "child",
+    "note": "banner after the correction"
+  },
+  "boss.again": {
+    "text": "هَذَا السُّؤَالُ سَيَعُودُ بَعْدَ قَلِيلٍ… وَسَنَعْرِفُهُ!",
+    "say": "هَذَا السُّؤَالُ سَيَعُودُ بَعْدَ قَلِيلْ… وَسَنَعْرِفُهْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "a wrong answer in a challenge (at most once per challenge)"
+  },
+  "boss.cumulative": {
+    "text": "سُؤَالٌ مِنْ كُلِّ حَيٍّ زُرْنَاهُ… نَتَذَكَّرُ الرِّحْلَةَ كُلَّهَا!",
+    "say": "سُؤَالٌ مِنْ كُلِّ حَيٍّ زُرْنَاهْ… نَتَذَكَّرُ الرِّحْلَةَ كُلَّهَا!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "the final challenge (nasyan), after boss.intro.amin"
+  },
+  "boss.thanks": {
+    "text": "شُكْرًا لَكُمْ! صِرْنَا كُلُّنَا أَصْدِقَاءَ الْقِرَاءَةِ الْحَسَنَةِ!",
+    "say": "شُكْرًا لَكُمْ! صِرْنَا كُلُّنَا أَصْدِقَاءَ الْقِرَاءَةِ الْحَسَنَهْ!",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 1,
+    "layer": [
+      "manfoukh",
+      "khallat",
+      "ajoul",
+      "kaslan",
+      "mattat",
+      "qallab",
+      "fuwaq",
+      "duhrouj",
+      "khafiyy",
+      "nasyan"
+    ],
+    "note": "finale: the corrected gang together, as the district lanterns light"
+  },
+  "boss.quiz.title": {
+    "text": "مُسَابَقَةُ مِشْمِشٍ",
+    "voice": false,
+    "aud": "child",
+    "note": "fallback alley skin: Mishmish's quiz instead of a gang member"
+  },
+  "boss.quiz.intro": {
+    "text": "مُسَابَقَةٌ! كُلُّ جَوَابٍ صَحِيحٍ بِسَرْدِينَةٍ… أَقْصِدُ: بِنَجْمَةٍ!",
+    "say": "مُسَابَقَهْ! كُلُّ جَوَابٍ صَحِيحٍ بِسَرْدِينَهْ… أَقْصِدْ: بِنَجْمَهْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.quiz.right": {
+    "text": "صَحِيحٌ! سَرْدِينَةٌ لَكُمْ… لَا، لِي أَنَا!",
+    "say": "صَحِيحْ! سَرْدِينَةٌ لَكُمْ… لَا، لِي أَنَا!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.quiz.wrong": {
+    "text": "حَتَّى أَنَا لَا أَعْرِفُ هَذَا… نُجَرِّبُ مَرَّةً أُخْرَى!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.quiz.end": {
+    "text": "انْتَهَتِ الْمُسَابَقَةُ! أَنْتُمْ أَذْكَى مِنْ قِطٍّ جَائِعٍ.",
+    "say": "انْتَهَتِ الْمُسَابَقَهْ! أَنْتُمْ أَذْكَى مِنْ قِطٍّ جَائِعْ.",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.oil": {
+    "text": "زَيْتُ الْفَانُوسِ",
+    "voice": false,
+    "aud": "child",
+    "note": "challenge mode [later]: the 25-second oil bar"
+  },
+  "boss.slip": {
+    "text": "هَرَبَ مِنَّا! نَبْدَأُ التَّحَدِّيَ مِنْ جَدِيدٍ.",
+    "say": "هَرَبَ مِنَّا! نَبْدَأُ التَّحَدِّيَ مِنْ جَدِيدْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "challenge mode [later]: no lantern left, the challenge restarts at once"
+  },
+  "boss.crown": {
+    "text": "تَاجُ التَّحَدِّي",
+    "voice": false,
+    "aud": "child",
+    "note": "challenge mode [later]: the small crown on a member's sticker"
+  },
+  "boss.manfoukh.name": {
+    "text": "مَنْفُوخٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.manfoukh.title": {
+    "text": "تَحَدِّي مَنْفُوخٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.manfoukh.tagline": {
+    "text": "يَنْتَفِخُ كُلَّمَا تَفَاخَرَ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.manfoukh.intro": {
+    "text": "أَنَا مَنْفُوخٌ الْعَظِيمُ! أَعْرِفُ أَكْثَرَ مِنَ الْجَمِيعِ… انْظُرُوا كَيْفَ أَكْبُرُ!",
+    "say": "أَنَا مَنْفُوخٌ الْعَظِيمْ! أَعْرِفُ أَكْثَرَ مِنَ الْجَمِيعْ… انْظُرُوا كَيْفَ أَكْبُرْ!",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.manfoukh.gag": {
+    "text": "أَنَا أَعْظَمُ مَنْفُوخٍ فِي التَّارِيخِ… وَأَكْبَرُ مِنَ الْبَالُونِ!",
+    "say": "أَنَا أَعْظَمُ مَنْفُوخٍ فِي التَّارِيخْ… وَأَكْبَرُ مِنَ الْبَالُونْ!",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.manfoukh.right.1": {
+    "text": "فِشْشْشْ… هَوَائِي يَخْرُجُ!",
+    "say": "فِشْشْشْ… هَوَائِي يَخْرُجْ!",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.manfoukh.right.2": {
+    "text": "كَيْفَ عَرَفْتُمْ هَذَا؟ صِرْتُ أَصْغَرَ قَلِيلًا…",
+    "say": "كَيْفَ عَرَفْتُمْ هَذَا؟ صِرْتُ أَصْغَرَ قَلِيلَا…",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.manfoukh.wrong": {
+    "text": "انْتَفَخْتُ قَلِيلًا! أَنَا الْآنَ أَكْبَرُ مِنَ الْغَيْمَةِ!",
+    "say": "انْتَفَخْتُ قَلِيلَا! أَنَا الْآنَ أَكْبَرُ مِنَ الْغَيْمَهْ!",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.manfoukh.fixed": {
+    "text": "آهٍ… التَّفَاخُرُ نَفَخَنِي. مِنَ الْيَوْمِ، أَتَعَلَّمُ بِتَوَاضُعٍ.",
+    "say": "آهْ… التَّفَاخُرُ نَفَخَنِي. مِنَ الْيَوْمْ، أَتَعَلَّمُ بِتَوَاضُعْ.",
+    "voice": true,
+    "who": "manfoukh",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.manfoukh.lesson": {
+    "text": "نَتَعَلَّمُ لِنَعْمَلَ وَنَنْفَعَ، لَا لِنَتَفَاخَرَ عَلَى النَّاسِ.",
+    "say": "نَتَعَلَّمُ لِنَعْمَلَ وَنَنْفَعْ، لَا لِنَتَفَاخَرَ عَلَى النَّاسْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.khallat.name": {
+    "text": "خَلَّاطٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khallat.title": {
+    "text": "تَحَدِّي خَلَّاطٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khallat.tagline": {
+    "text": "يَخْلِطُ كُلَّ شَيْءٍ بِكُلِّ شَيْءٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khallat.intro": {
+    "text": "أَنَا خَلَّاطٌ… أَوْ طَلَّاخٌ؟ أَخْلِطُ الْأَسْمَاءَ وَالْمُدُنَ… وَحِذَائِي عَلَى رَأْسِي!",
+    "say": "أَنَا خَلَّاطْ… أَوْ طَلَّاخْ؟ أَخْلِطُ الْأَسْمَاءَ وَالْمُدُنْ… وَحِذَائِي عَلَى رَأْسِي!",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khallat.gag": {
+    "text": "قُبَّعَتِي فِي قَدَمِي، وَحِذَائِي عَلَى رَأْسِي… أَنِيقٌ، أَلَيْسَ كَذَلِكَ؟",
+    "say": "قُبَّعَتِي فِي قَدَمِي، وَحِذَائِي عَلَى رَأْسِي… أَنِيقْ، أَلَيْسَ كَذَلِكْ؟",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.khallat.right.1": {
+    "text": "أُوهْ! رَجَعَ شَيْءٌ إِلَى مَكَانِهِ!",
+    "say": "أُوهْ! رَجَعَ شَيْءٌ إِلَى مَكَانِهْ!",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khallat.right.2": {
+    "text": "كَيْفَ تُفَرِّقُونَ بَيْنَهَا؟ أَنَا أَخْلِطُهَا دَائِمًا!",
+    "say": "كَيْفَ تُفَرِّقُونَ بَيْنَهَا؟ أَنَا أَخْلِطُهَا دَائِمَا!",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.khallat.wrong": {
+    "text": "يَاهْ! أُحِبُّ هَذِهِ الْفَوْضَى!",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khallat.fixed": {
+    "text": "الْآنَ عَرَفْتُ: لِكُلِّ قَارِئٍ اسْمُهُ، وَلِكُلِّ اسْمٍ مَدِينَتُهُ.",
+    "say": "الْآنَ عَرَفْتْ: لِكُلِّ قَارِئٍ اسْمُهْ، وَلِكُلِّ اسْمٍ مَدِينَتُهْ.",
+    "voice": true,
+    "who": "khallat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khallat.lesson": {
+    "text": "الْقُرَّاءُ السَّبْعَةُ عَلَّمُوا النَّاسَ الْقُرْآنَ، فَنَشْكُرُهُمْ وَنَدْعُو لَهُمْ.",
+    "say": "الْقُرَّاءُ السَّبْعَةُ عَلَّمُوا النَّاسَ الْقُرْآنْ، فَنَشْكُرُهُمْ وَنَدْعُو لَهُمْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.ajoul.name": {
+    "text": "عَجُولٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.ajoul.title": {
+    "text": "تَحَدِّي عَجُولٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.ajoul.tagline": {
+    "text": "أَسْرَعُ مِنَ الرِّيحِ… وَيَأْكُلُ الْحُرُوفَ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.ajoul.intro": {
+    "text": "أَنَا عَجُـ… عَجُـ… لَا وَقْتَ عِنْدِي لِأُكْمِلَ اسْمِي!",
+    "say": "أَنَا عَجُو… عَجُو… لَا وَقْتَ عِنْدِي لِأُكْمِلَ اسْمِي!",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 1,
+    "note": "the cut name is drawn with a tatweel on purpose"
+  },
+  "boss.ajoul.gag": {
+    "text": "زُوووومْ! قَرَأْتُ قِصَّةً كَامِلَةً فِي ثَانِيَةٍ… وَأَكَلْتُ نِصْفَ حُرُوفِهَا!",
+    "say": "زُوووومْ! قَرَأْتُ قِصَّةً كَامِلَةً فِي ثَانِيَهْ… وَأَكَلْتُ نِصْفَ حُرُوفِهَا!",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.ajoul.right.1": {
+    "text": "مَهْلًا، مَهْلًا! لِمَاذَا تَقْرَؤُونَ بِهُدُوءٍ هَكَذَا؟",
+    "say": "مَهْلَا، مَهْلَا! لِمَاذَا تَقْرَؤُونَ بِهُدُوءٍ هَكَذَا؟",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.ajoul.right.2": {
+    "text": "أَبْطَأْتُ قَلِيلًا… فَسَمِعْتُ الْحُرُوفَ كُلَّهَا! غَرِيبٌ!",
+    "say": "أَبْطَأْتُ قَلِيلَا… فَسَمِعْتُ الْحُرُوفَ كُلَّهَا! غَرِيبْ!",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.ajoul.wrong": {
+    "text": "أُسْرِعُ! أُسْرِعُ!… أَيْنَ ذَهَبَ ذَيْلِي؟",
+    "say": "أُسْرِعْ! أُسْرِعْ!… أَيْنَ ذَهَبَ ذَيْلِي؟",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.ajoul.fixed": {
+    "text": "جَلَسْتُ أَشْرَبُ الشَّايَ بِالنَّعْنَاعِ… الْقِرَاءَةُ عَلَى مَهْلٍ أَحْلَى!",
+    "say": "جَلَسْتُ أَشْرَبُ الشَّايَ بِالنَّعْنَاعْ… الْقِرَاءَةُ عَلَى مَهْلٍ أَحْلَى!",
+    "voice": true,
+    "who": "ajoul",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.ajoul.lesson": {
+    "text": "نُعْطِي كُلَّ حَرْفٍ حَقَّهُ، فِي الْقِرَاءَةِ الْبَطِيئَةِ وَالسَّرِيعَةِ.",
+    "say": "نُعْطِي كُلَّ حَرْفٍ حَقَّهْ، فِي الْقِرَاءَةِ الْبَطِيئَةِ وَالسَّرِيعَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.kaslan.name": {
+    "text": "كَسْلَانُ",
+    "voice": false,
+    "aud": "child",
+    "note": "diptote"
+  },
+  "boss.kaslan.title": {
+    "text": "تَحَدِّي كَسْلَانَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.kaslan.tagline": {
+    "text": "شِعَارُهُ: غَدًا… غَدًا… بَعْدَ غَدٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.kaslan.intro": {
+    "text": "أَنَا كَسْلَـ… آآآهْ… أُكْمِلُ اسْمِي غَدًا.",
+    "say": "أَنَا كَسْلَا… آآآهْ… أُكْمِلُ اسْمِي غَدَا.",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 1,
+    "note": "a yawn cuts his name"
+  },
+  "boss.kaslan.gag": {
+    "text": "وِسَادَتِي تُنَادِينِي… سَأُرَاجِعُ بَعْدَ قَيْلُولَةٍ… أَوِ اثْنَتَيْنِ.",
+    "say": "وِسَادَتِي تُنَادِينِي… سَأُرَاجِعُ بَعْدَ قَيْلُولَهْ… أَوِ اثْنَتَيْنْ.",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.kaslan.right.1": {
+    "text": "مَاذَا؟ تُرَاجِعُونَ الْيَوْمَ، لَا غَدًا؟",
+    "say": "مَاذَا؟ تُرَاجِعُونَ الْيَوْمْ، لَا غَدَا؟",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.kaslan.right.2": {
+    "text": "أُوهْ… بَدَأْتُ أَسْتَيْقِظُ قَلِيلًا.",
+    "say": "أُوهْ… بَدَأْتُ أَسْتَيْقِظُ قَلِيلَا.",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.kaslan.wrong": {
+    "text": "آآآهْ… فُرْصَةٌ لِقَيْلُولَةٍ صَغِيرَةٍ!",
+    "say": "آآآهْ… فُرْصَةٌ لِقَيْلُولَةٍ صَغِيرَهْ!",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.kaslan.fixed": {
+    "text": "مِنَ الْيَوْمِ: قَلِيلٌ كُلَّ يَوْمٍ، وَلَا أَقُولُ «غَدًا»!",
+    "say": "مِنَ الْيَوْمْ: قَلِيلٌ كُلَّ يَوْمْ، وَلَا أَقُولُ «غَدَا»!",
+    "voice": true,
+    "who": "kaslan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.kaslan.lesson": {
+    "text": "الْمُرَاجَعَةُ كُلَّ يَوْمٍ تَجْعَلُ الْقِرَاءَةَ سَهْلَةً عَلَى اللِّسَانِ.",
+    "say": "الْمُرَاجَعَةُ كُلَّ يَوْمٍ تَجْعَلُ الْقِرَاءَةَ سَهْلَةً عَلَى اللِّسَانْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.mattat.name": {
+    "text": "مَطَّاطٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.mattat.title": {
+    "text": "تَحَدِّي مَطَّاطٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.mattat.tagline": {
+    "text": "يَمُدُّ كُلَّ شَيْءٍ… أَكْثَرَ مِنَ اللَّازِمِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.mattat.intro": {
+    "text": "أَنَا مَطَّااااااطٌ! أَزِيدُ وَأَزِيدُ… حَتَّى أَخْرُجَ مِنَ الشَّاشَةِ!",
+    "say": "أَنَا مَطَّااااااطْ! أَزِيدُ وَأَزِيدْ… حَتَّى أَخْرُجَ مِنَ الشَّاشَهْ!",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 1,
+    "note": "he over-stretches only his own name"
+  },
+  "boss.mattat.gag": {
+    "text": "انْظُرُوا: يَدِي هُنَا… وَرِجْلِي فِي الْحَيِّ الْمُجَاوِرِ!",
+    "say": "انْظُرُوا: يَدِي هُنَا… وَرِجْلِي فِي الْحَيِّ الْمُجَاوِرْ!",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.mattat.right.1": {
+    "text": "أُوهْ! رَجَعْتُ قَلِيلًا إِلَى حَجْمِي!",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.mattat.right.2": {
+    "text": "لَا زِيَادَةَ وَلَا نُقْصَانَ؟ هَذَا… مُرِيحٌ!",
+    "say": "لَا زِيَادَةَ وَلَا نُقْصَانْ؟ هَذَا… مُرِيحْ!",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.mattat.wrong": {
+    "text": "يِيييهْ! تَمَدَّدْتُ أَكْثَرَ… مِثْلَ الْعِلْكَةِ!",
+    "say": "يِيييهْ! تَمَدَّدْتُ أَكْثَرْ… مِثْلَ الْعِلْكَهْ!",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.mattat.fixed": {
+    "text": "الْآنَ مَعِي مِيزَانٌ: لَا أَزِيدُ وَلَا أَنْقُصُ.",
+    "say": "الْآنَ مَعِي مِيزَانْ: لَا أَزِيدُ وَلَا أَنْقُصْ.",
+    "voice": true,
+    "who": "mattat",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.mattat.lesson": {
+    "text": "نَزِنُ كُلَّ حَرْفٍ: لَا نَزِيدُ عَلَى حَقِّهِ، وَلَا نَنْقُصُ مِنْهُ.",
+    "say": "نَزِنُ كُلَّ حَرْفْ: لَا نَزِيدُ عَلَى حَقِّهْ، وَلَا نَنْقُصُ مِنْهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.qallab.name": {
+    "text": "قَلَّابٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.qallab.title": {
+    "text": "تَحَدِّي قَلَّابٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.qallab.tagline": {
+    "text": "يَقْلِبُ الْحَرَكَاتِ… وَيَمْشِي عَلَى يَدَيْهِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.qallab.intro": {
+    "text": "أَنَا قُلُّوبٌ… أَوْ قِلِّيبٌ؟ أَجْعَلُ الْفَتْحَةَ ضَمَّةً، وَالضَّمَّةَ كَسْرَةً!",
+    "say": "أَنَا قُلُّوبْ… أَوْ قِلِّيبْ؟ أَجْعَلُ الْفَتْحَةَ ضَمَّهْ، وَالضَّمَّةَ كَسْرَهْ!",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 1,
+    "note": "he gets the vowels of his own name wrong (only his name)"
+  },
+  "boss.qallab.intro.amin": {
+    "text": "اسْمُكَ «قَلَّابٌ» يَا قَلَّابُ… بِفَتْحِ الْقَافِ!",
+    "say": "اسْمُكَ «قَلَّابٌ» يَا قَلَّابْ… بِفَتْحِ الْقَافْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "Amin speaks to Qallab"
+  },
+  "boss.qallab.gag": {
+    "text": "الدُّنْيَا مَقْلُوبَةٌ… أَمْ أَنَا الْمَقْلُوبُ؟",
+    "say": "الدُّنْيَا مَقْلُوبَهْ… أَمْ أَنَا الْمَقْلُوبْ؟",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.qallab.right.1": {
+    "text": "أُوبْ! وَقَفْتُ عَلَى قَدَمَيَّ لَحْظَةً!",
+    "say": "أُوبْ! وَقَفْتُ عَلَى قَدَمَيَّ لَحْظَهْ!",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.qallab.right.2": {
+    "text": "كُلُّ حَرَكَةٍ فِي مَكَانِهَا؟ رَأْسِي يَدُورُ!",
+    "say": "كُلُّ حَرَكَةٍ فِي مَكَانِهَا؟ رَأْسِي يَدُورْ!",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.qallab.wrong": {
+    "text": "هُوبْ! شَقْلَبَةٌ جَدِيدَةٌ!",
+    "say": "هُوبْ! شَقْلَبَةٌ جَدِيدَهْ!",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.qallab.fixed": {
+    "text": "الْآنَ أَقِفُ مُسْتَقِيمًا… وَكُلُّ حَرَكَةٍ عَلَى حَرْفِهَا.",
+    "say": "الْآنَ أَقِفُ مُسْتَقِيمَا… وَكُلُّ حَرَكَةٍ عَلَى حَرْفِهَا.",
+    "voice": true,
+    "who": "qallab",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.qallab.lesson": {
+    "text": "تَغْيِيرُ الْحَرَكَةِ لَحْنٌ جَلِيٌّ، قَدْ يُغَيِّرُ الْمَعْنَى. فَلِكُلِّ حَرْفٍ حَرَكَتُهُ.",
+    "say": "تَغْيِيرُ الْحَرَكَةِ لَحْنٌ جَلِيّْ، قَدْ يُغَيِّرُ الْمَعْنَى. فَلِكُلِّ حَرْفٍ حَرَكَتُهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.fuwaq.name": {
+    "text": "فُوَاقٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.fuwaq.title": {
+    "text": "تَحَدِّي فُوَاقٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.fuwaq.tagline": {
+    "text": "كُلَّمَا تَكَلَّمَ… قَفَزَتْ مِنْهُ هَمْزَةٌ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.fuwaq.intro": {
+    "text": "أَنَا فُؤَاقٌ… هِئْ!… أَقْصِدُ: فُوَاقٌ! أَضَعُ الْهَمْزَةَ فِي كُلِّ مَكَانٍ… هِئْ!",
+    "say": "أَنَا فُؤَاقْ… هِئْ!… أَقْصِدْ: فُوَاقْ! أَضَعُ الْهَمْزَةَ فِي كُلِّ مَكَانْ… هِئْ!",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 1,
+    "note": "the extra hamza goes only into his own name"
+  },
+  "boss.fuwaq.gag": {
+    "text": "هِئْ! هَمْزَةٌ… هِئْ! هَمْزَتَانِ… مَنْ يُعْطِينِي كُوبَ مَاءٍ؟",
+    "say": "هِئْ! هَمْزَهْ… هِئْ! هَمْزَتَانْ… مَنْ يُعْطِينِي كُوبَ مَاءْ؟",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.fuwaq.right.1": {
+    "text": "هِئْ… أُوهْ! فُقَّاعَاتٌ أَقَلُّ!",
+    "say": "هِئْ… أُوهْ! فُقَّاعَاتٌ أَقَلّْ!",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.fuwaq.right.2": {
+    "text": "لَا هَمْزَةَ هُنَا؟ صَحِيحٌ… هِئْ… أَقْصِدُ: لَا شَيْءَ!",
+    "say": "لَا هَمْزَةَ هُنَا؟ صَحِيحْ… هِئْ… أَقْصِدْ: لَا شَيْءْ!",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.fuwaq.wrong": {
+    "text": "هِئْ! هِئْ! الْفُقَّاعَاتُ تَتَطَايَرُ!",
+    "say": "هِئْ! هِئْ! الْفُقَّاعَاتُ تَتَطَايَرْ!",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.fuwaq.fixed": {
+    "text": "شَرِبْتُ الْمَاءَ، فَسَكَتَ الْفُوَاقُ. الْهَمْزَةُ فِي مَكَانِهَا فَقَطْ!",
+    "say": "شَرِبْتُ الْمَاءْ، فَسَكَتَ الْفُوَاقْ. الْهَمْزَةُ فِي مَكَانِهَا فَقَطْ!",
+    "voice": true,
+    "who": "fuwaq",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.fuwaq.lesson": {
+    "text": "نَنْطِقُ الْهَمْزَةَ كَمَا قَرَأَهَا شُيُوخُنَا، وَلَا نَزِيدُ هَمْزَةً لَيْسَتْ فِي الْكَلِمَةِ.",
+    "say": "نَنْطِقُ الْهَمْزَةَ كَمَا قَرَأَهَا شُيُوخُنَا، وَلَا نَزِيدُ هَمْزَةً لَيْسَتْ فِي الْكَلِمَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.duhrouj.name": {
+    "text": "دُحْرُوجٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.duhrouj.title": {
+    "text": "تَحَدِّي دُحْرُوجٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.duhrouj.tagline": {
+    "text": "يَتَدَحْرَجُ… وَلَا يَعْرِفُ أَيْنَ يَقِفُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.duhrouj.intro": {
+    "text": "أَنَا دُحْرُوجٌ دُحْرُوجٌ دُحْرُوجٌ… كَيْفَ أَقِفُ؟ لَا أَعْرِفُ!",
+    "say": "أَنَا دُحْرُوجٌ دُحْرُوجٌ دُحْرُوجْ… كَيْفَ أَقِفْ؟ لَا أَعْرِفْ!",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.duhrouj.gag": {
+    "text": "بُومْ! اصْطَدَمْتُ بِالْوِسَادَةِ… مَرَّةً أُخْرَى!",
+    "say": "بُومْ! اصْطَدَمْتُ بِالْوِسَادَهْ… مَرَّةً أُخْرَى!",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.duhrouj.right.1": {
+    "text": "أُوهْ! تَوَقَّفْتُ… فِي الْمَكَانِ الصَّحِيحِ؟",
+    "say": "أُوهْ! تَوَقَّفْتْ… فِي الْمَكَانِ الصَّحِيحْ؟",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.duhrouj.right.2": {
+    "text": "الْوُقُوفُ عِنْدَ تَمَامِ الْمَعْنَى؟ فِكْرَةٌ جَمِيلَةٌ!",
+    "say": "الْوُقُوفُ عِنْدَ تَمَامِ الْمَعْنَى؟ فِكْرَةٌ جَمِيلَهْ!",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.duhrouj.wrong": {
+    "text": "وِييي! أَتَدَحْرَجُ… وَأَتَدَحْرَجُ…",
+    "say": "وِييي! أَتَدَحْرَجْ… وَأَتَدَحْرَجْ…",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.duhrouj.fixed": {
+    "text": "قَدَمَايَ عَلَى الْأَرْضِ! أَقِفُ حِينَ يَتِمُّ الْكَلَامُ.",
+    "say": "قَدَمَايَ عَلَى الْأَرْضْ! أَقِفُ حِينَ يَتِمُّ الْكَلَامْ.",
+    "voice": true,
+    "who": "duhrouj",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.duhrouj.lesson": {
+    "text": "نَقِفُ حِينَ يَتِمُّ الْمَعْنَى، لَا فِي وَسَطِ الْكَلَامِ.",
+    "say": "نَقِفُ حِينَ يَتِمُّ الْمَعْنَى، لَا فِي وَسَطِ الْكَلَامْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.khafiyy.name": {
+    "text": "خَفِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khafiyy.title": {
+    "text": "تَحَدِّي خَفِيٍّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khafiyy.tagline": {
+    "text": "لَا يُرَى… إِلَّا بِنُورِ الْفَانُوسِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.khafiyy.intro": {
+    "text": "أَنَا خَـ… ـفِـ… هَلْ تَسْمَعُونَنِي؟ أُخْفِي الْحُرُوفَ… حَتَّى حُرُوفَ اسْمِي!",
+    "say": "أَنَا خَا… فِي… هَلْ تَسْمَعُونَنِي؟ أُخْفِي الْحُرُوفْ… حَتَّى حُرُوفَ اسْمِي!",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 1,
+    "note": "a whisper; the hidden letters are drawn faint"
+  },
+  "boss.khafiyy.gag": {
+    "text": "شُشْشْ… أَنَا هُنَا… أَوْ هُنَاكَ… لَنْ تَجِدُونِي!",
+    "say": "شُشْشْ… أَنَا هُنَا… أَوْ هُنَاكْ… لَنْ تَجِدُونِي!",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.khafiyy.right.1": {
+    "text": "آيْ! النُّورُ… صِرْتُ أُرَى قَلِيلًا!",
+    "say": "آيْ! النُّورْ… صِرْتُ أُرَى قَلِيلَا!",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khafiyy.right.2": {
+    "text": "سَمِعْتُمْ كُلَّ حَرْفٍ؟ حَتَّى الْحُرُوفَ الَّتِي خَبَّأْتُهَا؟",
+    "say": "سَمِعْتُمْ كُلَّ حَرْفْ؟ حَتَّى الْحُرُوفَ الَّتِي خَبَّأْتُهَا؟",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.khafiyy.wrong": {
+    "text": "هِيهِي… اخْتَفَيْتُ أَكْثَرَ!",
+    "say": "هِيهِي… اخْتَفَيْتُ أَكْثَرْ!",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khafiyy.fixed": {
+    "text": "الْآنَ أَلْمَعُ! وَكُلُّ حَرْفٍ يَخْرُجُ وَاضِحًا.",
+    "say": "الْآنَ أَلْمَعْ! وَكُلُّ حَرْفٍ يَخْرُجُ وَاضِحَا.",
+    "voice": true,
+    "who": "khafiyy",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.khafiyy.lesson": {
+    "text": "حُرُوفُ الْحَلْقِ سِتَّةٌ، وَالنُّونُ السَّاكِنَةُ قَبْلَهَا تَظْهَرُ وَاضِحَةً.",
+    "say": "حُرُوفُ الْحَلْقِ سِتَّهْ، وَالنُّونُ السَّاكِنَةُ قَبْلَهَا تَظْهَرُ وَاضِحَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "boss.nasyan.name": {
+    "text": "نَسْيَانُ",
+    "voice": false,
+    "aud": "child",
+    "note": "diptote"
+  },
+  "boss.nasyan.title": {
+    "text": "تَحَدِّي نَسْيَانَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.nasyan.tagline": {
+    "text": "زَعِيمُ الْعِصَابَةِ… نَسِيَ أَنَّهُ الزَّعِيمُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "boss.nasyan.intro": {
+    "text": "أَنَا… أَنَا… مَا اسْمِي؟ نَسِيتُ! وَسَأُنْسِيكُمُ الْقَصِيدَةَ كُلَّهَا!",
+    "say": "أَنَا… أَنَا… مَا اسْمِي؟ نَسِيتْ! وَسَأُنْسِيكُمُ الْقَصِيدَةَ كُلَّهَا!",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.nasyan.gag": {
+    "text": "أَيْنَ نَظَّارَتِي؟… آهٍ، كَانَتْ عَلَى رَأْسِي طُولَ الْوَقْتِ!",
+    "say": "أَيْنَ نَظَّارَتِي؟… آهْ، كَانَتْ عَلَى رَأْسِي طُولَ الْوَقْتْ!",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.nasyan.right.1": {
+    "text": "مَاذَا؟ تَتَذَكَّرُونَ هَذَا الْبَيْتَ أَيْضًا؟",
+    "say": "مَاذَا؟ تَتَذَكَّرُونَ هَذَا الْبَيْتَ أَيْضَا؟",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.nasyan.right.2": {
+    "text": "غَرِيبٌ… بَدَأْتُ أَتَذَكَّرُ اسْمِي!",
+    "say": "غَرِيبْ… بَدَأْتُ أَتَذَكَّرُ اسْمِي!",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 2
+  },
+  "boss.nasyan.wrong": {
+    "text": "آهٍ، نَسِيتُ مَاذَا كُنْتُ أَقُولُ… لَا يَهُمُّ!",
+    "say": "آهْ، نَسِيتُ مَاذَا كُنْتُ أَقُولْ… لَا يَهُمّْ!",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.nasyan.fixed": {
+    "text": "تَذَكَّرْتُ كُلَّ شَيْءٍ! هَذَا خَيْطُ الْعِقْدِ… أُعِيدُهُ إِلَيْكُمْ.",
+    "say": "تَذَكَّرْتُ كُلَّ شَيْءْ! هَذَا خَيْطُ الْعِقْدْ… أُعِيدُهُ إِلَيْكُمْ.",
+    "voice": true,
+    "who": "nasyan",
+    "aud": "child",
+    "p": 1
+  },
+  "boss.nasyan.lesson": {
+    "text": "النِّسْيَانُ يَهْرُبُ مِنَ الْمُرَاجَعَةِ، وَالْعِلْمُ يَأْتِي قَلِيلًا قَلِيلًا لِمَنْ يَصْبِرُ.",
+    "say": "النِّسْيَانُ يَهْرُبُ مِنَ الْمُرَاجَعَهْ، وَالْعِلْمُ يَأْتِي قَلِيلًا قَلِيلًا لِمَنْ يَصْبِرْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "stickers.title": {
+    "text": "كِتَابُ الْمُلْصَقَاتِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "stickers.tab.friends": {
+    "text": "الْأَصْدِقَاءُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "stickers.tab.districts": {
+    "text": "الْأَحْيَاءُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "stickers.tab.feats": {
+    "text": "الْإِنْجَازَاتُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "stickers.locked": {
+    "text": "لَمْ نَجِدْهُ بَعْدُ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "stickers.count": {
+    "text": "الْمُلْصَقَاتُ: {n} مِنْ {total}",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.district.cap": {
+    "text": "فَانُوسُ هَذَا الْحَيِّ أَضَاءَ!",
+    "voice": false,
+    "aud": "child",
+    "note": "caption of the ten district stickers; their names are district.<id>.name"
+  },
+  "sticker.amin": {
+    "text": "أَمِينٌ وَفَانُوسُهُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.amin.cap": {
+    "text": "دَلِيلُ الرِّحْلَةِ، وَحَافِظُ الدُّرَرِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.mishmish": {
+    "text": "مِشْمِشٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.mishmish.cap": {
+    "text": "أَشْجَعُ قِطٍّ… حِينَ يَكُونُ نَائِمًا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.laqlaq": {
+    "text": "لَقْلَقٌ الْحَكِيمُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.laqlaq.cap": {
+    "text": "يَسْكُنُ فَوْقَ بَابِ الْمَدِينَةِ، وَيَعْرِفُ مَعْنَى كُلِّ بَيْتٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.manfoukh": {
+    "text": "مَنْفُوخٌ الْمُتَوَاضِعُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.manfoukh.cap": {
+    "text": "صَارَ صَغِيرًا مُرْتَاحًا، وَعَلَى رَأْسِهِ وَرَقَةُ شَجَرٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.khallat": {
+    "text": "خَلَّاطٌ الْمُرَتَّبُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.khallat.cap": {
+    "text": "الْحِذَاءُ فِي الْقَدَمِ، وَكُلُّ لَوْنٍ فِي مَكَانِهِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.ajoul": {
+    "text": "عَجُولٌ الْهَادِئُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.ajoul.cap": {
+    "text": "يَقْرَأُ عَلَى مَهْلٍ، وَمَعَهُ كَأْسُ شَايٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.kaslan": {
+    "text": "كَسْلَانُ النَّشِيطُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.kaslan.cap": {
+    "text": "مَعَهُ قَائِمَةٌ صَغِيرَةٌ: قَلِيلٌ كُلَّ يَوْمٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.mattat": {
+    "text": "مَطَّاطٌ الْمَوْزُونُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.mattat.cap": {
+    "text": "يَحْمِلُ مِيزَانًا صَغِيرًا: لَا زِيَادَةَ وَلَا نُقْصَانَ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.qallab": {
+    "text": "قَلَّابٌ الْمُسْتَقِيمُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.qallab.cap": {
+    "text": "يَقِفُ عَلَى قَدَمَيْهِ، وَكُلُّ حَرَكَةٍ فِي مَكَانِهَا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.fuwaq": {
+    "text": "فُوَاقٌ الصَّافِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.fuwaq.cap": {
+    "text": "فُقَّاعَاتُهُ فِي جَرَّةٍ، وَالْهَمْزَةُ فِي مَكَانِهَا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.duhrouj": {
+    "text": "دُحْرُوجٌ الثَّابِتُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.duhrouj.cap": {
+    "text": "قَدَمَاهُ عَلَى الْأَرْضِ، وَيَعْرِفُ أَيْنَ يَقِفُ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.khafiyy": {
+    "text": "خَفِيٌّ الْمُضِيءُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.khafiyy.cap": {
+    "text": "صَارَ يُرَى… وَصَارَ صَوْتُهُ وَاضِحًا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.nasyan": {
+    "text": "نَسْيَانُ الْمُتَذَكِّرُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.nasyan.cap": {
+    "text": "نَظَّارَتُهُ عَلَى عَيْنَيْهِ، وَأَعَادَ خَيْطَ الْعِقْدِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.firstPearl": {
+    "text": "أَوَّلُ دُرَّةٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.firstPearl.cap": {
+    "text": "أَوَّلُ دُرَّةٍ رَجَعَتْ إِلَى الْعِقْدِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.sevenPearls": {
+    "text": "سَبْعُ دُرَرٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.sevenPearls.cap": {
+    "text": "سَبْعُ دُرَرٍ… بِعَدَدِ الْقُرَّاءِ السَّبْعَةِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.half": {
+    "text": "نِصْفُ الْعِقْدِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.half.cap": {
+    "text": "وَصَلْنَا إِلَى نِصْفِ الطَّرِيقِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.all": {
+    "text": "الْعِقْدُ كَامِلًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.all.cap": {
+    "text": "كُلُّ الدُّرَرِ رَجَعَتْ إِلَى مَكَانِهَا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.golden": {
+    "text": "الدُّرَّةُ الذَّهَبِيَّةُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.golden.cap": {
+    "text": "أَوَّلُ دُرَّةٍ بِثَلَاثِ نَجَمَاتٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.polish5": {
+    "text": "مِنْدِيلُ التَّلْمِيعِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.polish5.cap": {
+    "text": "خَمْسُ جَلَسَاتِ تَلْمِيعٍ… وَالدُّرَرُ تَلْمَعُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days3": {
+    "text": "ثَلَاثَةُ أَيَّامٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days3.cap": {
+    "text": "ثَلَاثَةُ أَيَّامٍ مَعَ الدُّرَرِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days7": {
+    "text": "سَبْعَةُ أَيَّامٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days7.cap": {
+    "text": "سَبْعَةُ أَيَّامٍ… وَالْفَانُوسُ يَزْدَادُ نُورًا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days14": {
+    "text": "أَرْبَعَةَ عَشَرَ يَوْمًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days14.cap": {
+    "text": "أَرْبَعَةَ عَشَرَ يَوْمًا مِنَ الْحِفْظِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days30": {
+    "text": "ثَلَاثُونَ يَوْمًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.days30.cap": {
+    "text": "ثَلَاثُونَ يَوْمًا فِي مَدِينَةِ الْقُرَّاءِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.weekFull": {
+    "text": "الْأُسْبُوعُ الْمُضِيءُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.weekFull.cap": {
+    "text": "سَبْعَةُ أَيَّامٍ مُتَتَالِيَةٍ، وَسَبْعَةُ مَصَابِيحَ مُضِيئَةٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.comeback": {
+    "text": "الْعَوْدَةُ الْجَمِيلَةُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.comeback.cap": {
+    "text": "رَجَعْنَا إِلَى الرِّحْلَةِ… وَالدُّرَرُ فَرِحَتْ بِنَا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.seven": {
+    "text": "قَافِلَةُ الْقُرَّاءِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.seven.cap": {
+    "text": "كُلُّ قَارِئٍ وَصَلَ إِلَى مَدِينَتِهِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.calm": {
+    "text": "بِلَا عَجَلَةٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.calm.cap": {
+    "text": "تَحَدِّي عَجُولٍ… بِلَا فَانُوسِ مُسَاعَدَةٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.listener": {
+    "text": "مَنْ يَسْمَعُنِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.listener.cap": {
+    "text": "أَوَّلُ تَسْمِيعٍ أَمَامَ مَنْ يَسْمَعُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.wholeListen": {
+    "text": "الْعِقْدُ فِي أُذُنِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.wholeListen.cap": {
+    "text": "سَمِعْنَا الْقَصِيدَةَ كُلَّهَا، مِنْ أَوَّلِهَا إِلَى آخِرِهَا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.recorded": {
+    "text": "صَوْتِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.recorded.cap": {
+    "text": "أَوَّلَ مَرَّةٍ نَسْمَعُ صَوْتَنَا بِجَانِبِ الْقَارِئِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.sardine": {
+    "text": "السَّرْدِينَةُ الذَّهَبِيَّةُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.sardine.cap": {
+    "text": "هَدِيَّةٌ سِرِّيَّةٌ مِنْ مِشْمِشٍ… لَا تُخْبِرُوا أَحَدًا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.medal": {
+    "text": "وِسَامُ أَمِينٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "sticker.medal.cap": {
+    "text": "الْعِقْدُ كَامِلٌ، وَالْقَصِيدَةُ فِي الْقَلْبِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "polish.title": {
+    "text": "التَّلْمِيعُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "polish.start": {
+    "text": "بَعْضُ الدُّرَرِ عَلَيْهَا غُبَارٌ… نُلَمِّعُهَا مَعًا؟",
+    "say": "بَعْضُ الدُّرَرِ عَلَيْهَا غُبَارْ… نُلَمِّعُهَا مَعَا؟",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "polish.mishmish": {
+    "text": "أَنَا أُمْسِكُ الْمِنْدِيلَ… وَلَكِنْ مَنْ يُلَمِّعُ؟",
+    "say": "أَنَا أُمْسِكُ الْمِنْدِيلْ… وَلَكِنْ مَنْ يُلَمِّعْ؟",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 2,
+    "note": "sometimes, at the start of a polish session"
+  },
+  "polish.shiny": {
+    "text": "طَارَ الْغُبَارُ! الدُّرَّةُ تَلْمَعُ.",
+    "say": "طَارَ الْغُبَارْ! الدُّرَّةُ تَلْمَعْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1
+  },
+  "polish.later": {
+    "text": "لَا بَأْسَ، نَسْمَعُهَا الْآنَ… وَنُلَمِّعُهَا غَدًا.",
+    "say": "لَا بَأْسْ، نَسْمَعُهَا الْآنْ… وَنُلَمِّعُهَا غَدَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "polish.done": {
+    "text": "انْتَهَى التَّلْمِيعُ! الْعِقْدُ يَلْمَعُ أَكْثَرَ.",
+    "say": "انْتَهَى التَّلْمِيعْ! الْعِقْدُ يَلْمَعُ أَكْثَرْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "polish.moreAsk": {
+    "text": "مَا زَالَتْ دُرَرٌ عَلَيْهَا غُبَارٌ. نُكْمِلُ؟",
+    "say": "مَا زَالَتْ دُرَرٌ عَلَيْهَا غُبَارْ. نُكْمِلْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "before the two buttons polish.more / polish.enough"
+  },
+  "polish.more": {
+    "text": "أُلَمِّعُ الْمَزِيدَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "polish.enough": {
+    "text": "يَكْفِي الْيَوْمَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "polish.none": {
+    "text": "لَا غُبَارَ الْيَوْمَ! كُلُّ الدُّرَرِ لَامِعَةٌ.",
+    "say": "لَا غُبَارَ الْيَوْمْ! كُلُّ الدُّرَرِ لَامِعَهْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2
+  },
+  "polish.count": {
+    "text": "دُرَرٌ لِلتَّلْمِيعِ: {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.title": {
+    "text": "عِقْدِي",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.count": {
+    "text": "الدُّرَرُ: {n} مِنْ {total}",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.playAll": {
+    "text": "أَسْمَعُ الْعِقْدَ كُلَّهُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.stop": {
+    "text": "أُوقِفُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.loop": {
+    "text": "أُعِيدُ بِلَا تَوَقُّفٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sleep": {
+    "text": "قَبْلَ النَّوْمِ",
+    "voice": false,
+    "aud": "child",
+    "note": "sleep timer"
+  },
+  "necklace.sleep.5": {
+    "text": "خَمْسُ دَقَائِقَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sleep.10": {
+    "text": "عَشْرُ دَقَائِقَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sleep.15": {
+    "text": "رُبْعُ سَاعَةٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sleep.off": {
+    "text": "حَتَّى أُوقِفَهُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.read": {
+    "text": "أَقْرَأُ الْقَصِيدَةَ كَامِلَةً",
+    "voice": false,
+    "aud": "child",
+    "note": "link to ./qasida/#b<n>"
+  },
+  "necklace.empty": {
+    "text": "الْعِقْدُ يَنْتَظِرُ أَوَّلَ دُرَّةٍ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.playing": {
+    "text": "الْآنَ: الْبَيْتُ {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.locked": {
+    "text": "هَذِهِ الدُّرَّةُ مَا زَالَتْ فِي الطَّرِيقِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sheet.verse": {
+    "text": "الْبَيْتُ {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sheet.play": {
+    "text": "أَسْمَعُ الْبَيْتَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sheet.meaning": {
+    "text": "الْمَعْنَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sheet.replay": {
+    "text": "أَلْعَبُهُ مِنْ جَدِيدٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.sheet.stars": {
+    "text": "النَّجَمَاتُ: {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "necklace.media.verse": {
+    "text": "البيت {n}",
+    "voice": false,
+    "aud": "adult",
+    "note": "Media Session title (system UI: no tashkeel); artist = reciter, album = app.manifest.name"
+  },
+  "necklace.listenDone": {
+    "text": "سَمِعْنَا الْعِقْدَ كُلَّهُ! مَا أَجْمَلَهُ!",
+    "say": "سَمِعْنَا الْعِقْدَ كُلَّهْ! مَا أَجْمَلَهْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "note": "after a whole listen (the wholeListen sticker)"
+  },
+  "days.title": {
+    "text": "أَيَّامُ الرِّحْلَةِ: {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "days.week": {
+    "text": "آخِرُ سَبْعَةِ أَيَّامٍ",
+    "voice": false,
+    "aud": "child",
+    "note": "label of the seven lamps"
+  },
+  "days.lit": {
+    "text": "أَضَاءَ مِصْبَاحُ الْيَوْمِ!",
+    "say": "أَضَاءَ مِصْبَاحُ الْيَوْمْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 2,
+    "note": "the day counts (after one new pearl or one polish session)"
+  },
+  "days.hint": {
+    "text": "كُلُّ يَوْمٍ نَلْعَبُ فِيهِ يُضِيءُ مِصْبَاحًا.",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.title": {
+    "text": "لَوْحَةُ الْأَبْطَالِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.local": {
+    "text": "هَذِهِ اللَّوْحَةُ فِي هَذَا الْجِهَازِ فَقَطْ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.new": {
+    "text": "فَانُوسٌ جَدِيدٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "new player"
+  },
+  "heroes.empty": {
+    "text": "فَانُوسٌ وَاحِدٌ فَقَطْ هُنَا… نُضِيفُ فَانُوسًا آخَرَ؟",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.col.name": {
+    "text": "الِاسْمُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.col.pearls": {
+    "text": "الدُّرَرُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.col.stars": {
+    "text": "النَّجَمَاتُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.col.days": {
+    "text": "الْأَيَّامُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "heroes.col.rank": {
+    "text": "الْعِقْدُ",
+    "voice": false,
+    "aud": "child",
+    "note": "the rank describes the necklace, not the child"
+  },
+  "heroes.rank.0": {
+    "text": "خَيْطٌ يَنْتَظِرُ",
+    "voice": false,
+    "aud": "child",
+    "note": "0 pearls"
+  },
+  "heroes.rank.1": {
+    "text": "عِقْدٌ يَبْدَأُ",
+    "voice": false,
+    "aud": "child",
+    "note": "1 pearl to under a third"
+  },
+  "heroes.rank.2": {
+    "text": "عِقْدٌ يَلْمَعُ",
+    "voice": false,
+    "aud": "child",
+    "note": "a third to under two thirds"
+  },
+  "heroes.rank.3": {
+    "text": "عِقْدٌ يَكَادُ يَكْتَمِلُ",
+    "voice": false,
+    "aud": "child",
+    "note": "two thirds to total − 1"
+  },
+  "heroes.rank.4": {
+    "text": "عِقْدٌ كَامِلٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "all pearls"
+  },
+  "heroes.switch": {
+    "text": "أَلْعَبُ بِهَذَا الْفَانُوسِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.who": {
+    "text": "مَنْ يَلْعَبُ الْآنَ؟",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.guest": {
+    "text": "ضَيْفٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "name shown for the silent first profile"
+  },
+  "profile.askName": {
+    "text": "مَا الِاسْمُ الَّذِي نَكْتُبُهُ عَلَى هَذَا الْفَانُوسِ؟",
+    "say": "مَا الِاسْمُ الَّذِي نَكْتُبُهُ عَلَى هَذَا الْفَانُوسْ؟",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "after the guest's first pearl; everything optional"
+  },
+  "profile.name": {
+    "text": "الِاسْمُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.name.hint": {
+    "text": "اخْتِيَارِيٌّ، وَيَبْقَى فِي هَذَا الْجِهَازِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern": {
+    "text": "لَوْنُ الْفَانُوسِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.gold": {
+    "text": "ذَهَبِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.teal": {
+    "text": "فَيْرُوزِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.rose": {
+    "text": "وَرْدِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.sky": {
+    "text": "سَمَاوِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.leaf": {
+    "text": "أَخْضَرُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.lantern.violet": {
+    "text": "بَنَفْسَجِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level": {
+    "text": "الْمُسْتَوَى",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.easy": {
+    "text": "خَفِيفٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.mid": {
+    "text": "مُتَوَسِّطٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.strong": {
+    "text": "قَوِيٌّ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.easy.desc": {
+    "text": "لِلْبِدَايَةِ: خِيَارَاتٌ أَقَلُّ، وَتَعْلِيمَاتٌ بِالصَّوْتِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.mid.desc": {
+    "text": "خِيَارَاتٌ أَكْثَرُ، وَكَلِمَاتٌ هَارِبَةٌ أَكْثَرُ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.level.strong.desc": {
+    "text": "لِمَنْ يَحْفَظُ جَيِّدًا: أَرْبَعَةُ خِيَارَاتٍ، وَالْبَيْتُ كُلُّهُ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.save": {
+    "text": "أَحْفَظُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.skip": {
+    "text": "لَاحِقًا",
+    "voice": false,
+    "aud": "child"
+  },
+  "profile.easter.amin": {
+    "text": "أَمِينٌ؟ مِثْلِي تَمَامًا! صِرْنَا أَمِينَيْنِ… وَفَانُوسَيْنِ ذَهَبِيَّيْنِ!",
+    "say": "أَمِينْ؟ مِثْلِي تَمَامَا! صِرْنَا أَمِينَيْنْ… وَفَانُوسَيْنِ ذَهَبِيَّيْنْ!",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "a profile named أمين / Amin / Amine (with or without marks); the player's lantern gets the golden glow"
+  },
+  "profile.easter.amin.laqlaq": {
+    "text": "أَهْلًا بِمَنْ تَحْمِلُ الرِّحْلَةُ اسْمَهُ!",
+    "say": "أَهْلًا بِمَنْ تَحْمِلُ الرِّحْلَةُ اسْمَهْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "right after profile.easter.amin"
+  },
+  "profile.rename": {
+    "text": "تغيير الاسم",
+    "voice": false,
+    "aud": "adult"
+  },
+  "profile.delete": {
+    "text": "حذف هذا الفانوس",
+    "voice": false,
+    "aud": "adult"
+  },
+  "profile.delete.confirm": {
+    "text": "سيُحذف هذا الفانوس وكل دُرَره. هل نتابع؟",
+    "voice": false,
+    "aud": "adult"
+  },
+  "profile.max": {
+    "text": "لا مكان لأكثر من أربعين فانوسًا في جهاز واحد.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "profile.nameTooLong": {
+    "text": "الاسم طويل: عشرون حرفًا على الأكثر.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "finale.dawn": {
+    "text": "طَلَعَ الْفَجْرُ… وَاكْتَمَلَ الْعِقْدُ!",
+    "say": "طَلَعَ الْفَجْرْ… وَاكْتَمَلَ الْعِقْدْ!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "the sky turns to dawn, the clasp closes"
+  },
+  "finale.heart": {
+    "text": "الدُّرَرُ الْآنَ فِي مَكَانٍ لَا يُبَعْثِرُهَا فِيهِ أَحَدٌ: فِي الْقَلْبِ.",
+    "say": "الدُّرَرُ الْآنَ فِي مَكَانٍ لَا يُبَعْثِرُهَا فِيهِ أَحَدْ: فِي الْقَلْبْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "finale.amin.thanks": {
+    "text": "شُكْرًا لَكُمْ! مَشَيْنَا مَعًا مِنَ الْغُرُوبِ إِلَى الْفَجْرِ.",
+    "say": "شُكْرًا لَكُمْ! مَشَيْنَا مَعًا مِنَ الْغُرُوبِ إِلَى الْفَجْرْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "after the gang's cheer (boss.thanks), before the prayer"
+  },
+  "finale.dua.intro": {
+    "text": "طَلَبَ الشَّاعِرُ مِنْ كُلِّ مَنْ يَتَعَلَّمُ مِنْهُ دُعَاءً عِنْدَ الْفَجْرِ… وَنَحْنُ تَعَلَّمْنَا مِنْهُ.",
+    "say": "طَلَبَ الشَّاعِرُ مِنْ كُلِّ مَنْ يَتَعَلَّمُ مِنْهُ دُعَاءً عِنْدَ الْفَجْرْ… وَنَحْنُ تَعَلَّمْنَا مِنْهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "tags": [
+      "fact-verify"
+    ],
+    "note": "the last voiced line before the still prayer screen"
+  },
+  "finale.dua.text": {
+    "text": "اللَّهُمَّ اغْفِرْ لِأَبِي مُزَاحِمٍ الْخَاقَانِيِّ وَلِمُعَلِّمِينَا، وَارْحَمْهُمْ، وَاجْزِهِمْ عَنَّا خَيْرًا، وَانْفَعْنَا بِمَا تَعَلَّمْنَا.",
+    "voice": false,
+    "aud": "child",
+    "note": "the prayer screen: this text and finale.dua.amen only. Never voiced, no effect, no animation, no character."
+  },
+  "finale.dua.amen": {
+    "text": "آمِينَ",
+    "voice": false,
+    "aud": "child",
+    "note": "the only button of the prayer screen"
+  },
+  "finale.medal": {
+    "text": "هَذَا وِسَامُ أَمِينٍ! وَالْأَمِينُ يَحْفَظُ الْأَمَانَةَ… وَالْقَصِيدَةُ الْآنَ أَمَانَةٌ عِنْدَنَا.",
+    "say": "هَذَا وِسَامُ أَمِينْ! وَالْأَمِينُ يَحْفَظُ الْأَمَانَهْ… وَالْقَصِيدَةُ الْآنَ أَمَانَةٌ عِنْدَنَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "finale.mishmish": {
+    "text": "وِسَامٌ لِي أَيْضًا؟ لَا؟… إِذَنْ سَرْدِينَةٌ!",
+    "say": "وِسَامٌ لِي أَيْضَا؟ لَا؟… إِذَنْ سَرْدِينَهْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1
+  },
+  "finale.toDedication": {
+    "text": "إِلَى الْإِهْدَاءِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "finale.keep": {
+    "text": "الْعِقْدُ كَامِلٌ… وَنُلَمِّعُهُ كُلَّ يَوْمٍ لِيَبْقَى لَامِعًا.",
+    "say": "الْعِقْدُ كَامِلْ… وَنُلَمِّعُهُ كُلَّ يَوْمٍ لِيَبْقَى لَامِعَا.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "back to the map in daylight"
+  },
+  "dedication.title": {
+    "text": "إِهْدَاءٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "dedication.1": {
+    "text": "إِلَى أَمِينٍ،",
+    "say": "إِلَى أَمِينْ،",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1,
+    "note": "the five lines are one page, read once in Laqlaq's voice; first name only"
+  },
+  "dedication.2": {
+    "text": "الَّذِي صُنِعَتْ هَذِهِ الرِّحْلَةُ مِنْ أَجْلِهِ،",
+    "say": "الَّذِي صُنِعَتْ هَذِهِ الرِّحْلَةُ مِنْ أَجْلِهْ،",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "dedication.3": {
+    "text": "لِتَبْقَى الْقَصِيدَةُ فِي قَلْبِهِ دُرَرًا لَا تَتَبَعْثَرُ،",
+    "say": "لِتَبْقَى الْقَصِيدَةُ فِي قَلْبِهِ دُرَرًا لَا تَتَبَعْثَرْ،",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "dedication.4": {
+    "text": "وَلِيَكُونَ كَاسْمِهِ: أَمِينًا عَلَى مَا يَحْفَظُ،",
+    "say": "وَلِيَكُونَ كَاسْمِهْ: أَمِينًا عَلَى مَا يَحْفَظْ،",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "dedication.5": {
+    "text": "وَإِلَى كُلِّ مَنْ يَمْشِي مَعَهُ فِي هَذِهِ الرِّحْلَةِ.",
+    "say": "وَإِلَى كُلِّ مَنْ يَمْشِي مَعَهُ فِي هَذِهِ الرِّحْلَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 1
+  },
+  "dedication.from": {
+    "text": "مِنْ قَرِيبِهِ خَالِدٍ، بِكُلِّ حُبٍّ",
+    "voice": false,
+    "aud": "child",
+    "note": "owner 2026-11-13: «Me. I am his relative.» (the owner, Khalid, signs)"
+  },
+  "dedication.back": {
+    "text": "أَعُودُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.title": {
+    "text": "وِسَامُ أَمِينٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.subtitle": {
+    "text": "شَهَادَةُ حِفْظِ الْقَصِيدَةِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.grantedTo": {
+    "text": "مُنِحَ هَذَا الْوِسَامُ لِـ:",
+    "voice": false,
+    "aud": "child",
+    "note": "the typed name follows on its own line"
+  },
+  "cert.name.ask": {
+    "text": "أَكْتُبُ اسْمِي لِيَظْهَرَ فِي الشَّهَادَةِ:",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.name.local": {
+    "text": "يَبْقَى الِاسْمُ فِي هَذَا الْجِهَازِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.name.show": {
+    "text": "أُظْهِرُ اسْمِي فِي الصُّورَةِ",
+    "voice": false,
+    "aud": "child",
+    "note": "tick on the share card, off by default"
+  },
+  "cert.reason": {
+    "text": "لِإِتْمَامِ رِحْلَةِ الْحِفْظِ وَالْفَهْمِ فِي:",
+    "voice": false,
+    "aud": "child",
+    "note": "followed by the poem's fullTitle from data on its own line"
+  },
+  "cert.author": {
+    "text": "نَظْمُ:",
+    "voice": false,
+    "aud": "child",
+    "note": "followed by author from data"
+  },
+  "cert.verses": {
+    "text": "عَدَدُ الْأَبْيَاتِ: {n}",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.stars": {
+    "text": "النَّجَمَاتُ: {n} مِنْ {total}",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.date": {
+    "text": "التَّارِيخُ: {hijri} — {gregorian}",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.named": {
+    "text": "سُمِّيَ هَذَا الْوِسَامُ بِاسْمِ أَمِينٍ، وَالْأَمِينُ مَنْ يَحْفَظُ الْأَمَانَةَ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.sign": {
+    "text": "التَّوْقِيعُ:",
+    "voice": false,
+    "aud": "child"
+  },
+  "cert.print.hint": {
+    "text": "لِلطِّبَاعَةِ: وَرَقَةُ A4 بِالْعَرْضِ.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "share.final.title": {
+    "text": "اكْتَمَلَ الْعِقْدُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "share.final.sub": {
+    "text": "حَفِظْتُ الْخَاقَانِيَّةَ كَامِلَةً، دُرَّةً دُرَّةً.",
+    "voice": false,
+    "aud": "child"
+  },
+  "share.text": {
+    "text": "أَكْمَلْتُ رِحْلَةَ أَمِينٍ فِي مَدِينَةِ الْقُرَّاءِ، وَحَفِظْتُ الْخَاقَانِيَّةَ! الْعَبُوا مَعَنَا: {url}",
+    "voice": false,
+    "aud": "child",
+    "note": "Web Share text"
+  },
+  "share.district": {
+    "text": "أَضَاءَ فَانُوسٌ جَدِيدٌ: {district}",
+    "voice": false,
+    "aud": "child",
+    "note": "small card after a challenge"
+  },
+  "share.district.text": {
+    "text": "أَضَأْتُ فَانُوسًا جَدِيدًا فِي رِحْلَةِ أَمِينٍ: {url}",
+    "voice": false,
+    "aud": "child"
+  },
+  "share.saved": {
+    "text": "حُفِظَتِ الصُّورَةُ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "share.failed": {
+    "text": "لَمْ تُحْفَظِ الصُّورَةُ… نُجَرِّبُ مَرَّةً أُخْرَى؟",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.title": {
+    "text": "الذكاء الاصطناعي (اختياري)",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.desc": {
+    "text": "ميزتان اختياريتان تحتاجان إلى الشبكة: «أُسَمِّعُ لِلَقْلَقٍ» و«أَسْأَلُ لَقْلَقًا».",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.privacy": {
+    "text": "عند تشغيلهما يُرسَل الصوت المسجَّل أو السؤال إلى خدمة Gemini من Google، ولا يُرسَل غير ذلك. هما مطفأتان في الأصل.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.consent": {
+    "text": "أوافق، وأشغّل الميزة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.mode.family": {
+    "text": "رابط العائلة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.mode.family.desc": {
+    "text": "رمز تعطيه العائلة، ويعمل عبر خادم صغير يحفظ المفتاح، بحدّ عشرين جلسة في اليوم.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.mode.byok": {
+    "text": "مفتاحي الخاص",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.mode.byok.desc": {
+    "text": "مفتاح Gemini API خاص بكم، يُحفظ في هذا الجهاز فقط.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.key.label": {
+    "text": "مفتاح Gemini API",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.key.save": {
+    "text": "حفظ المفتاح",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.key.saved": {
+    "text": "حُفظ المفتاح في هذا الجهاز فقط.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.key.remove": {
+    "text": "حذف المفتاح",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.key.invalid": {
+    "text": "المفتاح لا يعمل. يُرجى التحقق منه.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.family.code": {
+    "text": "رمز العائلة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.family.invalid": {
+    "text": "الرمز غير صحيح.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.status.on": {
+    "text": "يعمل",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.status.off": {
+    "text": "مطفأ",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.status.offline": {
+    "text": "لا توجد شبكة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.status.quota": {
+    "text": "انتهى رصيد اليوم، ونعود غدًا.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.status.error": {
+    "text": "تعذّر الاتصال.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "ai.soon": {
+    "text": "قَرِيبًا",
+    "voice": false,
+    "aud": "child",
+    "note": "shown on live-AI buttons while they are not built"
+  },
+  "ai.recite.btn": {
+    "text": "أُسَمِّعُ لِلَقْلَقٍ",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.recite.listening": {
+    "text": "لَقْلَقٌ يَسْمَعُ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.recite.offline": {
+    "text": "لَقْلَقٌ لَا يَسْمَعُ بِلَا شَبَكَةٍ. نُسَمِّعُ كَالْعَادَةِ!",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.recite.missed": {
+    "text": "كَلِمَاتٌ فَاتَتْ:",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.recite.say.right": {
+    "text": "سَمِعْتُ الْبَيْتَ كَامِلًا! مَا شَاءَ اللَّهُ.",
+    "say": "سَمِعْتُ الْبَيْتَ كَامِلَا! مَا شَاءَ اللَّهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "note": "canned verdict line when the model's own voice line is not used"
+  },
+  "ai.recite.say.almost": {
+    "text": "قَرِيبٌ جِدًّا! فَاتَتْنَا كَلِمَةٌ صَغِيرَةٌ.",
+    "say": "قَرِيبٌ جِدَّا! فَاتَتْنَا كَلِمَةٌ صَغِيرَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2
+  },
+  "ai.recite.say.again": {
+    "text": "نُعِيدُهُ مَعًا؟ أَنَا أَسْمَعُ.",
+    "say": "نُعِيدُهُ مَعَا؟ أَنَا أَسْمَعْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2
+  },
+  "ai.ask.btn": {
+    "text": "أَسْأَلُ لَقْلَقًا",
+    "voice": false,
+    "aud": "child",
+    "note": "on MEANING; v1 answers from meanings.json, no AI"
+  },
+  "ai.ask.title": {
+    "text": "لَقْلَقٌ يُجِيبُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.ask.q.meaning": {
+    "text": "مَا مَعْنَى الْبَيْتِ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "→ meanings.kid"
+  },
+  "ai.ask.q.words": {
+    "text": "مَا مَعْنَى الْكَلِمَاتِ الصَّعْبَةِ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "→ meanings.words"
+  },
+  "ai.ask.q.lesson": {
+    "text": "مَاذَا نَتَعَلَّمُ مِنْهُ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "→ meanings.lesson"
+  },
+  "ai.ask.q.adult": {
+    "text": "أُرِيدُ شَرْحًا أَطْوَلَ",
+    "voice": false,
+    "aud": "child",
+    "note": "→ meanings.adult"
+  },
+  "ai.ask.q.cite": {
+    "text": "مِنْ أَيْنَ هَذَا الشَّرْحُ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "→ meanings.cite"
+  },
+  "ai.ask.q.free": {
+    "text": "سُؤَالٌ آخَرُ…",
+    "voice": false,
+    "aud": "child",
+    "note": "live AI only"
+  },
+  "ai.ask.placeholder": {
+    "text": "سُؤَالٌ عَنْ هَذَا الْبَيْتِ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.ask.thinking": {
+    "text": "لَقْلَقٌ يُفَكِّرُ…",
+    "voice": false,
+    "aud": "child"
+  },
+  "ai.ask.outside": {
+    "text": "سُؤَالٌ جَمِيلٌ! نَسْأَلُ عَنْهُ مُعَلِّمَنَا أَوْ أَهْلَنَا.",
+    "say": "سُؤَالٌ جَمِيلْ! نَسْأَلُ عَنْهُ مُعَلِّمَنَا أَوْ أَهْلَنَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "note": "fixed answer to anything outside the verse and its meanings"
+  },
+  "ai.ask.empty": {
+    "text": "لَيْسَ عِنْدِي شَرْحٌ لِهَذَا الْبَيْتِ بَعْدُ.",
+    "voice": false,
+    "who": "laqlaq",
+    "aud": "child"
+  },
+  "error.data": {
+    "text": "لَمْ تُفْتَحِ الْقَصِيدَةُ. نُعِيدُ الْمُحَاوَلَةَ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "text/khaqaniya.json missing: the game cannot start"
+  },
+  "error.retry": {
+    "text": "أُعِيدُ الْمُحَاوَلَةَ",
+    "voice": false,
+    "aud": "child"
+  },
+  "error.audio": {
+    "text": "الصَّوْتُ لَا يَعْمَلُ الْآنَ. نَقْرَأُ الْبَيْتَ بِأَعْيُنِنَا!",
+    "voice": false,
+    "aud": "child"
+  },
+  "error.offline": {
+    "text": "لَا تُوجَدُ شَبَكَةٌ. نَلْعَبُ بِمَا هُوَ جَاهِزٌ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "error.generic": {
+    "text": "حَدَثَ شَيْءٌ غَرِيبٌ… نُحَاوِلُ مَرَّةً أُخْرَى.",
+    "voice": false,
+    "aud": "child"
+  },
+  "error.notFound": {
+    "text": "هَذَا الطَّرِيقُ لَا يُؤَدِّي إِلَى دُرَّةٍ. نَعُودُ إِلَى الْخَرِيطَةِ؟",
+    "voice": false,
+    "aud": "child",
+    "note": "unknown route"
+  },
+  "error.storage": {
+    "text": "لا يمكن حفظ التقدّم في هذا المتصفح (ربما بسبب التصفح الخاص).",
+    "voice": false,
+    "aud": "adult"
+  },
+  "error.storage.kid": {
+    "text": "لَنْ يَتَذَكَّرَ هَذَا الْجِهَازُ دُرَرَنَا… نَسْأَلُ أَحَدَ الْكِبَارِ.",
+    "voice": false,
+    "aud": "child",
+    "note": "the child-facing warning when progress cannot be saved on this device (private browsing, storage blocked); the grown-ups' detail is error.storage"
+  },
+  "error.import": {
+    "text": "الملف لا يصلح للاستيراد.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "decoy.1": {
+    "text": "سَرْدِينٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "radar decoys: everyday words that do not end in «ـرِ»; the radar uses three; decoy.1 triggers game.rhymeRadar.sardine"
+  },
+  "decoy.2": {
+    "text": "فِنْجَانٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.3": {
+    "text": "مِفْتَاحٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.4": {
+    "text": "حَلِيبٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.5": {
+    "text": "كُرَةٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.6": {
+    "text": "فَانُوسٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.7": {
+    "text": "بُرْتُقَالٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "decoy.8": {
+    "text": "حِذَاءٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "fact.poet": {
+    "text": "الشَّاعِرُ أَبُو مُزَاحِمٍ الْخَاقَانِيُّ عَاشَ فِي بَغْدَادَ، قَبْلَ أَكْثَرَ مِنْ أَلْفِ سَنَةٍ.",
+    "say": "الشَّاعِرُ أَبُو مُزَاحِمٍ الْخَاقَانِيُّ عَاشَ فِي بَغْدَادْ، قَبْلَ أَكْثَرَ مِنْ أَلْفِ سَنَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ],
+    "note": "«did you know» bubbles: district openings, the ask sheet, about"
+  },
+  "fact.first": {
+    "text": "وَقَصِيدَتُهُ هَذِهِ مِنْ أَقْدَمِ مَا كُتِبَ فِي التَّجْوِيدِ.",
+    "say": "وَقَصِيدَتُهُ هَذِهِ مِنْ أَقْدَمِ مَا كُتِبَ فِي التَّجْوِيدْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.dani": {
+    "text": "وَشَرَحَهَا الْإِمَامُ أَبُو عَمْرٍو الدَّانِيُّ.",
+    "say": "وَشَرَحَهَا الْإِمَامُ أَبُو عَمْرٍو الدَّانِيّْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.count": {
+    "text": "فِي الْقَصِيدَةِ وَاحِدٌ وَخَمْسُونَ بَيْتًا، وَالشَّاعِرُ نَفْسُهُ ذَكَرَ عَدَدَهَا!",
+    "say": "فِي الْقَصِيدَةِ وَاحِدٌ وَخَمْسُونَ بَيْتَا، وَالشَّاعِرُ نَفْسُهُ ذَكَرَ عَدَدَهَا!",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ],
+    "note": "the countJoke verse"
+  },
+  "fact.seven": {
+    "text": "الْقُرَّاءُ السَّبْعَةُ أَئِمَّةٌ نَقَلُوا الْقُرْآنَ كَمَا تَلَقَّوْهُ عَنْ شُيُوخِهِمْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.haramayn": {
+    "text": "الْحَرَمَانِ: مَكَّةُ وَالْمَدِينَةُ. فِي مَكَّةَ ابْنُ كَثِيرٍ، وَفِي الْمَدِينَةِ نَافِعٌ.",
+    "say": "الْحَرَمَانْ: مَكَّةُ وَالْمَدِينَهْ. فِي مَكَّةَ ابْنُ كَثِيرْ، وَفِي الْمَدِينَةِ نَافِعْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.nafi.warsh": {
+    "text": "وَأَهْلُ الْمَغْرِبِ يَقْرَؤُونَ بِقِرَاءَةِ نَافِعٍ، بِرِوَايَةِ وَرْشٍ عَنْهُ.",
+    "say": "وَأَهْلُ الْمَغْرِبِ يَقْرَؤُونَ بِقِرَاءَةِ نَافِعْ، بِرِوَايَةِ وَرْشٍ عَنْهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.abuamr": {
+    "text": "أَبُو عَمْرٍو قَارِئُ الْبَصْرَةِ، وَأَبُوهُ اسْمُهُ الْعَلَاءُ.",
+    "say": "أَبُو عَمْرٍو قَارِئُ الْبَصْرَهْ، وَأَبُوهُ اسْمُهُ الْعَلَاءْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.ibnamir": {
+    "text": "ابْنُ عَامِرٍ قَارِئُ الشَّامِ، وَاسْمُهُ عَبْدُ اللَّهِ.",
+    "say": "ابْنُ عَامِرٍ قَارِئُ الشَّامْ، وَاسْمُهُ عَبْدُ اللَّهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.asim": {
+    "text": "عَاصِمٌ مِنْ قُرَّاءِ الْكُوفَةِ، وَيُدْعَى أَبَا بَكْرٍ.",
+    "say": "عَاصِمٌ مِنْ قُرَّاءِ الْكُوفَهْ، وَيُدْعَى أَبَا بَكْرْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.asim.hafs": {
+    "text": "وَأَكْثَرُ الْمُسْلِمِينَ الْيَوْمَ يَقْرَؤُونَ بِقِرَاءَةِ عَاصِمٍ، بِرِوَايَةِ حَفْصٍ عَنْهُ.",
+    "say": "وَأَكْثَرُ الْمُسْلِمِينَ الْيَوْمَ يَقْرَؤُونَ بِقِرَاءَةِ عَاصِمْ، بِرِوَايَةِ حَفْصٍ عَنْهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.kufa": {
+    "text": "ثَلَاثَةٌ مِنَ السَّبْعَةِ مِنَ الْكُوفَةِ: عَاصِمٌ وَحَمْزَةُ وَالْكِسَائِيُّ.",
+    "say": "ثَلَاثَةٌ مِنَ السَّبْعَةِ مِنَ الْكُوفَهْ: عَاصِمٌ وَحَمْزَةُ وَالْكِسَائِيّْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.kisai": {
+    "text": "الْكِسَائِيُّ إِمَامٌ فِي الْقِرَاءَةِ، وَإِمَامٌ فِي النَّحْوِ أَيْضًا.",
+    "say": "الْكِسَائِيُّ إِمَامٌ فِي الْقِرَاءَهْ، وَإِمَامٌ فِي النَّحْوِ أَيْضَا.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.madd": {
+    "text": "حُرُوفُ الْمَدِّ ثَلَاثَةٌ: الْأَلِفُ، وَالْوَاوُ السَّاكِنَةُ بَعْدَ ضَمَّةٍ، وَالْيَاءُ السَّاكِنَةُ بَعْدَ كَسْرَةٍ.",
+    "say": "حُرُوفُ الْمَدِّ ثَلَاثَهْ: الْأَلِفْ، وَالْوَاوُ السَّاكِنَةُ بَعْدَ ضَمَّهْ، وَالْيَاءُ السَّاكِنَةُ بَعْدَ كَسْرَهْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "fact.throat": {
+    "text": "حُرُوفُ الْحَلْقِ سِتَّةٌ: الْهَمْزَةُ وَالْهَاءُ، وَالْعَيْنُ وَالْحَاءُ، وَالْغَيْنُ وَالْخَاءُ.",
+    "say": "حُرُوفُ الْحَلْقِ سِتَّهْ: الْهَمْزَةُ وَالْهَاءْ، وَالْعَيْنُ وَالْحَاءْ، وَالْغَيْنُ وَالْخَاءْ.",
+    "voice": true,
+    "who": "laqlaq",
+    "aud": "child",
+    "p": 2,
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.nafi": {
+    "text": "نَافِعٌ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ],
+    "note": "S1 lantern names; pairs in config: nafi→madinah, ibnkathir→makkah, abuamr→basra, ibnamir→sham, asim/hamza/kisai→kufa"
+  },
+  "reciter.ibnkathir": {
+    "text": "ابْنُ كَثِيرٍ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.abuamr": {
+    "text": "أَبُو عَمْرٍو",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.ibnamir": {
+    "text": "ابْنُ عَامِرٍ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.asim": {
+    "text": "عَاصِمٌ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.hamza": {
+    "text": "حَمْزَةُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "reciter.kisai": {
+    "text": "الْكِسَائِيُّ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "city.makkah": {
+    "text": "مَكَّةُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "city.madinah": {
+    "text": "الْمَدِينَةُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "city.basra": {
+    "text": "الْبَصْرَةُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "city.sham": {
+    "text": "الشَّامُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "city.kufa": {
+    "text": "الْكُوفَةُ",
+    "voice": false,
+    "aud": "child",
+    "tags": [
+      "fact-verify"
+    ]
+  },
+  "grown.title": {
+    "text": "رُكْنُ الْكِبَارِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.title": {
+    "text": "لِلْكِبَارِ فَقَطْ",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.q": {
+    "text": "كَمْ يُسَاوِي {a} × {b}؟",
+    "voice": false,
+    "aud": "child",
+    "note": "a ∈ 12…19, b ∈ 3…9; numeric keypad"
+  },
+  "grown.gate.hint": {
+    "text": "سُؤَالُ حِسَابٍ صَغِيرٌ، لِيَبْقَى هَذَا الرُّكْنُ لِلْكِبَارِ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.ok": {
+    "text": "أَدْخُلُ",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.cancel": {
+    "text": "أَعُودُ إِلَى اللَّعِبِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.wrong": {
+    "text": "الْجَوَابُ غَيْرُ صَحِيحٍ.",
+    "voice": false,
+    "aud": "child"
+  },
+  "grown.gate.wait": {
+    "text": "نَنْتَظِرُ قَلِيلًا: {n}",
+    "voice": false,
+    "aud": "child",
+    "note": "30-second pause after three wrong answers; {n} counts down"
+  },
+  "grown.section.tips": {
+    "text": "نصائح",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.settings": {
+    "text": "الإعدادات",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.players": {
+    "text": "ملفات اللعب",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.data": {
+    "text": "النسخ والنقل",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.ai": {
+    "text": "الذكاء الاصطناعي",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.privacy": {
+    "text": "الخصوصية",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.section.about": {
+    "text": "عن اللعبة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.1": {
+    "text": "جلسة قصيرة كل يوم أنفع من جلسة طويلة في الأسبوع.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.2": {
+    "text": "«التلميع» مراجعة متباعدة: تعود الدُّرّة بعد يوم، ثم يومين، ثم أربعة أيام، وهكذا، فيثبت الحفظ.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.3": {
+    "text": "الاستماع إلى «العقد» قبل النوم يعين على تثبيت الحفظ بلا جهد.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.4": {
+    "text": "التسميع من الحفظ بصوت مسموع أهم خطوة: شجّعوا عليه، ولا تستعجلوا.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.5": {
+    "text": "في «معي من يسمعني» يظهر النص لمن يسمع، وتُلمَس الكلمة التي فاتت، فتعود في الألعاب أولًا.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.6": {
+    "text": "لا خسارة في اللعبة، ولا ساعة تستعجل أحدًا، ولا عقوبة على الغياب.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.7": {
+    "text": "المعاني مختصرة من شروح القصيدة، والشرح الأوسع ومصادره في «وضع الكبار».",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.tips.8": {
+    "text": "للمعلّمين: يمكن إضافة أربعين فانوسًا على جهاز واحد، يتناوب عليه التلاميذ.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.download": {
+    "text": "تنزيل كل شيء للعب بلا شبكة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.download.progress": {
+    "text": "جارٍ التنزيل: {n}٪",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.download.done": {
+    "text": "كل شيء جاهز بلا شبكة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.download.size": {
+    "text": "الحجم التقريبي: {size}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.reset": {
+    "text": "البدء من جديد",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.reset.confirm": {
+    "text": "سيُمحى تقدّم هذا الفانوس كله. هل نتابع؟",
+    "voice": false,
+    "aud": "adult"
+  },
+  "grown.exit": {
+    "text": "العودة إلى اللعب",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.title": {
+    "text": "الإعدادات",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.recitation": {
+    "text": "تِلَاوَةُ الْقَارِئِ",
+    "voice": false,
+    "aud": "child"
+  },
+  "settings.voices": {
+    "text": "أَصْوَاتُ الشَّخْصِيَّاتِ",
+    "voice": false,
+    "aud": "child",
+    "note": "also in the pause menu (no gate)"
+  },
+  "settings.sfx": {
+    "text": "الْمُؤَثِّرَاتُ الصَّوْتِيَّةُ",
+    "voice": false,
+    "aud": "child",
+    "note": "also in the pause menu"
+  },
+  "settings.textSize": {
+    "text": "حَجْمُ الْخَطِّ",
+    "voice": false,
+    "aud": "child",
+    "note": "also in the pause menu"
+  },
+  "settings.textSize.s": {
+    "text": "عَادِيٌّ",
+    "voice": false,
+    "aud": "child",
+    "note": "× 1"
+  },
+  "settings.textSize.m": {
+    "text": "كَبِيرٌ",
+    "voice": false,
+    "aud": "child",
+    "note": "× 1.15"
+  },
+  "settings.textSize.l": {
+    "text": "أَكْبَرُ",
+    "voice": false,
+    "aud": "child",
+    "note": "× 1.3"
+  },
+  "settings.on": {
+    "text": "تَشْغِيلٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "settings.off": {
+    "text": "إِيقَافٌ",
+    "voice": false,
+    "aud": "child"
+  },
+  "settings.grownupMode": {
+    "text": "وضع الكبار",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.grownupMode.desc": {
+    "text": "شرح أوسع مع المصادر، وإيقاع أسرع، وزر «أحفظه» لتخطّي ما سبق حفظه.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.challenge": {
+    "text": "وضع التحدي",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.challenge.desc": {
+    "text": "في تحديات العصابة فقط: ثلاثة فوانيس ووقت لكل سؤال. مطفأ في الأصل.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.dailyNew": {
+    "text": "الدُّرر الجديدة المقترحة في اليوم",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.dailyNew.1": {
+    "text": "واحدة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.dailyNew.2": {
+    "text": "اثنتان",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.dailyNew.3": {
+    "text": "ثلاث",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.dailyNew.none": {
+    "text": "بلا حدّ",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.openAll": {
+    "text": "فتح كل الأحياء",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.openAll.desc": {
+    "text": "للمعلّمين والكبار: كل الأبيات والتحديات مفتوحة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.numerals": {
+    "text": "شكل الأرقام",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.numerals.latn": {
+    "text": "1 2 3",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.numerals.arab": {
+    "text": "١ ٢ ٣",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.reduceMotion": {
+    "text": "تقليل الحركة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.reduceMotion.desc": {
+    "text": "بلا بريق ولا طيران: انتقالات هادئة فقط.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.reduceMotion.auto": {
+    "text": "حسب الجهاز",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.mic": {
+    "text": "الميكروفون (للتسجيل والمقارنة)",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.mic.desc": {
+    "text": "يبقى التسجيل في الذاكرة وقت اللعب فقط، ولا يُرسَل ولا يُحفظ.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.export": {
+    "text": "تصدير التقدّم (ملف)",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.import": {
+    "text": "استيراد التقدّم",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.import.confirm": {
+    "text": "سيحلّ الملف محلّ التقدّم الحالي. هل نتابع؟",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.import.done": {
+    "text": "تمّ الاستيراد.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.replayIntro": {
+    "text": "إعادة القصة من أولها",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.soon": {
+    "text": "قريبًا",
+    "voice": false,
+    "aud": "adult"
+  },
+  "settings.link.poem": {
+    "text": "القصيدة كاملة بمعانيها وتلاوتها",
+    "voice": false,
+    "aud": "adult",
+    "note": "./qasida/"
+  },
+  "settings.link.code": {
+    "text": "الشفرة المصدرية على GitHub",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.title": {
+    "text": "الخصوصية",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.1": {
+    "text": "اللعبة بلا حساب ولا بريد إلكتروني، وبلا إعلانات ولا أدوات تتبّع.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.2": {
+    "text": "الأسماء والتقدّم تُحفظ في هذا الجهاز فقط، ولا تُرسَل إلى أي مكان.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.3": {
+    "text": "لا تطلب اللعبة من الشبكة شيئًا غير ملفاتها هي.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.4": {
+    "text": "الميكروفون مطفأ في الأصل. إذا شُغّل، بقي التسجيل في الذاكرة وقت اللعب فقط.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.5": {
+    "text": "الذكاء الاصطناعي مطفأ في الأصل. إذا شغّله أحد الكبار، أُرسل الصوت أو السؤال إلى خدمة Gemini من Google.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "privacy.6": {
+    "text": "يمكن محو كل شيء من «البدء من جديد»، أو بمسح بيانات الموقع في المتصفح.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.title": {
+    "text": "عن اللعبة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.poem": {
+    "text": "القصيدة: {fullTitle}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.author": {
+    "text": "الناظم: {author}، المتوفّى سنة {death} هـ",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.metre": {
+    "text": "البحر: {metre}، والقافية راء مكسورة.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.basis": {
+    "text": "ضبط النص: {basis}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.reciter": {
+    "text": "التلاوة: {reciter}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.reciter.src": {
+    "text": "مقاطع الأبيات من تلاوته المنشورة على YouTube، مع الشكر: {url}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.meanings": {
+    "text": "المعاني مختصرة للأطفال من شروح القصيدة، والشرح الأوسع ومصادر كل بيت في «وضع الكبار».",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.sources": {
+    "text": "من المصادر: {sources}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.voices": {
+    "text": "أصوات الشخصيات مولّدة آليًّا، وليست أصوات أشخاص حقيقيين.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.art": {
+    "text": "الرسوم صُنعت لهذه اللعبة، والقرّاء السبعة يظهرون فوانيسَ بأسمائهم، لا صورًا.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.noMusic": {
+    "text": "بلا موسيقى: تلاوة، وكلام، ومؤثرات صوتية قصيرة فقط.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.offline": {
+    "text": "تعمل اللعبة بلا شبكة بعد أول تحميل.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.fonts": {
+    "text": "الخطوط: {fonts}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.license": {
+    "text": "الرخصة: {license}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.version": {
+    "text": "الإصدار: {v}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.dedication": {
+    "text": "صُنعت هذه اللعبة لأمين، ولكل من يحب القرآن.",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.link.poem": {
+    "text": "القصيدة مع المعاني والتلاوة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "about.link.code": {
+    "text": "الشفرة المصدرية على GitHub",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.ear": {
+    "text": "إعادة سماع المقطع",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.helpQ": {
+    "text": "إعادة التعليمات",
+    "voice": false,
+    "aud": "adult",
+    "note": "the «؟» in the goal banner"
+  },
+  "aria.help": {
+    "text": "فانوس المساعدة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.back": {
+    "text": "رجوع",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.mute": {
+    "text": "كتم الصوت",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.unmute": {
+    "text": "إعادة الصوت",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pause": {
+    "text": "استراحة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.close": {
+    "text": "إغلاق",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.menu": {
+    "text": "القائمة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.necklace": {
+    "text": "العقد: {n} من {total}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.steps": {
+    "text": "الخطوة {n} من {total}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.verseCard": {
+    "text": "البيت {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pearl": {
+    "text": "الدُّرّة {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pearl.locked": {
+    "text": "الدُّرّة {n}: مغلقة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pearl.open": {
+    "text": "الدُّرّة {n}: مفتوحة",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pearl.stars": {
+    "text": "الدُّرّة {n}: النجمات {s}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.pearl.dusty": {
+    "text": "الدُّرّة {n}: تحتاج إلى تلميع",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.gate": {
+    "text": "باب التحدي: {boss}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.option": {
+    "text": "الخيار {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.hearOption": {
+    "text": "سماع الخيار {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.choose": {
+    "text": "اختيار هذا",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.tile": {
+    "text": "كلمة: {w}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.slot": {
+    "text": "المكان {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.lane": {
+    "text": "الطريق {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.meter": {
+    "text": "قطرات الحبر الباقية: {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.days": {
+    "text": "أيام الرحلة: {n}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.lamp.on": {
+    "text": "يوم مضيء",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.lamp.off": {
+    "text": "يوم بلا لعب",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.amin": {
+    "text": "أمين",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.mishmish": {
+    "text": "مشمش",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.laqlaq": {
+    "text": "لقلق",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.player": {
+    "text": "فانوس اللاعب",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.rail": {
+    "text": "القفز إلى حيّ",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.rail.item": {
+    "text": "الحيّ {n}: {district}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.playAll": {
+    "text": "تشغيل العقد كله",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.loop": {
+    "text": "إعادة بلا توقف",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.sleep": {
+    "text": "مؤقّت النوم",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.sticker": {
+    "text": "ملصق: {sticker}",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.sticker.locked": {
+    "text": "ملصق لم يُكسَب بعد",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.mic": {
+    "text": "تسجيل الصوت",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.textSize": {
+    "text": "حجم الخط",
+    "voice": false,
+    "aud": "adult"
+  },
+  "aria.dedication": {
+    "text": "الإهداء",
+    "voice": false,
+    "aud": "adult"
+  }
+}

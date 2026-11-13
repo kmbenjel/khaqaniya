@@ -1,0 +1,30 @@
+{
+  "stone": {
+    "label": "حجري · Stone",
+    "themeColor": "#f5f5f4",
+    "splashColor": "#121212",
+    "light": { "bg": "#f5f5f4", "text": "#333333", "title": "#111111", "accent": "#6b6b6b", "card": "#ffffff", "progress": ["#a0937a", "#5c4f3a"] },
+    "dark":  { "bg": "#121212", "text": "#d0d0d0", "title": "#ffffff", "accent": "#888888", "card": "#1c1c1e", "progress": ["#6b5d4f", "#d4c9b8"] }
+  },
+  "sepia": {
+    "label": "ورقيّ · Sepia",
+    "themeColor": "#f4ecd8",
+    "splashColor": "#1c1813",
+    "light": { "bg": "#f4ecd8", "text": "#463f33", "title": "#2b2419", "accent": "#8a7a5c", "card": "#fbf6e9", "progress": ["#c8a96a", "#8a6d3b"] },
+    "dark":  { "bg": "#1c1813", "text": "#d8cdb6", "title": "#f3ead3", "accent": "#a8966f", "card": "#261f17", "progress": ["#7a6747", "#d8c39a"] }
+  },
+  "midnight": {
+    "label": "نيليّ · Midnight",
+    "themeColor": "#f5f7fa",
+    "splashColor": "#0f1620",
+    "light": { "bg": "#f5f7fa", "text": "#2f3a45", "title": "#16202b", "accent": "#5b6b7b", "card": "#ffffff", "progress": ["#7c93a8", "#3c5167"] },
+    "dark":  { "bg": "#0f1620", "text": "#c2ccd6", "title": "#ffffff", "accent": "#7d8b99", "card": "#18222e", "progress": ["#46586b", "#aebfce"] }
+  },
+  "rawda": {
+    "label": "روضة · Rawda (green)",
+    "themeColor": "#f1f5ef",
+    "splashColor": "#10160f",
+    "light": { "bg": "#f1f5ef", "text": "#34402f", "title": "#1c2618", "accent": "#5f7253", "card": "#ffffff", "progress": ["#8aa276", "#4c6139"] },
+    "dark":  { "bg": "#10160f", "text": "#c6d2bd", "title": "#ffffff", "accent": "#83977a", "card": "#192117", "progress": ["#4a5c3d", "#aec79c"] }
+  }
+}

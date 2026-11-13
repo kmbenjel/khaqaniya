@@ -1,0 +1,933 @@
+{
+ "_fixture": "DEV FIXTURE: placeholder strings; replace by text/meanings.json (M1)",
+ "verses": [
+  {
+   "n": 1,
+   "kid": "[fixture] kid meaning of verse 1",
+   "adult": "[fixture] adult explanation of verse 1",
+   "words": [
+    {
+     "w": "مَقَالًا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "مُعْجِبًا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 1",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 2,
+   "kid": "[fixture] kid meaning of verse 2",
+   "adult": "[fixture] adult explanation of verse 2",
+   "words": [
+    {
+     "w": "الْقَوْلِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "التِّلَاوَةَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 2",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 3,
+   "kid": "[fixture] kid meaning of verse 3",
+   "adult": "[fixture] adult explanation of verse 3",
+   "words": [
+    {
+     "w": "وَأَسْأَلُهُ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "نَوَيْتُهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 3",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 4,
+   "kid": "[fixture] kid meaning of verse 4",
+   "adult": "[fixture] adult explanation of verse 4",
+   "words": [
+    {
+     "w": "وَأَسْأَلُهُ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "التَّجَاوُزَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 4",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 5,
+   "kid": "[fixture] kid meaning of verse 5",
+   "adult": "[fixture] adult explanation of verse 5",
+   "words": [
+    {
+     "w": "الْقُرْآنِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "أَدَاءَهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 5",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 6,
+   "kid": "[fixture] kid meaning of verse 6",
+   "adult": "[fixture] adult explanation of verse 6",
+   "words": [
+    {
+     "w": "الْكِتَابَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "يُقِيمُهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 6",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 7,
+   "kid": "[fixture] kid meaning of verse 7",
+   "adult": "[fixture] adult explanation of verse 7",
+   "words": [
+    {
+     "w": "الْقِرَاءَةِ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 7",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 8,
+   "kid": "[fixture] kid meaning of verse 8",
+   "adult": "[fixture] adult explanation of verse 8",
+   "words": [
+    {
+     "w": "فَلِلسَّبْعَةِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْقُرَّاءِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 8",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 9,
+   "kid": "[fixture] kid meaning of verse 9",
+   "adult": "[fixture] adult explanation of verse 9",
+   "words": [
+    {
+     "w": "فَبِالْحَرَمَيْنِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْكَثِيرِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 9",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 10,
+   "kid": "[fixture] kid meaning of verse 10",
+   "adult": "[fixture] adult explanation of verse 10",
+   "words": [
+    {
+     "w": "وَبِالشَّامِ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 10",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 11,
+   "kid": "[fixture] kid meaning of verse 11",
+   "adult": "[fixture] adult explanation of verse 11",
+   "words": [
+    {
+     "w": "وَحَمْزَةُ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "وَالْكِسَائِيُّ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 11",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 12,
+   "kid": "[fixture] kid meaning of verse 12",
+   "adult": "[fixture] adult explanation of verse 12",
+   "words": [
+    {
+     "w": "الْحِذْقِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "لِلْحُرُوفِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 12",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 13,
+   "kid": "[fixture] kid meaning of verse 13",
+   "adult": "[fixture] adult explanation of verse 13",
+   "words": [
+    {
+     "w": "وَتَرْتِيلُنَا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْقُرْآنَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 13",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 14,
+   "kid": "[fixture] kid meaning of verse 14",
+   "adult": "[fixture] adult explanation of verse 14",
+   "words": [
+    {
+     "w": "حَدَرْنَا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "دَرْسَنَا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 14",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 15,
+   "kid": "[fixture] kid meaning of verse 15",
+   "adult": "[fixture] adult explanation of verse 15",
+   "words": [
+    {
+     "w": "فَاحْفَظُوا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "اخْتَصَرْتُهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 15",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 16,
+   "kid": "[fixture] kid meaning of verse 16",
+   "adult": "[fixture] adult explanation of verse 16",
+   "words": [
+    {
+     "w": "سَقَيْتُكُمْ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 16",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 17,
+   "kid": "[fixture] kid meaning of verse 17",
+   "adult": "[fixture] adult explanation of verse 17",
+   "words": [
+    {
+     "w": "الْأَدَاءِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "قَصِيدَةً",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 17",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 18,
+   "kid": "[fixture] kid meaning of verse 18",
+   "adult": "[fixture] adult explanation of verse 18",
+   "words": [
+    {
+     "w": "وَأَبْيَاتُهَا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "خَمْسُونَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 18",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 19,
+   "kid": "[fixture] kid meaning of verse 19",
+   "adult": "[fixture] adult explanation of verse 19",
+   "words": [
+    {
+     "w": "وَبِاللَّهِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "تَوْفِيقِي",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 19",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 20,
+   "kid": "[fixture] kid meaning of verse 20",
+   "adult": "[fixture] adult explanation of verse 20",
+   "words": [
+    {
+     "w": "الْقُرْآنَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "كَالْقِدْحِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 20",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 21,
+   "kid": "[fixture] kid meaning of verse 21",
+   "adult": "[fixture] adult explanation of verse 21",
+   "words": [
+    {
+     "w": "الْفَصَاحَةَ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 21",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 22,
+   "kid": "[fixture] kid meaning of verse 22",
+   "adult": "[fixture] adult explanation of verse 22",
+   "words": [
+    {
+     "w": "التَّالِي",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "لِسَانَهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 22",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 23,
+   "kid": "[fixture] kid meaning of verse 23",
+   "adult": "[fixture] adult explanation of verse 23",
+   "words": [
+    {
+     "w": "الذِّكْرِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "إِتْقَانُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 23",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 24,
+   "kid": "[fixture] kid meaning of verse 24",
+   "adult": "[fixture] adult explanation of verse 24",
+   "words": [
+    {
+     "w": "عَارِفًا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "بِاللَّحْنِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 24",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 25,
+   "kid": "[fixture] kid meaning of verse 25",
+   "adult": "[fixture] adult explanation of verse 25",
+   "words": [
+    {
+     "w": "الْقِرَاءَةَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "فَاحْذَرِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 25",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 26,
+   "kid": "[fixture] kid meaning of verse 26",
+   "adult": "[fixture] adult explanation of verse 26",
+   "words": [
+    {
+     "w": "الْحَرْفَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "تُخْرِجْهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 26",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 27,
+   "kid": "[fixture] kid meaning of verse 27",
+   "adult": "[fixture] adult explanation of verse 27",
+   "words": [
+    {
+     "w": "وَحُكْمُكَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "بِالتَّحْقِيقِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 27",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 28,
+   "kid": "[fixture] kid meaning of verse 28",
+   "adult": "[fixture] adult explanation of verse 28",
+   "words": [
+    {
+     "w": "يَنْبَغِي",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "تُبِينَهُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 28",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 29,
+   "kid": "[fixture] kid meaning of verse 29",
+   "adult": "[fixture] adult explanation of verse 29",
+   "words": [
+    {
+     "w": "تُخْفِيهِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "بِمُدْغَمٍ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 29",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 30,
+   "kid": "[fixture] kid meaning of verse 30",
+   "adult": "[fixture] adult explanation of verse 30",
+   "words": [
+    {
+     "w": "تَسْكِينَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْحُرُوفِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 30",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 31,
+   "kid": "[fixture] kid meaning of verse 31",
+   "adult": "[fixture] adult explanation of verse 31",
+   "words": [
+    {
+     "w": "وَاقْطَعَنْ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 31",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 32,
+   "kid": "[fixture] kid meaning of verse 32",
+   "adult": "[fixture] adult explanation of verse 32",
+   "words": [
+    {
+     "w": "ثَلَاثَةِ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 32",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 33,
+   "kid": "[fixture] kid meaning of verse 33",
+   "adult": "[fixture] adult explanation of verse 33",
+   "words": [
+    {
+     "w": "الْأَلِفُ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْمَعْرُوفُ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 33",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 34,
+   "kid": "[fixture] kid meaning of verse 34",
+   "adult": "[fixture] adult explanation of verse 34",
+   "words": [
+    {
+     "w": "وَاشْدُدِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "عَامِدًا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 34",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 35,
+   "kid": "[fixture] kid meaning of verse 35",
+   "adult": "[fixture] adult explanation of verse 35",
+   "words": [
+    {
+     "w": "مَهْمُوزًا",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "هَامِزًا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 35",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 36,
+   "kid": "[fixture] kid meaning of verse 36",
+   "adult": "[fixture] adult explanation of verse 36",
+   "words": [
+    {
+     "w": "الْيَاءِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "وَالْوَاوِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 36",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 37,
+   "kid": "[fixture] kid meaning of verse 37",
+   "adult": "[fixture] adult explanation of verse 37",
+   "words": [
+    {
+     "w": "الرَّاءِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "وَاللَّامِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 37",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 38,
+   "kid": "[fixture] kid meaning of verse 38",
+   "adult": "[fixture] adult explanation of verse 38",
+   "words": [
+    {
+     "w": "وَأَنْعِمْ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْعَيْنِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 38",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 39,
+   "kid": "[fixture] kid meaning of verse 39",
+   "adult": "[fixture] adult explanation of verse 39",
+   "words": [
+    {
+     "w": "إِتْمَامِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْكَلَامِ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 39",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 40,
+   "kid": "[fixture] kid meaning of verse 40",
+   "adult": "[fixture] adult explanation of verse 40",
+   "words": [
+    {
+     "w": "تُدْغِمَنَّ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "الْمِيمَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 40",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 41,
+   "kid": "[fixture] kid meaning of verse 41",
+   "adult": "[fixture] adult explanation of verse 41",
+   "words": [
+    {
+     "w": "الْوَاوِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "مُشْبِعًا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 41",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 42,
+   "kid": "[fixture] kid meaning of verse 42",
+   "adult": "[fixture] adult explanation of verse 42",
+   "words": [],
+   "lesson": "[fixture] lesson of verse 42",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 43,
+   "kid": "[fixture] kid meaning of verse 43",
+   "adult": "[fixture] adult explanation of verse 43",
+   "words": [
+    {
+     "w": "السَّاكِنَيْنِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "تَلَاقَيَا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 43",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 44,
+   "kid": "[fixture] kid meaning of verse 44",
+   "adult": "[fixture] adult explanation of verse 44",
+   "words": [
+    {
+     "w": "وَأُسْمِي",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "حُرُوفًا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 44",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 45,
+   "kid": "[fixture] kid meaning of verse 45",
+   "adult": "[fixture] adult explanation of verse 45",
+   "words": [
+    {
+     "w": "وَهَمْزَةٌ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 45",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 46,
+   "kid": "[fixture] kid meaning of verse 46",
+   "adult": "[fixture] adult explanation of verse 46",
+   "words": [
+    {
+     "w": "الْحَلْقِ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "بَيَانُهَا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 46",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 47,
+   "kid": "[fixture] kid meaning of verse 47",
+   "adult": "[fixture] adult explanation of verse 47",
+   "words": [
+    {
+     "w": "النُّونَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "يُظْهِرُونَهَا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 47",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 48,
+   "kid": "[fixture] kid meaning of verse 48",
+   "adult": "[fixture] adult explanation of verse 48",
+   "words": [
+    {
+     "w": "وَإِظْهَارُكَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "التَّنْوِينَ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 48",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 49,
+   "kid": "[fixture] kid meaning of verse 49",
+   "adult": "[fixture] adult explanation of verse 49",
+   "words": [
+    {
+     "w": "أَشْيَاءُ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "لَطِيفَةٌ",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 49",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 50,
+   "kid": "[fixture] kid meaning of verse 50",
+   "adult": "[fixture] adult explanation of verse 50",
+   "words": [
+    {
+     "w": "فَلِابْنِ",
+     "m": "[fixture] meaning 1"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 50",
+   "cite": [
+    "[fixture] source"
+   ]
+  },
+  {
+   "n": 51,
+   "kid": "[fixture] kid meaning of verse 51",
+   "adult": "[fixture] adult explanation of verse 51",
+   "words": [
+    {
+     "w": "أَجَابَكَ",
+     "m": "[fixture] meaning 1"
+    },
+    {
+     "w": "وَأَجَابَنَا",
+     "m": "[fixture] meaning 2"
+    }
+   ],
+   "lesson": "[fixture] lesson of verse 51",
+   "cite": [
+    "[fixture] source"
+   ]
+  }
+ ]
+}

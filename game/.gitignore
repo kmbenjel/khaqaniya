@@ -1,0 +1,15 @@
+node_modules/
+dist/
+public/data/
+public/audio/
+public/FIXTURE
+test-shots/
+test-results/
+playwright-report/
+.serve/
+copy-missing.txt
+public/manifest.webmanifest
+public/robots.txt
+public/sitemap.xml
+public/CNAME
+public/art/

@@ -1,0 +1,37 @@
+# GitHub Pages: the game at <base>/, the poem site (shatr) at <base>/qasida/, one artifact (site/README.md).
+# Base URL: repository variable KQ_BASE (default https://khaqaniya.benjelloun.dev; the custom domain is set in the repo's Pages settings, cname).
+name: pages
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+permissions: { contents: read, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: { KQ_BASE: "${{ vars.KQ_BASE || 'https://khaqaniya.benjelloun.dev' }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Poem site (generates its content from text/, audio/)
+        working-directory: site
+        run: npm ci && npm test && npm run build && test ! -e content/FIXTURE
+      - name: Game
+        working-directory: game
+        run: npm ci && npm run build && test ! -e dist/FIXTURE
+      - name: One artifact
+        run: |
+          mkdir -p _site/qasida
+          cp -r game/dist/. _site/
+          cp -r site/dist/. _site/qasida/
+          test -e _site/qasida/sw.js && test -e _site/sw.js
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: _site }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4
