@@ -108,7 +108,7 @@
   "file": "audio/voice/boss.fuwaq.right.2.mp3"
  },
  "boss.fuwaq.wrong": {
-  "dur": 3.96,
+  "dur": 3.65,
   "file": "audio/voice/boss.fuwaq.wrong.mp3"
  },
  "boss.intro.amin": {
@@ -484,7 +484,7 @@
   "file": "audio/voice/fact.nafi.warsh.mp3"
  },
  "fact.poet": {
-  "dur": 10.8,
+  "dur": 12.17,
   "file": "audio/voice/fact.poet.mp3"
  },
  "fact.seven": {
@@ -664,7 +664,7 @@
   "file": "audio/voice/game.help.place.mp3"
  },
  "game.help.remove": {
-  "dur": 3.62,
+  "dur": 4.39,
   "file": "audio/voice/game.help.remove.mp3"
  },
  "game.listenPick.how": {
@@ -852,7 +852,7 @@
   "file": "audio/voice/joke.1.mp3"
  },
  "joke.10": {
-  "dur": 7.51,
+  "dur": 7.87,
   "file": "audio/voice/joke.10.mp3"
  },
  "joke.11": {
@@ -976,7 +976,7 @@
   "file": "audio/voice/level.start.2.mp3"
  },
  "level.start.3": {
-  "dur": 2.9,
+  "dur": 5.04,
   "file": "audio/voice/level.start.3.mp3"
  },
  "level.start.4": {
@@ -1170,5 +1170,13 @@
  "reward.stars.3": {
   "dur": 3.24,
   "file": "audio/voice/reward.stars.3.mp3"
+ },
+ "tomorrow.line": {
+  "dur": 6.43,
+  "file": "audio/voice/tomorrow.line.mp3"
+ },
+ "tomorrow.mishmish": {
+  "dur": 5.11,
+  "file": "audio/voice/tomorrow.mishmish.mp3"
  }
 }

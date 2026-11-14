@@ -4,7 +4,7 @@ export interface VerseState { stars: number; box: number; due: string; rung: num
 export interface Profile {
   id: string; name: string; lantern: string; level: Level; seed: number; created: string;
   days: string[]; skill: number; boost: number; items: number;
-  seen: { intro?: boolean; cast?: boolean; how: Record<string, number>; tips: string[]; jokes: string[]; lines: string[]; lahn?: boolean; askedName?: boolean; listened?: number[]; facts?: string[]; book?: string[] };
+  seen: { intro?: boolean; cast?: boolean; how: Record<string, number>; tips: string[]; jokes: string[]; lines: string[]; lahn?: boolean; askedName?: boolean; listened?: number[]; facts?: string[]; book?: string[]; tomorrow?: string };
   verses: Record<string, VerseState>;
   bosses: Record<string, { stars: number; crown: boolean; date: string; noHelp?: boolean }>;
   stickers: Record<string, string>;
@@ -171,8 +171,8 @@ export function markDay(): void {
   const p = profile(); const d = today();
   if (!p.days.includes(d)) { p.days.push(d); p.days.sort(); }
 }
-export function lastSevenLamps(): boolean[] {
-  const d = today(); const set = new Set(profile().days);
+export function lastSevenLamps(p: Profile = profile()): boolean[] {
+  const d = today(); const set = new Set(p.days);
   return Array.from({ length: 7 }, (_, i) => set.has(addDays(d, -i)));
 }
 export function daysAway(): number {

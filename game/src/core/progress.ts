@@ -1,6 +1,6 @@
 // Unlocks, the next target, due pearls and stickers (GAME_DESIGN §4.9, §5.2–5.4).
 import type { District, Poem } from './data';
-import { award, daysAway, isDue, learned, learnedCount, lastSevenLamps, profile, settings, vs } from './store';
+import { award, daysAway, learned, learnedCount, lastSevenLamps, profile, settings, today, type Profile } from './store';
 
 let poem: Poem;
 export function initProgress(p: Poem) { poem = p; }
@@ -41,8 +41,11 @@ export function nextTarget(): Target {
 }
 export const targetHash = (tg: Target) => (tg.kind === 'verse' ? '#/verse/' + tg.n : tg.kind === 'boss' ? '#/boss/' + bossKey(tg.d) : tg.kind === 'finale' ? '#/finale' : '#/map');
 
-export function dueVerses(): number[] {
-  return poem.verses.filter((v) => isDue(v.n)).map((v) => v.n).sort((a, b) => (vs(a)!.due < vs(b)!.due ? -1 : vs(a)!.due > vs(b)!.due ? 1 : a - b));
+/** Verses due on a day (default today) for a player (default the active one), the longest overdue first. */
+export function dueVerses(on = today(), p: Profile = profile()): number[] {
+  const st = (n: number) => p.verses[String(n)];
+  return poem.verses.filter((v) => { const x = st(v.n); return !!x && x.stars > 0 && x.due <= on; }).map((v) => v.n)
+    .sort((a, b) => (st(a).due < st(b).due ? -1 : st(a).due > st(b).due ? 1 : a - b));
 }
 
 export const STICKERS = {

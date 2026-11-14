@@ -5,7 +5,7 @@ import { t, num } from '../core/copy';
 import type { Verse } from '../core/data';
 import { pearlSvg } from '../art';
 import { btn, iconBtn, sheet, verseCard, stars } from '../core/ui';
-import { learned, vs, isDue, learnedCount, award, profile, save } from '../core/store';
+import { learned, vs, isDue, learnedCount, award, profile, save, switchProfile, type Profile } from '../core/store';
 import { P, verseUnlocked, versesOf } from '../core/progress';
 import { play, stop, setMediaControls } from '../core/audio';
 import { go, type ScreenCtx } from '../core/router';
@@ -89,17 +89,23 @@ export function necklaceScreen(ctx: ScreenCtx): HTMLElement {
   return root;
 }
 
-export function verseSheet(v: Verse) {
-  const st = vs(v.n);
-  const unlocked = verseUnlocked(v.n);
+/** A pearl's sheet: the verse, its stars, the kid meaning, listen / play it again / read it on the poem site.
+ *  From the grown-ups' progress (`o.player`): that player's stars, the words missed in «someone is listening» marked,
+ *  and «play it again» plays it as that player. */
+export function verseSheet(v: Verse, o: { player?: Profile; weak?: string[] } = {}) {
+  const other = o.player && o.player.id !== profile().id ? o.player : null;
+  const st = o.player ? o.player.verses[String(v.n)] : vs(v.n);
+  const unlocked = other ? (st?.stars || 0) > 0 : verseUnlocked(v.n);
   const ctl = new AbortController();
+  const card = unlocked || st ? verseCard(v, { cls: 'sheet-card' }) : null;
+  if (card && o.weak?.length) card.querySelectorAll<HTMLElement>('.w').forEach((w) => { if (o.weak!.includes(w.dataset.key || '')) w.classList.add('weak'); });
   const body = h('div', { class: 'verse-sheet' },
-    unlocked || st ? verseCard(v, { cls: 'sheet-card' }) : h('p', { class: 'locked-note' }, t('necklace.locked')),
+    card || h('p', { class: 'locked-note' }, t('necklace.locked')),
     st ? stars(st.stars) : null,
     unlocked && v.meaning?.kid ? h('p', { class: 'kid-meaning small' }, v.meaning.kid) : null,
     h('div', { class: 'row' },
       unlocked || st ? btn(t('necklace.sheet.play'), { icon: 'ear', testid: 'sheet-play', onClick: () => void play(v, 'verse', ctl.signal).catch(() => {}) }) : null,
-      unlocked ? btn(t('necklace.sheet.replay'), { icon: 'pearl', primary: true, testid: 'sheet-level', onClick: () => { s.close(); go('#/verse/' + v.n); } }) : null,
+      unlocked ? btn(t('necklace.sheet.replay'), { icon: 'pearl', primary: true, testid: 'sheet-level', onClick: () => { s.close(); if (other) switchProfile(other.id); go('#/verse/' + v.n); } }) : null,
       h('a', { class: 'btn btn-small', href: './qasida/#b' + v.n, 'data-testid': 'sheet-read' }, t('necklace.read'))));
   // closing stops this sheet's own clip only (not «listen to all»)
   const s = sheet(body, { testid: 'verse-sheet', title: t('necklace.sheet.verse', { n: v.n }), onClose: () => ctl.abort() });

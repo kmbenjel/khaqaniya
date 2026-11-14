@@ -3936,6 +3936,55 @@
     "voice": false,
     "aud": "child"
   },
+  "tomorrow.title": {
+    "text": "نَلْتَقِي غَدًا!",
+    "voice": false,
+    "who": "amin",
+    "aud": "child",
+    "note": "E2 (ENGAGEMENT #14): title of the «see you tomorrow» card, shown once a day on the reward of the pearl that meets the day's suggestion (settings.dailyNew). An invitation: no loss, no streak, no countdown"
+  },
+  "tomorrow.line": {
+    "text": "جَمَعْنَا نَصِيبَ الْيَوْمِ مِنَ الدُّرَرِ! غَدًا نُلَمِّعُهَا… وَيُضِيءُ مِصْبَاحٌ جَدِيدٌ.",
+    "say": "جَمَعْنَا نَصِيبَ الْيَوْمِ مِنَ الدُّرَرْ! غَدًا نُلَمِّعُهَا… وَيُضِيءُ مِصْبَاحٌ جَدِيدْ.",
+    "voice": true,
+    "who": "amin",
+    "aud": "child",
+    "p": 1,
+    "note": "on the card, said first; Amin rests on his bench with the lantern. Today's new pearls are due tomorrow (box 1); the lamp is the journey-days lamp (days.hint, days.lit)"
+  },
+  "tomorrow.mishmish": {
+    "text": "وَأَنَا… أَحْلُمُ بِالسَّرْدِينِ حَتَّى الْغَدِ!",
+    "say": "وَأَنَا… أَحْلُمُ بِالسَّرْدِينِ حَتَّى الْغَدْ!",
+    "voice": true,
+    "who": "mishmish",
+    "aud": "child",
+    "p": 1,
+    "note": "on the card, after tomorrow.line; Mishmish is curled up asleep in the picture (he talks in his sleep). حَلَمَ يَحْلُمُ بِـ (a dream), not حَلُمَ"
+  },
+  "tomorrow.label.today": {
+    "text": "الْيَوْمَ",
+    "voice": false,
+    "aud": "child",
+    "note": "under today's lamp (lit) on the card; adverb, like غَدًا beside it"
+  },
+  "tomorrow.label.tomorrow": {
+    "text": "غَدًا",
+    "voice": false,
+    "aud": "child",
+    "note": "under tomorrow's lamp (waiting, glowing softly) on the card"
+  },
+  "tomorrow.polish": {
+    "text": "دُرَرٌ لِلتَّلْمِيعِ غَدًا: {n}",
+    "voice": false,
+    "aud": "child",
+    "note": "on the card, with up to six small dusty pearls; {n} = verses due tomorrow (today's new pearls and any left from today); hidden when 0. Same pattern as polish.count"
+  },
+  "tomorrow.ok": {
+    "text": "إِلَى الْغَدِ!",
+    "voice": false,
+    "aud": "child",
+    "note": "the card's one button (the child's own words); it closes the card and the reward's buttons come back (nothing is blocked)"
+  },
   "heroes.title": {
     "text": "لَوْحَةُ الْأَبْطَالِ",
     "voice": false,
@@ -5070,6 +5119,78 @@
     "text": "عن اللعبة",
     "voice": false,
     "aud": "adult"
+  },
+  "grown.section.progress": {
+    "text": "تقدُّم الرحلة",
+    "voice": false,
+    "aud": "adult",
+    "note": "E2 (ENGAGEMENT #13): first section of the grown-ups' corner (behind the gate), one player's progress"
+  },
+  "grown.progress.who": {
+    "text": "الفانوس:",
+    "voice": false,
+    "aud": "adult",
+    "note": "label of the player chooser (a chip per lantern: its colour and name), shown only when there are several players; also the group's aria-label"
+  },
+  "grown.progress.pearls": {
+    "text": "الدُّرر المجموعة: {n} من {total}",
+    "voice": false,
+    "aud": "adult",
+    "note": "verses learned (stars > 0) of all verses"
+  },
+  "grown.progress.golden": {
+    "text": "الدُّرر الذهبية (ثلاث نَجَمات): {n}",
+    "voice": false,
+    "aud": "adult",
+    "note": "verses at 3 stars; «نَجَمات» as in the game (heroes.col.stars, reward.stars.3)"
+  },
+  "grown.progress.days": {
+    "text": "أيام اللعب: {n}",
+    "voice": false,
+    "aud": "adult",
+    "note": "distinct days the player played (a new pearl or a polish session); the seven lamps follow under days.week"
+  },
+  "grown.progress.bosses": {
+    "text": "التحدّيات المكتملة: {n} من {total}",
+    "voice": false,
+    "aud": "adult",
+    "note": "gang challenges done (a challenge cannot be lost), of the ten"
+  },
+  "grown.progress.due": {
+    "text": "دُرر للتلميع اليوم: {n}",
+    "voice": false,
+    "aud": "adult",
+    "note": "verses due for spaced review today"
+  },
+  "grown.progress.practise": {
+    "text": "أبيات نراجعها معًا",
+    "voice": false,
+    "aud": "adult",
+    "note": "heading of the list of verses to practise; each item opens the verse sheet (that player's stars, missed words marked)"
+  },
+  "grown.progress.practise.why": {
+    "text": "أبيات احتاجت إلى إعادة في التلميع، أو فاتت منها كلمات في «معي من يسمعني».",
+    "voice": false,
+    "aud": "adult",
+    "note": "under grown.progress.practise: where the list comes from (polish «not yet» results, and the words marked in RECITE's listener mode, game.recite.listener)"
+  },
+  "grown.progress.lapses": {
+    "text": "إعادات في التلميع: {n}",
+    "voice": false,
+    "aud": "adult",
+    "note": "on a verse to practise: how many polish tasks ended «not yet» (lapses)"
+  },
+  "grown.progress.weak": {
+    "text": "كلمات فاتت:",
+    "voice": false,
+    "aud": "adult",
+    "note": "on a verse to practise, followed by the missed words themselves (from text/khaqaniya.json, vocalised)"
+  },
+  "grown.progress.none": {
+    "text": "لا أبيات تحتاج إلى مراجعة الآن.",
+    "voice": false,
+    "aud": "adult",
+    "note": "instead of the list when no verse has a polish retry or a missed word (also before the first pearl)"
   },
   "grown.tips.1": {
     "text": "جلسة قصيرة كل يوم أنفع من جلسة طويلة في الأسبوع.",

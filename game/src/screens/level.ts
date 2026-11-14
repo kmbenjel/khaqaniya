@@ -22,6 +22,7 @@ import { pauseMenu } from './grownups';
 import { sceneArt } from '../art';
 import { svg } from '../core/h';
 import { storyInterlude, storyBeat } from './splash';
+import { tomorrowDue, tomorrowCard } from './tomorrow';
 
 export const STEP_NAMES = ['intro', 'listen', 'meaning', 'playA', 'playB', 'playC', 'recite', 'link', 'reward'] as const;
 let levelState: { verse: number; step: string } | null = null;
@@ -418,6 +419,9 @@ async function reward(v: Verse, f: Frame, signal: AbortSignal, score: number, rn
     await lines;
     if (!pr.name && !pr.seen.askedName) { pr.seen.askedName = true; save(); await askNameSheet(); }
   }
+  // the pearl that meets the day's suggestion: once the reward's lines are over, a gentle «see you tomorrow» (once a day)
+  const closing = res.first && tomorrowDue();
+  if (closing) { await lines; await tomorrowCard(signal, d.skin); }
   const tg = nextTarget();
   const row = h('div', { class: 'reward-btns' });
   f.play.replaceChildren(row);
@@ -428,4 +432,5 @@ async function reward(v: Verse, f: Frame, signal: AbortSignal, score: number, rn
       btn(t('btn.replay'), { icon: 'again', testid: 'btn-replay', onClick: () => go('#/verse/' + v.n + '?r=' + Date.now()) }),
       btn(t('btn.map'), { icon: 'map', testid: 'btn-map', onClick: () => go('#/map') })));
   setActive({ right: () => row.querySelector('[data-testid=btn-next]'), wrong: () => null, label: 'reward' });
+  if (closing) (row.querySelector('[data-testid=btn-next]') as HTMLElement | null)?.focus({ preventScroll: true });   // the card's focus comes back here
 }

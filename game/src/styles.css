@@ -832,3 +832,74 @@ html.grownup .bubble { font-family: var(--ui); font-size: calc(17px * var(--k));
 /* a child's line in a toast (the map has no cast bar): the bubble's face and size */
 .toast.kid { font-family: var(--verse); font-size: var(--fs-bubble); line-height: 1.8; background: #fff8ec; color: var(--ink); border-radius: 18px; box-shadow: var(--shadow); text-align: center; }
 /* ══ end of E1 block ═════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ══ E2: parents' progress (grown-ups' corner) and «see you tomorrow» (ENGAGEMENT #13, #14) ══════════════════════════ */
+/* progress: one lantern at a time, its numbers, the last seven lamps, the verses to practise (each opens its sheet) */
+.grown-progress { gap: 10px; }
+.progress-who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.progress-who[hidden] { display: none; }
+.progress-who-label { font-size: var(--fs-adult); font-weight: 700; }
+.who-chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--ui); }
+.who-chip .lantern-art { width: 22px; height: 32px; flex: none; }
+.progress-card { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.progress-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 6px 14px; }
+.corner .progress-stat { display: flex; align-items: center; gap: 8px; }
+.progress-stat .icon { width: 24px; height: 24px; flex: none; color: var(--brass); }
+.progress-week { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; background: #f6efe0; border-radius: 14px; padding: 6px 12px; }
+.progress-week-label { font-family: var(--verse); font-weight: 700; font-size: calc(18px * var(--k)); line-height: 1.8; }
+.progress-week .lamp { width: 24px; height: 36px; opacity: .3; }
+.progress-week .lamp.on { opacity: 1; }
+.grown-progress h3 { margin: 4px 0 0; font-size: 18px; }
+.corner .practise-note, .corner .practise-none { color: var(--muted); }
+.practise-box { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.practise { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.practise-item { width: 100%; min-height: var(--tap); display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 12px; border: 2px solid #eadfc8; border-radius: 16px;
+  background: var(--paper); color: var(--ink); font: inherit; text-align: start; cursor: pointer; box-shadow: 0 3px 0 #eadfc8; touch-action: manipulation; }
+.practise-head { display: flex; align-items: center; gap: 8px; }
+.practise-n { font-family: var(--verse); font-weight: 700; font-size: calc(18px * var(--k)); line-height: 1.8; }
+.practise-head .star svg { width: 18px; height: 18px; }
+.practise-head .star:not(.on) svg { color: #d9cfba; }
+.practise-sadr { font-family: var(--verse); font-weight: 700; font-size: calc(20px * var(--k)); line-height: 2; }
+.practise-why { font-size: var(--fs-adult); line-height: 1.7; color: var(--muted); }
+.practise-word { display: inline-block; margin-inline-start: 4px; padding: 0 6px; border-radius: 8px; background: #ffd5da; color: var(--ink); font-family: var(--verse); font-weight: 700; font-size: calc(18px * var(--k)); line-height: 1.9; }
+/* the verse sheet opened from the progress: the words missed in «someone is listening», as they were marked */
+.verse-card .w.weak { background: #ffd5da; border-radius: 6px; text-decoration: underline wavy var(--rose); text-underline-offset: 6px; }
+
+/* «see you tomorrow»: a dusk card over the reward (one button, no timer); its content scrolls if the text is large */
+.overlay.tomorrow-card { z-index: 46; justify-content: flex-start; overflow-y: auto; color: #fff; padding: calc(12px + var(--safe-t)) 16px calc(16px + var(--safe-b)); animation: fadeIn .5s;
+  background: linear-gradient(#0b1130, #283464 52%, #6d5f9e 82%, #e7a57c); }
+.tomorrow-sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .8;
+  background: radial-gradient(1.5px 1.5px at 14% 10%, #fff, transparent), radial-gradient(1.5px 1.5px at 78% 7%, #fff, transparent), radial-gradient(2px 2px at 60% 18%, #ffe9a8, transparent),
+    radial-gradient(1.5px 1.5px at 30% 24%, #fff, transparent), radial-gradient(1.5px 1.5px at 90% 28%, #fff, transparent), radial-gradient(2px 2px at 8% 34%, #ffe9a8, transparent); }
+.tomorrow-card > * { flex: none; }
+.tomorrow-card > .tomorrow-title { margin-top: auto; }   /* centred when it fits, scrolls from the top when it does not */
+.tomorrow-card > .tomorrow-ok { margin-bottom: auto; }
+.tomorrow-title { margin: 0; font-family: var(--verse); font-size: calc(34px * var(--k)); line-height: 1.8; text-shadow: 0 2px 0 rgba(0,0,0,.3); }
+.tomorrow-stage { position: relative; width: min(100%, 420px); height: 168px; border-radius: 24px; overflow: hidden; background: rgba(255,255,255,.08); box-shadow: 0 8px 24px rgba(10,14,40,.35), inset 0 0 0 2px rgba(255,255,255,.18); }
+.tomorrow-stage.banded { background: linear-gradient(rgba(11,17,48,.45), rgba(11,17,48,.05) 60%), var(--band) center 70% / cover no-repeat; }
+.tomorrow-cast { position: absolute; bottom: 2px; }
+.tomorrow-cast > * { width: 100%; height: 100%; }
+.tomorrow-cast .art-img { object-fit: contain; object-position: bottom; }
+.tomorrow-amin { left: 50%; width: 108px; height: 162px; margin-left: -54px; }
+.tomorrow-mishmish { left: calc(50% + 46px); width: 74px; height: 74px; bottom: 0; }
+.tomorrow-laqlaq { left: 5%; width: 84px; height: 126px; }
+.tomorrow-lamps { display: flex; align-items: flex-end; gap: 10px; }
+.tomorrow-lamp { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tomorrow-lamp .lamp { width: 40px; height: 58px; }
+.tomorrow-lamp.is-today .lamp svg { filter: drop-shadow(0 0 10px rgba(255,217,119,.85)); }
+.tomorrow-lamp-label { font-family: var(--verse); font-weight: 700; font-size: calc(20px * var(--k)); line-height: 1.8; }
+.tomorrow-thread { width: 64px; margin-bottom: 66px; border-top: 3px dotted rgba(255,233,168,.75); }   /* at the lamps' middle */
+.tomorrow-line { width: min(100%, 520px); margin: 0; text-align: center; transition: box-shadow .2s; }
+.tomorrow-line.speaking { box-shadow: 0 0 0 3px var(--gold), var(--shadow); }
+.tomorrow-polish { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 10px; padding: 4px 14px; border-radius: 18px; background: rgba(11,17,48,.5);
+  font-family: var(--verse); font-weight: 700; font-size: var(--fs-bubble); line-height: 1.8; }
+.tomorrow-pearls { display: inline-flex; gap: 2px; }
+.tomorrow-pearls svg { width: 26px; height: 26px; }
+.tomorrow-ok { min-width: 220px; }
+@media (max-height: 760px) {   /* 360×740: the card fits one screen */
+  .overlay.tomorrow-card { gap: 8px; }
+  .tomorrow-stage { height: 132px; } .tomorrow-amin { width: 86px; height: 128px; margin-left: -43px; } .tomorrow-mishmish { left: calc(50% + 36px); width: 60px; height: 60px; }
+  .tomorrow-laqlaq { width: 66px; height: 100px; } .tomorrow-title { font-size: calc(30px * var(--k)); } .tomorrow-lamp .lamp { width: 34px; height: 48px; } .tomorrow-thread { margin-bottom: 61px; }
+}
+@media (min-width: 1024px) { .tomorrow-stage { height: 200px; } .tomorrow-amin { width: 130px; height: 195px; margin-left: -65px; } .tomorrow-mishmish { left: calc(50% + 56px); width: 86px; height: 86px; } .tomorrow-laqlaq { width: 96px; height: 144px; } }
+/* ══ end of E2 block ═════════════════════════════════════════════════════════════════════════════════════════════ */

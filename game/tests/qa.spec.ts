@@ -172,6 +172,15 @@ for (const vp of SIZES) {
       await kq(page, 'goto', target);
       await page.waitForTimeout(400);
       await look(target);
+      if (target === 'grownups') {
+        // E2: the progress with verses to practise (a polish retry, missed words), a second lantern, a practise sheet
+        await page.evaluate(() => { const k = (window as any).__kq; const p = k.state().profile; p.verses['3'].lapses = 3; p.verses['5'].weak = { s0: 2, s1: 1, a0: 1, a2: 1 }; p.verses['8'].lapses = 1; p.verses['8'].weak = { a1: 1 }; k.set({}); });
+        await kq(page, 'goto', 'grownups'); await page.waitForTimeout(400); await look('grownups progress');
+        await page.getByTestId('btn-add-player').click(); await page.waitForTimeout(300); await look('grownups two lanterns');
+        await page.getByTestId('practise-5').click(); await page.waitForTimeout(400); await look('grownups practise sheet');
+        if (vp.w === 360) await shot(page, `qa-${tag}-practise-sheet`);
+        await page.keyboard.press('Escape');
+      }
     }
     // levels: every step of verses 1–4 (G1, G2, G3, G4, G4r, G5, G6, G7, G8), the reward
     await kq(page, 'reset', 42);
@@ -180,8 +189,12 @@ for (const vp of SIZES) {
       if (v > 1) await kq(page, 'learnUpTo', v - 1);
       await kq(page, 'goto', 'verse:' + v);
       await playUntil(page, (s) => s.level?.verse === v && s.item === 'reward', {
-        skip: ['reward'], max: 1500,
-        each: async (s) => { const k = (s.level?.step || '') + ':' + (s.item || ''); if (s.item && !seen.has(k)) { seen.add(k); await look('v' + v + ' ' + k); if (vp.w === 360) await shot(page, `qa-${tag}-v${v}-${k.replace(':', '-')}`); } return false; },
+        skip: ['reward', 'tomorrow'], max: 1500,
+        each: async (s) => {
+          const k = (s.level?.step || '') + ':' + (s.item || ''); if (s.item && !seen.has(k)) { seen.add(k); await look('v' + v + ' ' + k); if (vp.w === 360) await shot(page, `qa-${tag}-v${v}-${k.replace(':', '-')}`); }
+          if (s.item === 'tomorrow') { await page.getByTestId('tomorrow-ok').click(); return true; }   // E2: the card on verse 2's reward, looked at above
+          return false;
+        },
       });
       await look('v' + v + ' reward');
     }
@@ -194,6 +207,7 @@ for (const vp of SIZES) {
     await kq(page, 'goto', 'polish');
     await playUntil(page, (s) => s.item === 'polish-done', { skip: ['polish-done'], max: 1500, each: async (s) => { if (s.polish && !seen.has('p' + s.polish.i)) { seen.add('p' + s.polish.i); await look('polish ' + s.item); } return false; } });
     for (const target of ['prayer', 'medal', 'cert']) { await kq(page, 'goto', target); await page.waitForTimeout(600); await look(target); await shot(page, `qa-${tag}-${target}`); }
+    expect(seen.has('reward:tomorrow'), 'the «see you tomorrow» card was audited').toBe(true);
     const uniq = new Map<string, Finding>();
     for (const f of found) uniq.set(f.what + '|' + f.text, f);
     const list = [...uniq.values()];

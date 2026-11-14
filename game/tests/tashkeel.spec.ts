@@ -141,14 +141,18 @@ test('tashkeel: every Arabic line a child can see is vocalised (grown-up mode of
   // verses that bring every mini-game: G1–G8, the radar, both specials (caravan, hats); a replayed verse
   const ds = await kq(page, 'districts');
   const plan: [number, string?][] = [[2], [3, 'mid'], [4], [5, 'strong'], [6], [11], [31], [41], [1]];
+  let sawTomorrow = false;
   for (const [v, level] of plan) {
     await kq(page, 'learnUpTo', v === 1 ? 3 : v - 1);
     if (level) await kq(page, 'level', level);
     asked = false;
     await kq(page, 'goto', 'verse:' + v);
-    await walk(page, 'v' + v, (s) => s.level?.verse === v && s.item === 'reward', { skip: ['reward'], each: meaningExtras });
+    // E2: the pearl that meets the day's suggestion (verse 2, the second of the day) closes with «see you tomorrow»
+    const tomorrow = async (s: any) => { if (s.item !== 'tomorrow') return meaningExtras(s); sawTomorrow = true; await tap(page, 'tomorrow-ok'); return true; };
+    await walk(page, 'v' + v, (s) => s.level?.verse === v && s.item === 'reward', { skip: ['reward', 'tomorrow'], each: tomorrow });
     await kq(page, 'level', 'easy');
   }
+  expect(sawTomorrow, 'the «see you tomorrow» card was met and looked at').toBe(true);
   // a gang challenge with its entrance and every question; the last one (the cave) too
   await kq(page, 'learnUpTo', 7);
   await kq(page, 'goto', 'boss:manfoukh');
@@ -178,7 +182,7 @@ test('tashkeel: every Arabic line a child can see is vocalised (grown-up mode of
   await page.waitForTimeout(500);
   await tap(page, 'home-mishmish'); await look(page, 'home mishmish');
   for (const id of ['btn-grownups', 'btn-about']) { await kq(page, 'goto', 'home'); await page.waitForTimeout(400); await tap(page, id); await page.waitForTimeout(300); await look(page, 'gate via ' + id); }
-  expect(await page.locator('.corner, .about-body').count(), 'grown-ups\' pages open without the gate').toBe(0);
+  expect(await page.locator('.corner, .about-body, [data-testid=grown-progress]').count(), 'grown-ups\' pages (or their progress) open without the gate').toBe(0);
   await kq(page, 'goto', 'home'); await page.waitForTimeout(300);
   await page.getByTestId('btn-players').click().catch(() => {}); await page.waitForTimeout(400); await look(page, 'profiles');
   // the last challenge, the finale, the prayer, the medal, the certificate

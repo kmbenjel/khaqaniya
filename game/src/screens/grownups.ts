@@ -1,8 +1,8 @@
 // Grown-ups' corner behind a gate (GAME_DESIGN §10.4), the pause menu (no gate), About and privacy.
 import { h } from '../core/h';
 import { t, num, setNumerals, family, has } from '../core/copy';
-import { btn, iconBtn, sheet, toast } from '../core/ui';
-import { settings, save, S, profile, exportJSON, importJSON, resetAll, deleteProfile, addProfile, switchProfile, storageOk, type Settings, type Level } from '../core/store';
+import { btn, iconBtn, sheet, toast, stars } from '../core/ui';
+import { settings, save, S, profile, exportJSON, importJSON, resetAll, deleteProfile, addProfile, switchProfile, storageOk, type Settings, type Level, type Profile } from '../core/store';
 import { P } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
 import { env } from '../core/env';
@@ -10,7 +10,9 @@ import { sfx } from '../core/sfx';
 import { followSwitches } from '../core/audio';
 import { downloadAll } from '../sw-client';
 import { profileEditor } from './profiles';
-import { charArt } from '../art';
+import { charArt, lanternArt, iconEl } from '../art';
+import { report, type PractiseItem } from '../core/report';
+import { verseSheet } from './necklace';
 
 export function applySettings() {
   const s = settings();
@@ -76,20 +78,80 @@ export function grownupsScreen(_ctx: ScreenCtx): HTMLElement {
   return root;
 }
 
+/** Progress for grown-ups (ENGAGEMENT #13), first in their corner: one lantern at a time (a chooser when there are
+ *  several), its numbers, the last seven lamps, and the verses to practise, each opening its verse sheet. Read from this
+ *  device's profiles only. Never shown to a child: it lives behind the gate, like the rest of the corner. */
+function progressSection(): { el: HTMLElement; refresh: () => void } {
+  let who = profile().id;
+  const card = h('div', { class: 'progress-card', 'data-testid': 'progress-card' });
+  const chooser = h('div', { class: 'progress-who', role: 'group', 'aria-label': t('grown.progress.who') });
+  const paint = () => {
+    const ps = S().profiles;
+    const p = ps.find((x) => x.id === who) || profile();
+    who = p.id;
+    chooser.hidden = ps.length < 2;
+    chooser.querySelectorAll<HTMLElement>('.who-chip').forEach((c) => { const on = c.dataset.player === p.id; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    card.dataset.player = p.id;
+    card.replaceChildren(...progressCard(p));
+  };
+  const refresh = () => {
+    chooser.replaceChildren(h('span', { class: 'progress-who-label', 'aria-hidden': 'true' }, t('grown.progress.who')),
+      ...S().profiles.map((x) => h('button', { type: 'button', class: 'chip who-chip', 'data-player': x.id, 'data-testid': 'progress-who-' + x.id, 'aria-pressed': 'false', onclick: () => { sfx('tap'); who = x.id; paint(); } },
+        lanternArt(x.lantern), h('span', { dir: 'auto' }, x.name || t('profile.guest')))));
+    paint();
+  };
+  refresh();
+  return { el: h('section', { class: 'grown-progress', 'data-testid': 'grown-progress' }, h('h2', null, t('grown.section.progress')), chooser, card), refresh };
+}
+
+function progressCard(p: Profile): Node[] {
+  const r = report(p);
+  const poem = P();
+  const stat = (icon: string, text: string, testid: string) => h('p', { class: 'progress-stat', 'data-testid': testid }, iconEl(icon), h('span', null, text));
+  const lit = r.lamps.filter(Boolean).length;
+  const item = (it: PractiseItem) => {
+    const v = poem.verses.find((x) => x.n === it.n)!;
+    const words = it.weak.map((k) => v.all.find((tk) => tk.key === k)?.t).filter((w): w is string => !!w);
+    return h('li', null, h('button', { type: 'button', class: 'practise-item', 'data-testid': 'practise-' + it.n, onclick: () => { sfx('tap'); verseSheet(v, { player: p, weak: it.weak }); } },
+      h('span', { class: 'practise-head' }, h('span', { class: 'practise-n' }, t('necklace.sheet.verse', { n: it.n })), stars(p.verses[String(it.n)]?.stars || 0)),
+      h('span', { class: 'practise-sadr', lang: 'ar' }, v.sadr),
+      it.lapses ? h('span', { class: 'practise-why' }, t('grown.progress.lapses', { n: it.lapses })) : null,
+      words.length ? h('span', { class: 'practise-why' }, t('grown.progress.weak'), ' ', ...words.map((w) => h('span', { class: 'practise-word' }, w))) : null));
+  };
+  return [
+    h('div', { class: 'progress-stats' },
+      stat('necklace', t('grown.progress.pearls', { n: r.pearls, total: r.total }), 'progress-pearls'),
+      stat('star', t('grown.progress.golden', { n: r.golden }), 'progress-golden'),
+      stat('sun', t('grown.progress.days', { n: r.days }), 'progress-days'),
+      stat('trophy', t('grown.progress.bosses', { n: r.bosses, total: r.bossTotal }), 'progress-bosses'),
+      stat('cloth', t('grown.progress.due', { n: r.due }), 'progress-due')),
+    h('div', { class: 'progress-week', 'data-testid': 'progress-week' }, h('span', { class: 'progress-week-label' }, t('days.week')),
+      h('div', { class: 'lamps', role: 'img', 'aria-label': t('aria.days', { n: lit }) }, ...r.lamps.map((on) => h('span', { class: 'lamp' + (on ? ' on' : '') }, lanternArt(p.lantern, on))))),
+    h('h3', null, t('grown.progress.practise')),
+    r.practise.length
+      ? h('div', { class: 'practise-box' }, h('p', { class: 'practise-note' }, t('grown.progress.practise.why')), h('ul', { class: 'practise', 'data-testid': 'practise' }, ...r.practise.map(item)))
+      : h('p', { class: 'practise-none', 'data-testid': 'practise-none' }, t('grown.progress.none')),
+  ];
+}
+
 function corner(): HTMLElement {
   const s = settings();
   const tips = family('grown.tips');
+  const progress = progressSection();
   const players = h('div', { class: 'players' });
   const renderPlayers = () => players.replaceChildren(...S().profiles.map((p) => h('div', { class: 'player-row' + (p.id === profile().id ? ' me' : '') },
     h('span', { dir: 'auto' }, p.name || t('profile.guest')),
-    btn(t('heroes.switch'), { small: true, testid: 'pick-' + p.id, onClick: () => { switchProfile(p.id); renderPlayers(); } }),
-    btn(t('profile.rename'), { small: true, testid: 'edit-' + p.id, onClick: () => { switchProfile(p.id); const sh = sheet(profileEditor(() => { sh.close(); renderPlayers(); }), { testid: 'edit-sheet' }); } }),
-    btn(t('profile.delete'), { small: true, testid: 'del-' + p.id, onClick: () => { if (confirm(t('profile.delete.confirm'))) { deleteProfile(p.id); renderPlayers(); } } }))),
-    btn(t('heroes.new'), { icon: 'plus', small: true, testid: 'btn-add-player', onClick: () => { addProfile(); renderPlayers(); } }));
+    btn(t('heroes.switch'), { small: true, testid: 'pick-' + p.id, onClick: () => { switchProfile(p.id); changed(); } }),
+    btn(t('profile.rename'), { small: true, testid: 'edit-' + p.id, onClick: () => { switchProfile(p.id); const sh = sheet(profileEditor(() => { sh.close(); changed(); }), { testid: 'edit-sheet' }); } }),
+    btn(t('profile.delete'), { small: true, testid: 'del-' + p.id, onClick: () => { if (confirm(t('profile.delete.confirm'))) { deleteProfile(p.id); changed(); } } }))),
+    btn(t('heroes.new'), { icon: 'plus', small: true, testid: 'btn-add-player', onClick: () => { addProfile(); changed(); } }));
+  // a player switched, renamed, added or deleted: the list and the progress chooser follow
+  const changed = () => { renderPlayers(); progress.refresh(); };
   renderPlayers();
   const fileIn = h('input', { type: 'file', accept: 'application/json', hidden: true, 'data-testid': 'import-file' }) as HTMLInputElement;
-  fileIn.addEventListener('change', async () => { const f = fileIn.files?.[0]; if (f && importJSON(await f.text())) { applySettings(); toast(t('settings.import.done')); } });
+  fileIn.addEventListener('change', async () => { const f = fileIn.files?.[0]; if (f && importJSON(await f.text())) { applySettings(); changed(); toast(t('settings.import.done')); } });
   return h('div', { class: 'corner' },
+    progress.el,
     h('section', null, h('h2', null, t('grown.section.tips')), h('ul', { class: 'tips' }, ...tips.map((k) => h('li', null, t(k))))),
     h('section', null, h('h2', null, t('settings.title')),
       toggle('recitation', 'settings.recitation'), toggle('voices', 'settings.voices'), toggle('sfx', 'settings.sfx'), textSizeChoice(),
