@@ -3,8 +3,8 @@ import { h, svg } from '../core/h';
 import { t, tt, has, family } from '../core/copy';
 import type { Token, Verse, Where } from '../core/data';
 import { shuffle, shuffleMoved, pick } from '../core/rng';
-import { verseCard, hemiLine, btn } from '../core/ui';
-import { iconEl, artImg } from '../art';
+import { verseCard, hemiLine, btn, burst } from '../core/ui';
+import { iconEl, artImg, charArt } from '../art';
 import { icon } from '../art/icons';
 import { sfx } from '../core/sfx';
 import { say } from '../core/voice';
@@ -196,7 +196,8 @@ function lanes(ctx: GameCtx, items: Token[], answer: Token): Promise<void> {
   const f = ctx.frame;
   return new Promise<void>((resolve, reject) => {
     const field = h('div', { class: 'lanes', 'data-testid': 'lanes' });
-    const basket = h('div', { class: 'basket', 'aria-hidden': 'true' });
+    // the catcher is Mishmish in his basket (the drawn pose; a plain basket under the SVG fallback)
+    const basket = h('div', { class: 'basket', 'aria-hidden': 'true' }, charArt('mishmish', 'basket'));
     let pos = 1, wave = 0, wrongHere = 0, helpHere = 0, done = false;
     const laneEls: HTMLButtonElement[] = [];
     const finish = () => { done = true; document.removeEventListener('keydown', onKey); ctx.frame.onHelp = null; setActive(null); };
@@ -220,7 +221,7 @@ function lanes(ctx: GameCtx, items: Token[], answer: Token): Promise<void> {
       if (items[i] === answer) {
         lane.classList.add('caught');
         lane.querySelector('.fall')?.classList.add('caught');
-        praise(ctx);
+        praise(ctx, lane.querySelector('.pearl-word'), wrongHere >= 2);
         finish();
         setTimeout(resolve, 450 / env.speed);
       } else {
@@ -290,7 +291,7 @@ export async function g4radar(ctx: GameCtx): Promise<number> {
         const b = h('button', { type: 'button', class: 'opt word', 'data-testid': 'opt-' + i, 'data-ok': q.ok ? '1' : '0' }, q.w);
         b.addEventListener('click', () => {
           if (b.classList.contains('right')) return;
-          if (q.ok) { b.classList.add('right'); praise(ctx); caught++; count.textContent = caught + ' / ' + reals.length; if (caught === reals.length) { setActive(null); resolve(); } }
+          if (q.ok) { b.classList.add('right'); praise(ctx, b); caught++; count.textContent = caught + ' / ' + reals.length; if (caught === reals.length) { setActive(null); resolve(); } }
           else { ctx.round.wrong(); wobble(b); sfx('thud'); void say(missLine(q.w), { signal: ctx.signal }).catch(() => {}); }
         });
         field.appendChild(b); return b;
@@ -318,7 +319,7 @@ export async function g4radar(ctx: GameCtx): Promise<number> {
         el.addEventListener('click', () => {
           if (tapped) return;
           tapped = true;
-          if (q.ok) { el.classList.add('caught'); praise(ctx); caught++; count.textContent = caught + ' / ' + reals.length; setTimeout(resolve, 380 / env.speed); }
+          if (q.ok) { burst(el); el.classList.add('caught'); praise(ctx); caught++; count.textContent = caught + ' / ' + reals.length; setTimeout(resolve, 380 / env.speed); }
           else { ctx.round.wrong(); el.classList.add('bounce'); sfx('thud'); void say(missLine(q.w), { signal: ctx.signal }).catch(() => {}); setTimeout(resolve, 380 / env.speed); }
         });
         el.addEventListener('animationend', () => { if (!tapped) { if (q.ok) queue.push(q); resolve(); } });
@@ -418,6 +419,7 @@ export async function g6(ctx: GameCtx, rungOverride?: number): Promise<number> {
         beads[w.k].textContent = w.tk.t; beads[w.k].classList.add('filled', 'pop-in');
         tile.classList.add('used');
         sfx('clack');
+        burst(beads[w.k], { n: 6, spread: 34 });
         idx++;
         markNext();
         if (idx === remaining.length) { f.onHelp = null; setActive(null); document.removeEventListener('keydown', onKey); resolve(); }
@@ -447,6 +449,7 @@ export async function g6(ctx: GameCtx, rungOverride?: number): Promise<number> {
     beads.forEach((b) => b.classList.remove('next'));
     beadRows[ui][0].closest('.thread')!.classList.add('knot');
     sfx('sparkle');
+    burst(beadRows[ui][0].closest('.thread'), { n: 12 });
     await (u.clip === 'verse' ? playClip(ctx, v, 'verse') : playClip(ctx, v, u.clip));
   }
   void say('game.build.knot', { signal: ctx.signal }).catch(() => {});
@@ -460,9 +463,10 @@ export async function g7(ctx: GameCtx, o: { firstWord?: boolean } = {}): Promise
   f.setBanner('game.recite', 'mic', 'game.recite.how');
   let listener = false, tries = 0;
   const showFirst = o.firstWord ?? true;
-  const toggle = h('label', { class: 'toggle listener-toggle' },
-    h('input', { type: 'checkbox', 'data-testid': 'listener-toggle', onchange: (e: Event) => { listener = (e.target as HTMLInputElement).checked; void stage(); } }),
-    h('span', null, t('game.recite.listener')));
+  // a pill like «بِبُطْءٍ» (a native box read as a broken picture, Argon), lit gold when on
+  const toggle = h('label', { class: 'toggle pill-toggle listener-toggle' },
+    h('input', { type: 'checkbox', 'data-testid': 'listener-toggle', onchange: (e: Event) => { listener = (e.target as HTMLInputElement).checked; toggle.classList.toggle('on', listener); void stage(); } }),
+    iconEl('ear'), h('span', null, t('game.recite.listener')));
   const cloth = () => h('div', { class: 'cloth-card', 'data-testid': 'cloth' },
     h('div', { class: 'cloth-pearl', 'aria-hidden': 'true' }),
     showFirst ? h('div', { class: 'first-word' }, h('span', { class: 'hint-label' }, t('game.recite.firstWord')), ' ', h('span', { class: 'w' }, v.sadrT[0].t), ' …') : null);
@@ -522,7 +526,7 @@ export async function g8(ctx: GameCtx, prev: Verse): Promise<number> {
   await how(ctx, 'game.next', 'game.next.how');
   void playClip(ctx, prev, 'verse').catch(() => {});   // the options come at once; the previous verse plays meanwhile
   const k = Math.min(3, Math.max(2, ctx.p.options));
-  const others = otherVerses(ctx, v, k - 1, 'sadr').filter((x) => x.n !== prev.n);
+  const others = otherVerses(ctx, v, k, 'sadr').filter((x) => x.n !== prev.n).slice(0, k - 1);
   const opts: Opt[] = shuffle([v, ...others.slice(0, k - 1)], ctx.rng).map((x) => ({ label: x.sadr, value: String(x.n), audio: hasAudio(x) ? () => play(x, 'sadr', ctx.signal).catch(() => {}) : undefined }));
   const zone = h('div'); f.play.replaceChildren(zone);
   await choose(ctx, zone, opts, String(v.n), { replay: f.onEar, label: 'g8' });

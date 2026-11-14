@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { Q } from './helpers';
 
-const BASE = 'http://127.0.0.1:4321/khaqaniya/';
+const BASE = `http://127.0.0.1:${process.env.KQ_PORT || '4321'}/khaqaniya/`;   // the server of playwright.config.ts
 
 test('Android Chrome: installable, the worker in control, offline reload', async ({}, info) => {
   test.skip(info.project.name !== 'phone', 'once');

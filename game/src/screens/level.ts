@@ -3,7 +3,7 @@ import { h } from '../core/h';
 import { t, tt, has, num } from '../core/copy';
 import type { Verse } from '../core/data';
 import { hash, mulberry32 } from '../core/rng';
-import { frame, verseCard, btn, sweepLight, stars as starsEl, type Frame } from '../core/ui';
+import { frame, verseCard, btn, sweepLight, stars as starsEl, burst, type Frame } from '../core/ui';
 import { charArt, picto, iconEl } from '../art';
 import { pearlSvg } from '../art';
 import { sfx } from '../core/sfx';
@@ -11,7 +11,7 @@ import { say, sayPick, show } from '../core/voice';
 import { play, clipFor, setSlow } from '../core/audio';
 import { env, emit, isAbort, sleep } from '../core/env';
 import { finishVerse, learned, profile, save, settings, learnedCount, clearPendingWeak } from '../core/store';
-import { P, checkStickers, districtOf, nextTarget, targetHash, verseUnlocked, bossUnlocked } from '../core/progress';
+import { P, checkStickers, districtOf, nextTarget, targetHash, verseUnlocked, bossUnlocked, versesOf } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
 import { Round, params, setActive, type GameCtx, type Mode } from '../games/engine';
 import { g1, g2, g3, g4, g4radar, g5, g6, g7, g8, s1caravan, s2hats } from '../games/games';
@@ -21,6 +21,7 @@ import { askSheet } from './ask';
 import { pauseMenu } from './grownups';
 import { sceneArt } from '../art';
 import { svg } from '../core/h';
+import { storyInterlude, storyBeat } from './splash';
 
 export const STEP_NAMES = ['intro', 'listen', 'meaning', 'playA', 'playB', 'playC', 'recite', 'link', 'reward'] as const;
 let levelState: { verse: number; step: string } | null = null;
@@ -56,10 +57,15 @@ export async function listenStep(v: Verse, f: Frame, signal: AbortSignal, o: { o
   // while the verse plays, the lit word can be caught: a sparkle and a star count, no score, nothing to lose (Q1 round 2)
   let caught = 0;
   const chip = h('span', { class: 'catch-count', 'data-testid': 'catch-count', 'aria-hidden': 'true', hidden: true }, iconEl('star'), h('span', { class: 'catch-n' }, '0'));
+  // until the first catch ever, a star bobs over the lit word: the 40 s of listening are play from the first verse on
+  const pr0 = profile();
+  if (!pr0.seen.tips.includes('listen.caught')) card.classList.add('invite');
   card.addEventListener('pointerdown', (e) => {
     const w = (e.target as HTMLElement).closest('.w') as HTMLElement | null;
     if (!w || !(w.classList.contains('lit') || w.classList.contains('was-lit')) || w.dataset.caught === String(passes)) return;
     w.dataset.caught = String(passes);
+    if (card.classList.contains('invite')) { card.classList.remove('invite'); pr0.seen.tips.push('listen.caught'); save(); }
+    burst(w, { n: 6, spread: 30 });
     caught++; chip.hidden = false; chip.querySelector('.catch-n')!.textContent = num(caught);
     chip.classList.remove('bump'); void chip.offsetWidth; chip.classList.add('bump');
     w.classList.remove('caught'); void w.offsetWidth; w.classList.add('caught');
@@ -133,20 +139,28 @@ export async function meaningStep(v: Verse, f: Frame, signal: AbortSignal, rng?:
   f.setBanner('meaning.title', 'think');
   const m = v.meaning;
   const grown = settings().grownupMode;
-  const card = h('div', { class: 'meaning-card', 'data-testid': 'meaning-card' }, h('div', { class: 'meaning-stork' }, charArt('laqlaq', 'think')));
+  // one idea at a time (Q1, Argon #1): Laqlaq, the meaning, the lesson; the pictograms are small drawings beside him
+  // (not buttons), and the hard words wait behind one chip «كَلِمَاتٌ جَدِيدَةٌ» (open at once in grown-up mode)
+  const stork = h('div', { class: 'meaning-stork' }, charArt('laqlaq', 'think'));
+  const card = h('div', { class: 'meaning-card', 'data-testid': 'meaning-card' }, stork);
   const body = h('div', { class: 'meaning-body' });
   card.appendChild(body);
   if (!m) body.appendChild(h('p', { class: 'kid-meaning' }, t('meaning.empty')));
   else {
     if (grown && m.adult) body.appendChild(h('p', { class: 'adult-meaning', 'data-testid': 'adult-meaning' }, m.adult));
     else body.appendChild(h('p', { class: 'kid-meaning', 'data-testid': 'kid-meaning' }, m.kid || t('meaning.empty')));   // never the adult text to a child
-    if (v.pictos.length) body.appendChild(h('div', { class: 'pictos' }, ...v.pictos.slice(0, 2).map((id) => picto(id, P().verses.length))));
+    if (v.pictos.length) stork.appendChild(h('div', { class: 'pictos', 'aria-hidden': 'true' }, ...v.pictos.slice(0, 2).map((id) => picto(id, P().verses.length))));
     const ws = m.words || [];
     if (ws.length) {
       const chips = h('div', { class: 'word-chips' });
       const chip = (w: { w: string; m: string }) => btn(w.w, { cls: 'chip', testid: 'word-chip', onClick: () => { show('meaning.word', { params: { word: w.w, meaning: w.m }, who: 'laqlaq' }); const b = f.bubble; if (!has('meaning.word')) b.textContent = w.w + ' : ' + w.m; } });
-      ws.slice(0, 3).forEach((w) => chips.appendChild(chip(w)));
-      if (ws.length > 3) chips.appendChild(btn('…', { cls: 'chip', onClick: (e) => { (e.currentTarget as HTMLElement).remove(); ws.slice(3).forEach((w) => chips.appendChild(chip(w))); } }));
+      const open = () => {
+        chips.replaceChildren(...ws.slice(0, 3).map(chip));
+        if (ws.length > 3) chips.appendChild(btn('…', { cls: 'chip', aria: t('meaning.more'), onClick: (e) => { (e.currentTarget as HTMLElement).remove(); ws.slice(3).forEach((w) => chips.appendChild(chip(w))); } }));
+        (chips.querySelector('[data-testid=word-chip]') as HTMLElement | null)?.focus({ preventScroll: true });
+      };
+      if (grown) open();
+      else chips.appendChild(btn(t('meaning.words'), { icon: 'book', cls: 'chip chip-words', testid: 'meaning-words', onClick: () => { sfx('page'); open(); } }));
       body.appendChild(chips);
     }
     if (m.lesson) body.appendChild(h('p', { class: 'lesson' }, h('span', { class: 'lesson-label' }, t('meaning.lesson')), ' ', m.lesson));
@@ -176,7 +190,7 @@ export function levelScreen(ctx: ScreenCtx): HTMLElement {
   const v = poem.verses.find((x) => x.n === n);
   if (!v || !verseUnlocked(n)) { setTimeout(() => go('#/map', true)); return h('div'); }
   const d = districtOf(n);
-  const f = frame(poem, { back: () => pauseMenu(() => go('#/map')), cls: 'level', sky: d.sky });
+  const f = frame(poem, { back: () => pauseMenu(() => go('#/map')), cls: 'level', sky: d.sky, place: d.skin });
   f.root.dataset.testid = 'level';
   f.root.setAttribute('data-testid', 'level');
   setTimeout(() => void runLevel(v, f, ctx.signal).catch((e) => { if (!isAbort(e)) console.error(e); }), 0);
@@ -242,11 +256,15 @@ async function runLevel(v: Verse, f: Frame, signal: AbortSignal) {
     document.body.appendChild(card);
     const skipCard = btn(t('btn.continue'), { icon: 'next', primary: true, testid: 'btn-next' });
     card.appendChild(skipCard);
+    skipCard.focus({ preventScroll: true });   // the card covers the screen: its one button takes the focus (keyboard, screen readers)
     setActive({ right: () => skipCard, wrong: () => null, label: 'district-card' });
     await Promise.race([say('district.' + dd.skin + '.intro', { signal, who: 'laqlaq' }).then(() => sleep(600, signal)), new Promise<void>((r) => skipCard.addEventListener('click', () => r()))]);
     card.remove();
     setActive(null);
   }
+  // the rest of a short first-launch story, a panel at a time, before verse 2 and before verse 4 (first time only)
+  const beat = replay ? null : storyBeat();
+  if (beat !== null) await storyInterlude(beat, signal, f.bubble);
   if (settings().grownupMode) {
     f.play.appendChild(btn(t('btn.skip'), { icon: 'next', testid: 'btn-skip', small: true, onClick: () => { skipToC = true; } }));
   }
@@ -287,6 +305,33 @@ async function runLevel(v: Verse, f: Frame, signal: AbortSignal) {
 
 export const starsFor = (score: number) => (score >= 10 ? 3 : score >= 7 ? 2 : 1);
 
+// Laqlaq's «did you know?» lines (copy `fact.*`), told one group at a time on rewards that have no joke: the district's own
+// first, then any earlier one not heard yet; never twice. Lines of a group follow each other (the second leans on the
+// first). `notOn`: verses whose own meaning already says it (A1, COPY_REVIEW §9): there the next group is told, or none,
+// so Laqlaq never says the same thing twice in a row.
+const FACTS: { d: string; keys: string[]; notOn?: number[] }[] = [
+  { d: 'gate', keys: ['fact.poet'] }, { d: 'gate', keys: ['fact.first', 'fact.dani'] },
+  { d: 'seven', keys: ['fact.seven'] },
+  { d: 'seven', keys: ['fact.haramayn', 'fact.nafi.warsh'], notOn: [9] }, { d: 'seven', keys: ['fact.abuamr'], notOn: [9] },
+  { d: 'seven', keys: ['fact.ibnamir'], notOn: [10] }, { d: 'seven', keys: ['fact.asim', 'fact.asim.hafs'], notOn: [10] },
+  { d: 'seven', keys: ['fact.kufa'], notOn: [11] }, { d: 'seven', keys: ['fact.kisai'], notOn: [11] },
+  { d: 'bridge', keys: ['fact.madd'], notOn: [32, 33] }, { d: 'cave', keys: ['fact.throat'], notOn: [45] },
+];
+export function nextFact(v: Verse): string[] | null {
+  const heard = new Set(profile().seen.facts || []);
+  if (v.countJoke && has('fact.count') && !heard.has('fact.count')) return ['fact.count'];
+  const order = P().districts.map((d) => d.skin);
+  const here = districtOf(v.n).skin;
+  const ok = FACTS.filter((f) => !heard.has(f.keys[0]) && f.keys.every((k) => has(k)) && !f.notOn?.includes(v.n) && order.includes(f.d) && order.indexOf(f.d) <= order.indexOf(here));
+  const f = ok.find((x) => x.d === here) || ok[0];
+  return f ? f.keys : null;
+}
+async function tellFact(keys: string[], signal: AbortSignal) {
+  const pr = profile();
+  (pr.seen.facts ||= []).push(...keys); save();
+  for (const k of keys) await say(k, { signal, who: 'laqlaq' });
+}
+
 async function reward(v: Verse, f: Frame, signal: AbortSignal, score: number, rng: () => number) {
   const s = starsFor(score);
   const firstPearlEver = learnedCount() === 0;
@@ -295,52 +340,92 @@ async function reward(v: Verse, f: Frame, signal: AbortSignal, score: number, rn
   f.reset(); f.setDots(4);
   f.setBanner('step.reward', 'star');
   f.ear.hidden = true; f.help.hidden = true;
-  const pearl = h('div', { class: 'reward-pearl', 'data-testid': 'reward-pearl' }, svg(pearlSvg(res.stars >= 3 ? 's3' : res.stars === 2 ? 's2' : 's1')));
-  f.prompt.replaceChildren(h('div', { class: 'reward' }, pearl, starsEl(res.stars), h('p', { class: 'reward-stars-line' }, t('reward.stars.' + s))));
+  f.root.classList.add('celebrating');   // the cast bar's small cast steps aside: Amin and Mishmish cheer on the stage
+  const golden = res.stars >= 3;
+  const kind = golden ? 's3' : res.stars === 2 ? 's2' : 's1';
+  // a celebration: the pearl in a soft turning glow between Amin and Mishmish cheering, the stars one by one, then a
+  // copy of the pearl travels down to its place on the district's strand (Q1 #8: the screen was empty after a fly-away)
+  const pearl = h('div', { class: 'reward-pearl', 'data-testid': 'reward-pearl' }, svg(pearlSvg(kind)));
+  const stage = h('div', { class: 'reward-stage' + (golden ? ' golden' : '') },
+    h('div', { class: 'reward-rays', 'aria-hidden': 'true' }),
+    h('div', { class: 'reward-cast reward-amin', 'aria-hidden': 'true' }, charArt('amin', 'happy', profile().lantern)),
+    pearl,
+    h('div', { class: 'reward-cast reward-mishmish', 'aria-hidden': 'true' }, charArt('mishmish', 'happy')));
+  const d = districtOf(v.n);
+  let landing: HTMLElement | null = null;
+  const strand = h('div', { class: 'reward-strand', 'data-testid': 'reward-strand', 'aria-hidden': 'true' },
+    ...versesOf(d).map((x) => {
+      const st = profile().verses[String(x.n)]?.stars || 0;
+      const el = h('span', { class: 'strand-pearl' + (x.n === v.n ? ' landing' : st ? '' : ' empty') }, svg(pearlSvg(x.n === v.n ? kind : st >= 3 ? 's3' : st === 2 ? 's2' : st === 1 ? 's1' : 'open')));
+      if (x.n === v.n) landing = el;
+      return el;
+    }));
+  const starRow = starsEl(res.stars);
+  f.prompt.replaceChildren(h('div', { class: 'reward' }, stage, starRow, h('p', { class: 'reward-stars-line' }, t('reward.stars.' + s)), strand));
   sfx('sparkle');
-  setTimeout(() => {
-    pearl.classList.add('fly'); sfx('swoosh');
-    // the pearl lands on the necklace in the HUD: its counter ticks (it was drawn before the pearl was won)
-    setTimeout(() => {
-      const hud = f.root.querySelector('.hud-necklace');
-      const n = hud?.querySelector('.hud-n');
-      if (hud && n) { n.textContent = num(learnedCount()) + ' / ' + num(P().verses.length); hud.setAttribute('aria-label', t('aria.necklace', { n: learnedCount(), total: P().verses.length })); hud.classList.remove('bump'); void (hud as HTMLElement).offsetWidth; hud.classList.add('bump'); }
-      // where the pearl went: the district's strand, the new pearl landing among the ones already won
-      const d = districtOf(v.n);
-      const strand = h('div', { class: 'reward-strand', 'data-testid': 'reward-strand', 'aria-hidden': 'true' },
-        ...P().verses.filter((x) => x.n >= d.from && x.n <= d.to).map((x) => {
-          const st = profile().verses[String(x.n)]?.stars || 0;
-          return h('span', { class: 'strand-pearl' + (x.n === v.n ? ' landed' : '') + (st ? '' : ' empty') }, svg(pearlSvg(st >= 3 ? 's3' : st === 2 ? 's2' : st === 1 ? 's1' : 'open')));
-        }));
-      pearl.replaceWith(strand);
-    }, 700 / env.speed);
-  }, 900 / env.speed);
+  requestAnimationFrame(() => burst(pearl, { n: golden ? 12 : 8, spread: golden ? 110 : 80 }));
+  for (let i = 0; i < res.stars; i++) setTimeout(() => { sfx('pop'); burst(starRow.children[i], { n: 5, spread: 26 }); }, (140 + i * 150) / env.speed);
+  const land = () => {
+    const el = landing as HTMLElement | null;
+    if (!el?.isConnected) return;
+    el.classList.remove('landing'); el.classList.add('landed');
+    burst(el, { n: 8, spread: 44 }); sfx('pop');
+    // the pearl is on the necklace: the HUD counter ticks (it was drawn before the pearl was won)
+    const hud = f.root.querySelector('.hud-necklace');
+    const n = hud?.querySelector('.hud-n');
+    if (hud && n) { n.textContent = num(learnedCount()) + ' / ' + num(P().verses.length); hud.setAttribute('aria-label', t('aria.necklace', { n: learnedCount(), total: P().verses.length })); hud.classList.remove('bump'); void (hud as HTMLElement).offsetWidth; hud.classList.add('bump'); }
+  };
+  const flight = sleep(900, signal).then(() => {
+    const el = landing as HTMLElement | null;
+    if (!el?.isConnected) return;
+    if (document.documentElement.classList.contains('reduce-motion')) { land(); return; }
+    const a = pearl.getBoundingClientRect(), b = el.getBoundingClientRect();
+    const fly = h('div', { class: 'pearl-flight', 'aria-hidden': 'true', style: { left: a.left + 'px', top: a.top + 'px', width: a.width + 'px', height: a.height + 'px' } }, svg(pearlSvg(kind)));
+    document.body.appendChild(fly);
+    sfx('swoosh');
+    requestAnimationFrame(() => requestAnimationFrame(() => { fly.style.transform = `translate(${b.left + b.width / 2 - a.left - a.width / 2}px, ${b.top + b.height / 2 - a.top - a.height / 2}px) scale(${(b.width / a.width).toFixed(3)})`; }));
+    return sleep(720, signal).finally(() => { fly.remove(); land(); });
+  });
   const pr = profile();
   pr.rewards++;
   save();
   const newSt = checkStickers();
-  await sayPick('reward.pearl', rng as never, { signal });
-  if (profile().days.length > daysBefore && daysBefore > 0) await say('days.lit', { signal });
-  const dist = districtOf(v.n);
-  if (res.first && bossUnlocked(dist) && !pr.bosses[dist.boss || dist.id]) await say('reward.gateOpen', { signal });
-  for (const id of newSt) { sfx('page'); f.prompt.appendChild(h('div', { class: 'new-sticker', 'data-testid': 'new-sticker' }, h('span', { class: 'new-sticker-art', 'aria-hidden': 'true' }, stickerArtById(id)), h('span', null, t('reward.newSticker'), ' ', h('b', null, t('sticker.' + id))))); }
   const jokeEvery = settings().grownupMode ? 4 : 2;
-  if (pr.rewards % jokeEvery === 0) {
-    if (v.countJoke && has('joke.14') && !pr.seen.jokes.includes('joke.14')) { pr.seen.jokes.push('joke.14'); await say('joke.14', { signal, params: { n: P().verses.length } }); }
-    else {
-      const jk = await sayPick('joke', rng as never, { signal, params: { n: P().verses.length } }, ['joke.5', 'joke.12', 'joke.14', 'joke.16']);
-      if (has(jk + '.real')) await say(jk + '.real', { signal, who: 'laqlaq' });
+  const dist = districtOf(v.n);
+  // the voices of the moment; after the first pearl the buttons do not wait for them (a tap on «next» ends the line)
+  const lines: Promise<void> = (async () => {
+    if (golden) await sayPick('fb.cheer', rng as never, { signal });
+    await sayPick('reward.pearl', rng as never, { signal });
+    if (profile().days.length > daysBefore && daysBefore > 0) await say('days.lit', { signal });
+    if (res.first && bossUnlocked(dist) && !pr.bosses[dist.boss || dist.id]) await say('reward.gateOpen', { signal });
+    if (pr.rewards % jokeEvery === 0) {
+      if (v.countJoke && has('joke.14') && !pr.seen.jokes.includes('joke.14')) {
+        pr.seen.jokes.push('joke.14'); await say('joke.14', { signal, params: { n: P().verses.length } });
+        if (!(pr.seen.facts || []).includes('fact.count') && has('fact.count')) await tellFact(['fact.count'], signal);   // the joke's real answer
+      } else {
+        const jk = await sayPick('joke', rng as never, { signal, params: { n: P().verses.length } }, ['joke.5', 'joke.12', 'joke.14', 'joke.16']);
+        if (has(jk + '.real')) await say(jk + '.real', { signal, who: 'laqlaq' });
+      }
+    } else if (!firstPearlEver) {
+      const fk = nextFact(v);
+      if (fk) await tellFact(fk, signal);
     }
+  })();
+  lines.catch(() => {});   // handled now: leaving the screen during the flight must not leave a rejection unhandled
+  await flight;
+  for (const id of newSt) { sfx('page'); const b = h('div', { class: 'new-sticker', 'data-testid': 'new-sticker' }, h('span', { class: 'new-sticker-art', 'aria-hidden': 'true' }, stickerArtById(id)), h('span', null, t('reward.newSticker'), ' ', h('b', null, t('sticker.' + id)))); f.prompt.appendChild(b); burst(b.firstElementChild, { n: 8 }); }
+  if (firstPearlEver) {
+    await lines;
+    if (!pr.name && !pr.seen.askedName) { pr.seen.askedName = true; save(); await askNameSheet(); }
   }
-  if (firstPearlEver && !pr.name && !pr.seen.askedName) { pr.seen.askedName = true; save(); await askNameSheet(); }
-  const d = districtOf(v.n);
   const tg = nextTarget();
   const row = h('div', { class: 'reward-btns' });
   f.play.replaceChildren(row);
   const nextHash = bossUnlocked(d) && !pr.bosses[d.boss || d.id] ? '#/boss/' + (d.boss || d.id) : targetHash(tg);
   row.append(
     btn(t('btn.next'), { icon: 'next', primary: true, testid: 'btn-next', onClick: () => go(nextHash) }),
-    btn(t('btn.replay'), { icon: 'again', testid: 'btn-replay', onClick: () => go('#/verse/' + v.n + '?r=' + Date.now()) }),
-    btn(t('btn.map'), { icon: 'map', testid: 'btn-map', onClick: () => go('#/map') }));
+    h('div', { class: 'reward-btns-2' },
+      btn(t('btn.replay'), { icon: 'again', testid: 'btn-replay', onClick: () => go('#/verse/' + v.n + '?r=' + Date.now()) }),
+      btn(t('btn.map'), { icon: 'map', testid: 'btn-map', onClick: () => go('#/map') })));
   setActive({ right: () => row.querySelector('[data-testid=btn-next]'), wrong: () => null, label: 'reward' });
 }

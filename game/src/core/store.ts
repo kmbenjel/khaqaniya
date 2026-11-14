@@ -4,7 +4,7 @@ export interface VerseState { stars: number; box: number; due: string; rung: num
 export interface Profile {
   id: string; name: string; lantern: string; level: Level; seed: number; created: string;
   days: string[]; skill: number; boost: number; items: number;
-  seen: { intro?: boolean; cast?: boolean; how: Record<string, number>; tips: string[]; jokes: string[]; lines: string[]; lahn?: boolean; askedName?: boolean; listened?: number[] };
+  seen: { intro?: boolean; cast?: boolean; how: Record<string, number>; tips: string[]; jokes: string[]; lines: string[]; lahn?: boolean; askedName?: boolean; listened?: number[]; facts?: string[]; book?: string[] };
   verses: Record<string, VerseState>;
   bosses: Record<string, { stars: number; crown: boolean; date: string; noHelp?: boolean }>;
   stickers: Record<string, string>;

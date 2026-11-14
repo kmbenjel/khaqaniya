@@ -7,7 +7,8 @@ import { sceneArt, blotArt, charArt, lanternArt, pearlSvg, iconEl } from '../art
 import { profile, vs, isDue } from '../core/store';
 import { P, versesOf, verseUnlocked, bossUnlocked, bossBeaten, districtUnlocked, nextTarget, targetHash, bossKey } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
-import { iconBtn, btn } from '../core/ui';
+import { iconBtn, btn, toast } from '../core/ui';
+import { say } from '../core/voice';
 import { sfx } from '../core/sfx';
 import { cacheDistrict } from '../sw-client';
 import { setActive } from '../games/engine';
@@ -54,6 +55,16 @@ export function mapScreen(ctx: ScreenCtx): HTMLElement {
   return root;
 }
 
+/** Why a pearl or a gate is still closed, said by Amin (voiced lines `map.*.locked`) and shown as a toast (the map has no
+ *  cast bar); one at a time. */
+let lockedAt = 0;
+function lockedLine(key: string) {
+  if (performance.now() - lockedAt < 2600) return;
+  lockedAt = performance.now();
+  toast(t(key), 2600, 'kid');
+  void say(key).catch(() => {});
+}
+
 function districtSection(d: District, currentN: number | null, currentBoss: string | null): { el: HTMLElement; current: HTMLElement | null } {
   const vv = versesOf(d);
   const nodes = vv.length + 1;
@@ -76,7 +87,7 @@ function districtSection(d: District, currentN: number | null, currentBoss: stri
       style: { insetInlineStart: `calc(${x}% - 30px)`, top: y - 30 + 'px' }, 'aria-label': t(state === 'locked' ? 'aria.pearl.locked' : state === 'open' ? 'aria.pearl.open' : dusty ? 'aria.pearl.dusty' : 'aria.pearl.stars', { n: v.n, s: st?.stars || 0 }),
     }, svg(pearlSvg(state as 'locked', dusty)), h('span', { class: 'node-n' }, num(v.n)), dusty ? h('span', { class: 'dust-mark', title: t('map.dusty') }, iconEl('cloth')) : null);
     node.addEventListener('click', () => {
-      if (!unlocked) { sfx('lock'); node.classList.remove('wobble'); void node.offsetWidth; node.classList.add('wobble'); return; }
+      if (!unlocked) { sfx('lock'); node.classList.remove('wobble'); void node.offsetWidth; node.classList.add('wobble'); lockedLine(districtUnlocked(d) ? 'map.pearl.locked' : 'map.district.locked'); return; }
       sfx('tap'); go('#/verse/' + v.n);
     });
     if (v.n === currentN) current = node;
@@ -93,7 +104,7 @@ function districtSection(d: District, currentN: number | null, currentBoss: stri
     type: 'button', class: `node gate-node${beaten ? ' beaten' : open ? ' open' : ' locked'}${bk === currentBoss ? ' current' : ''}`, 'data-testid': 'boss-gate-' + bk,
     style: { insetInlineStart: `calc(${gx}% - 44px)`, top: gy - 44 + 'px' }, 'aria-label': t('aria.gate', { boss: d.boss ? t('boss.' + d.boss + '.name') : t('boss.quiz.title') }),
   }, d.boss ? blotArt(d.boss, beaten) : lanternArt('gold', beaten), beaten ? h('span', { class: 'gate-lantern' }, lanternArt('gold', true)) : null);
-  gate.addEventListener('click', () => { if (!open) { sfx('lock'); gate.classList.remove('wobble'); void gate.offsetWidth; gate.classList.add('wobble'); return; } sfx('tap'); go('#/boss/' + bk); });
+  gate.addEventListener('click', () => { if (!open) { sfx('lock'); gate.classList.remove('wobble'); void gate.offsetWidth; gate.classList.add('wobble'); lockedLine(districtUnlocked(d) ? 'map.gate.locked' : 'map.district.locked'); return; } sfx('tap'); go('#/boss/' + bk); });
   if (bk === currentBoss) current = gate;
   const path = svg(`<svg class="map-path" viewBox="0 0 100 ${height}" preserveAspectRatio="none"><polyline points="${pts.map((p) => { const [x, y] = p.split(','); return `${x},${y}`; }).join(' ')}" fill="none" stroke="#fff3d0" stroke-width="2.2" stroke-dasharray="1 5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`);
   const header = h('div', { class: 'district-head', 'data-testid': 'district-' + d.id },

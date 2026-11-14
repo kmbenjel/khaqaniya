@@ -39,14 +39,54 @@ const PANELS: { art: () => Element; key: string }[] = [
   { key: 'intro.6', art: () => h('div', { class: 'panel-art' }, sceneArt('gate', 'sunset'), h('div', { class: 'blink-pearl' }, svg(pearlSvg('open')))) },
 ];
 
+/** First launch (§13.5: the first game within 60 s): the story is told in three panels — the necklace, the gang
+ *  snapping its thread, Amin's promise — and goes on a panel at a time later, before verse 2 (what a pearl is) and
+ *  before verse 4 (Mishmish batting the pearls). Panel 6 («the journey starts at the gate») is the gate's own title
+ *  card in this telling. A story skipped is not continued; a player with pearls sees the whole story. */
+const SHORT = [0, 2, 4];
+const LATER: [number, number][] = [[1, 1], [3, 3]];   // [pearls on the necklace, panel]
+export function storyBeat(): number | null {
+  const p = profile();
+  if (!p.seen.tips.includes('story.short')) return null;
+  const at = LATER.find(([n, i]) => learnedCount() === n && !p.seen.tips.includes('story.' + i));
+  return at ? at[1] : null;
+}
+/** One more panel of the story, full screen, voiced, with «أُكْمِلُ» (and a tap anywhere) to go on. */
+export async function storyInterlude(i: number, signal: AbortSignal, host: HTMLElement | null): Promise<void> {
+  const p = profile();
+  p.seen.tips.push('story.' + i); save();
+  const cap = h('p', { class: 'intro-caption bubble', 'data-testid': 'story-caption', 'aria-live': 'polite' });
+  const go_ = btn(t('btn.continue'), { icon: 'next', primary: true, testid: 'btn-next' });
+  const ov = h('div', { class: 'overlay story-beat', 'data-testid': 'story-beat' },
+    h('div', { class: 'intro-panel in' }, artImg('intro.panel-' + (i + 1), 'intro-art', () => PANELS[i].art(), true) || PANELS[i].art()), cap, go_);
+  document.body.appendChild(ov);
+  go_.focus({ preventScroll: true });   // a full-screen beat: its one button takes the focus
+  setBubbleHost(cap);
+  sfx('swoosh');
+  setActive({ right: () => go_, wrong: () => null, label: 'story' });
+  const tapped = new Promise<void>((r) => ov.addEventListener('click', () => r(), { once: true }));
+  const said = say(PANELS[i].key, { signal }).then(() => sleep(400, signal));
+  said.catch(() => {});   // the losing side of the race may reject later (screen left): never unhandled
+  try { await Promise.race([said, tapped]); }
+  finally { stopVoice(); ov.remove(); setActive(null); setBubbleHost(host); }
+}
+
 export function introScreen(ctx: ScreenCtx): HTMLElement {
   let i = 0, done = false;
+  const short = learnedCount() === 0 && !profile().seen.intro;
+  const order = short ? SHORT : PANELS.map((_, k) => k);
   const panel = h('div', { class: 'intro-panel' });
   const cap = h('p', { class: 'intro-caption bubble', 'data-testid': 'intro-caption', 'aria-live': 'polite' });
   const foot = h('p', { class: 'intro-foot' });
   // first launch (§1.1): the story leads straight into verse 1; later viewings go home
-  const finish = () => { if (done) return; done = true; const p = profile(); p.seen.intro = true; save(); go(learnedCount() ? '#/' : targetHash(nextTarget())); };
-  const skip = btn(t('intro.skip'), { icon: 'next', testid: 'btn-skip', small: true, onClick: finish });
+  let skipped = false;
+  const finish = () => {
+    if (done) return; done = true;
+    const p = profile(); p.seen.intro = true;
+    if (short && !skipped) p.seen.tips.push('story.short');   // the story goes on later, a panel at a time
+    save(); go(learnedCount() ? '#/' : targetHash(nextTarget()));
+  };
+  const skip = btn(t('intro.skip'), { icon: 'next', testid: 'btn-skip', small: true, onClick: () => { skipped = true; finish(); } });
   let advance: (() => void) | null = null;
   // one tap = the next panel (its voice stops); «skip all» stays visible at the top (Q1 round 2: a voiced intro ran past 60 s)
   const next = () => { stopVoice(); advance?.(); };
@@ -57,14 +97,15 @@ export function introScreen(ctx: ScreenCtx): HTMLElement {
   setTimeout(async () => {
     setBubbleHost(cap);
     try {
-      for (i = 0; i < PANELS.length && !done; i++) {
+      for (i = 0; i < order.length && !done; i++) {
         // R1's painted panel when the manifest has it (the SVG composition otherwise, or if the file fails)
-        const k = i;
-        panel.replaceChildren(artImg('intro.panel-' + (i + 1), 'intro-art', () => PANELS[k].art(), true) || PANELS[i].art());
+        const k = order[i];
+        panel.replaceChildren(artImg('intro.panel-' + (k + 1), 'intro-art', () => PANELS[k].art(), true) || PANELS[k].art());
         panel.classList.remove('in'); void panel.offsetWidth; panel.classList.add('in');
-        foot.textContent = i === 2 ? t('intro.lahn') : '';
+        foot.textContent = k === 2 ? t('intro.lahn') : '';
+        foot.hidden = k !== 2;
         sfx('swoosh');
-        await Promise.race([say(PANELS[i].key, { signal: ctx.signal }), new Promise<void>((r) => { advance = r; })]);
+        await Promise.race([say(PANELS[k].key, { signal: ctx.signal }), new Promise<void>((r) => { advance = r; })]);
         await sleep(250, ctx.signal);
       }
       finish();

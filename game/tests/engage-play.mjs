@@ -3,12 +3,13 @@
 // lit words, meaning read, games with a wrong tap now and then) → district 1 → Manfoukh → district 2 → Khallat; home, map,
 // necklace, stickers. Day 2 (clock +1): home → polish. Day 6 (clock +5): the comeback greeting.
 // Output: <out>/NN-name.png + play.json (step timings, captions, dead time, first-game time).
-//   node engage-play.mjs [baseURL=https://khaqaniya.benjelloun.dev/] [out=shots]
+//   node engage-play.mjs [baseURL=https://khaqaniya.benjelloun.dev/] [out=shots] [until=all|pearl2]   (pearl2: stop at verse 2's start)
 import { chromium } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const BASE = process.argv[2] || 'https://khaqaniya.benjelloun.dev/';
 const OUT = process.argv[3] || 'shots';
+const UNTIL = process.argv[4] || 'all';
 mkdirSync(OUT, { recursive: true });
 const b = await chromium.launch({ channel: 'chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
 const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2, locale: 'ar' });
@@ -37,6 +38,7 @@ const tStart = Date.now();
 await p.getByTestId('btn-start').tap();
 mark('tap-start');
 // the story, watched (no taps): one shot per panel
+await p.waitForSelector('[data-testid=intro]', { timeout: 10000 }).catch(() => {});
 const seenPanels = new Set();
 for (let i = 0; i < 900; i++) {
   const s = await st();
@@ -64,8 +66,10 @@ async function playUntil(stop, real, o = {}) {
     const v = s.level?.verse;
     const key = s.screen === 'boss' ? `boss-${s.boss?.id}-q${s.boss?.q}-${s.item}` : s.screen === 'polish' ? `polish-${s.polish?.i}-${s.item}` : `v${v}-${s.level?.step}-${s.item}`;
     // a child taps the glowing word while listening
+    if (s.level?.step === 'listen' && isReal && !shots.has('invite-' + v) && await p.$('.listen-card.invite .w.lit')) { shots.add('invite-' + v); await shot(`v${v}-listen-invite`); }
     if (s.level?.step === 'listen' && isReal) {
       const caught = await p.evaluate(() => { const w = document.querySelector('.listen-card .w.lit'); if (!w) return false; w.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); return true; });
+      if (caught && !marks['first-star']) mark('first-star');
       if (caught) await snapOnce(`listen-${v}`, `v${v}-listen-catch`, 250);
     }
     if (isReal && s.level?.step === 'meaning' && !s.item) await snapOnce(`meaning-${v}`, `v${v}-meaning`, 1500);
@@ -93,6 +97,17 @@ const districts = await api('districts');
 // verse 1 and 2 at real speed, then fast; the first pearl's time is measured
 await playUntil((s) => s.level?.verse === 2 && s.level?.step === 'intro', (s) => s.level?.verse === 1, { firstGame: true });
 mark('pearl-1');
+if (UNTIL === 'pearl2') {
+  // the story going on (first launch): one more panel before verse 2
+  await p.waitForTimeout(1500);
+  if (await p.$('[data-testid=story-beat]')) { await shot('story-beat-2'); }
+  const log = await p.evaluate(() => window.__log);
+  const r1 = (x) => Math.round(x * 10) / 10;
+  writeFileSync(`${OUT}/play.json`, JSON.stringify({ base: BASE, marks, firstTapToFirstStar: r1(marks['first-star'] - marks['tap-start']), firstTapToFirstGame: r1(marks['first-game'] - marks['tap-start']), firstTapToPearl1: r1(marks['pearl-1'] - marks['tap-start']), errors, log: log.filter((e) => e.ev !== 'kq:audio').slice(0, 400) }, null, 1));
+  console.log('done (pearl2)', JSON.stringify(marks), 'errors', errors.length);
+  await b.close();
+  process.exit(0);
+}
 await playUntil((s) => s.screen === 'boss', (s) => s.level?.verse === 2);
 mark('boss-1');
 await playUntil((s) => s.screen === 'boss' && s.item === 'boss-done', () => true);

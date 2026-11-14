@@ -5,10 +5,10 @@ import { h } from '../core/h';
 import { t, has } from '../core/copy';
 import type { District, Verse } from '../core/data';
 import { hash, mulberry32, shuffle, pick } from '../core/rng';
-import { frame, btn, type Frame } from '../core/ui';
+import { frame, btn, burst, castBase, castReact, type Frame } from '../core/ui';
 import { blotArt, charArt, iconEl } from '../art';
 import { sfx, type Sfx } from '../core/sfx';
-import { say, show } from '../core/voice';
+import { say, show, sayPick } from '../core/voice';
 import { env, emit, isAbort, sleep } from '../core/env';
 import { profile, save, vs, learned, award } from '../core/store';
 import { P, versesOf, districtById, bossUnlocked, bossKey, checkStickers, nextTarget, targetHash } from '../core/progress';
@@ -28,7 +28,7 @@ export function bossScreen(ctx: ScreenCtx): HTMLElement {
   const poem = P();
   const d = districtById(ctx.params[0]);
   if (!d || !bossUnlocked(d)) { setTimeout(() => go('#/map', true)); return h('div'); }
-  const f = frame(poem, { back: () => pauseMenu(() => go('#/map')), dots: false, title: d.boss ? t('boss.' + d.boss + '.name') : t('boss.quiz.title'), cls: 'boss', sky: d.sky });
+  const f = frame(poem, { back: () => pauseMenu(() => go('#/map')), dots: false, title: d.boss ? t('boss.' + d.boss + '.name') : t('boss.quiz.title'), cls: 'boss', sky: d.sky, place: d.skin });
   f.root.setAttribute('data-testid', 'boss');
   setTimeout(() => void runBoss(d, f, ctx.signal).catch((e) => { if (!isAbort(e)) console.error(e); }), 0);
   return f.root;
@@ -120,6 +120,8 @@ async function runBoss(d: District, f: Frame, signal: AbortSignal) {
   ]);
   entrance.remove();
   setActive(null);
+  // Mishmish, who boasts of his courage, watches the challenge from inside his basket (design §8.3)
+  castBase('mishmish', 'basket');
   // 2. questions
   const queue = qs.map((q) => ({ ...q }));
   let washed = 0, wrongTotal = 0, helped = false, asked = 0;
@@ -141,9 +143,12 @@ async function runBoss(d: District, f: Frame, signal: AbortSignal) {
     const lastOne = q.type === 'g6r3' && !queue.length;
     if (round.wrongs === 0 || q.again || lastOne || (q.type === 'g6r3' && round.wrongs <= 1)) {
       washed++;
-      meter.children[K - washed]?.classList.add('washed');
+      const drop = meter.children[K - washed];
+      burst(drop, { n: 6, spread: 26 });   // the drop turns into sparkles (STYLE §10)
+      drop?.classList.add('washed');
       sfx('drip');
       blotBox.replaceChildren(id ? blotArt(id, false, step()) : charArt('mishmish', 'happy'));
+      blotBox.classList.remove('hit'); void blotBox.offsetWidth; blotBox.classList.add('hit');
       void say(id ? (washed % 2 ? 'boss.' + id + '.right.1' : 'boss.' + id + '.right.2') : 'boss.quiz.right', { signal }).catch(() => {});
     } else {
       if (id) { sfx(GAG_SFX[id] || 'thud'); blotBox.classList.remove('gag'); void blotBox.offsetWidth; blotBox.classList.add('gag'); }
@@ -168,10 +173,15 @@ async function runBoss(d: District, f: Frame, signal: AbortSignal) {
   const fixedBox = h('div', { class: 'boss-fixed', 'data-testid': 'boss-fixed' }, id ? blotArt(id, true) : charArt('mishmish', 'happy'));
   blotBox.replaceChildren(id ? blotArt(id, true) : charArt('mishmish', 'happy'));
   blotBox.classList.add('smooth');
-  f.prompt.replaceChildren(fixedBox, h('div', { class: 'boss-stars' }, ...Array.from({ length: 3 }, (_, i) => h('span', { class: 'star' + (i < stars ? ' on' : '') }, iconEl('star')))));
-  sfx('sparkle');
+  f.prompt.replaceChildren(h('div', { class: 'boss-fixed-stage' }, h('div', { class: 'reward-rays', 'aria-hidden': 'true' }), fixedBox), h('div', { class: 'boss-stars' }, ...Array.from({ length: 3 }, (_, i) => h('span', { class: 'star' + (i < stars ? ' on' : '') }, iconEl('star')))));
+  sfx('sparkle'); sfx('reveal');
+  requestAnimationFrame(() => burst(fixedBox, { n: 12, spread: 120 }));
+  castBase('mishmish', 'point');   // proud: «he got scared of me…» (joke.12)
+  castReact('amin', 'happy', 1600, true);
+  // the cheer (voices only, design §7.2) for a friend made
+  await sayPick('fb.cheer', rng, { signal }).catch((e) => { if (isAbort(e)) throw e; });
   if (id) { await say('boss.' + id + '.fixed', { signal }); await say('boss.' + id + '.lesson', { signal, who: 'laqlaq' }); } else await say('boss.quiz.end', { signal });
-  for (const st of newSt) { sfx('page'); f.prompt.appendChild(h('div', { class: 'new-sticker', 'data-testid': 'new-sticker' }, h('span', { class: 'new-sticker-art', 'aria-hidden': 'true' }, stickerArtById(st)), h('span', null, t('reward.newSticker'), ' ', h('b', null, t('sticker.' + st))))); }
+  for (const st of newSt) { sfx('page'); const b = h('div', { class: 'new-sticker', 'data-testid': 'new-sticker' }, h('span', { class: 'new-sticker-art', 'aria-hidden': 'true' }, stickerArtById(st)), h('span', null, t('reward.newSticker'), ' ', h('b', null, t('sticker.' + st)))); f.prompt.appendChild(b); burst(b.firstElementChild, { n: 8 }); }
   if (d.final) { await sleep(600, signal); go('#/finale'); return; }
   await say('boss.win', { signal });
   if (rng() < 0.5) await say('joke.12', { signal }).catch(() => {});

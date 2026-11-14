@@ -4,7 +4,7 @@ import { t, num } from '../core/copy';
 import { btn, iconBtn, sheet } from '../core/ui';
 import { charArt, blotArt, lanternArt, iconEl, medalSvg, artImg } from '../art';
 import { svg } from '../core/h';
-import { profile, S, switchProfile, addProfile, type Profile } from '../core/store';
+import { profile, S, switchProfile, addProfile, save, type Profile } from '../core/store';
 import { P, STICKERS, stickerId } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
 import { sfx } from '../core/sfx';
@@ -15,13 +15,23 @@ const ACH_ICON: Record<string, string> = {
 };
 export function stickerArt(page: string, id: string): Element {
   if (page === 'friends') return ['amin', 'mishmish', 'laqlaq'].includes(id) ? charArt(id, 'happy') : blotArt(id, true);
-  if (page === 'districts') return lanternArt('gold', true);
+  // each district its own sticker: a round window on its painting with the district's lantern lit (ten identical
+  // lanterns before); the lantern alone under the SVG fallback
+  if (page === 'districts') {
+    const pic = artImg('district.' + id, 'vignette-art');
+    return pic ? h('span', { class: 'vignette' }, pic, h('span', { class: 'vignette-lantern' }, lanternArt('gold', true))) : lanternArt('gold', true);
+  }
   if (id === 'medal') return artImg('medal', 'medal-art', () => svg(medalSvg())) || svg(medalSvg());
-  return iconEl(ACH_ICON[id] || 'star');
+  // feats: round badges, a gold ring on a cream disc with the pictogram (STYLE §7)
+  return h('span', { class: 'badge' }, iconEl(ACH_ICON[id] || 'star'));
 }
 
 export function stickersScreen(_ctx: ScreenCtx): HTMLElement {
   const pr = profile();
+  // stickers won since the book was last opened shine once
+  const seenBefore = new Set(pr.seen.book || []);
+  const fresh = (sid: string) => !!pr.stickers[sid] && !seenBefore.has(sid);
+  pr.seen.book = Object.keys(pr.stickers); save();
   const pages = ['friends', 'districts', 'achievements'] as const;
   let cur: (typeof pages)[number] = 'friends';
   const grid = h('div', { class: 'sticker-grid', 'data-testid': 'sticker-grid' });
@@ -32,7 +42,7 @@ export function stickersScreen(_ctx: ScreenCtx): HTMLElement {
       const sid = stickerId(cur, id);
       const got = !!pr.stickers[sid];
       const name = cur === 'districts' ? t('district.' + id + '.name') : t('sticker.' + sid);
-      const b = h('button', { type: 'button', class: 'sticker' + (got ? ' got' : ' locked'), 'data-testid': 'sticker-' + sid, 'aria-label': got ? name : t('stickers.locked') },
+      const b = h('button', { type: 'button', class: 'sticker' + (got ? ' got' : ' locked') + (fresh(sid) ? ' fresh' : ''), 'data-testid': 'sticker-' + sid, 'aria-label': got ? name : t('stickers.locked') },
         h('span', { class: 'sticker-art' }, stickerArt(cur, id)), h('span', { class: 'sticker-name' }, got ? name : '؟'));
       b.addEventListener('click', () => {
         sfx('page');

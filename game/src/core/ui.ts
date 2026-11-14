@@ -1,7 +1,8 @@
 // Shared UI pieces: buttons, the verse card, the play frame (top bar, banner, prompt, play zone, cast bar), sheets.
 import { h, svg, clear, type Child } from './h';
 import { t, num, has } from './copy';
-import { iconEl, charArt, lanternArt } from '../art';
+import { iconEl, charArt, lanternArt, artFile } from '../art';
+import type { Pose } from '../art/chars';
 import { sfx } from './sfx';
 import { followSwitches } from './audio';
 import { setBubbleHost, say } from './voice';
@@ -87,6 +88,63 @@ export function muteBtn(): HTMLButtonElement {
   return b;
 }
 
+/** A burst of small sparkles at an element (STYLE §10: at most 12 particles, each well under 0.5 % of the screen,
+ *  transform and opacity only, gone in 0.8 s); nothing under reduced motion. `dust`: grey-brown specks (polishing). */
+export function burst(el: Element | null | undefined, o: { n?: number; kind?: 'gold' | 'dust' | 'mint'; spread?: number } = {}): void {
+  if (!el || !(el as HTMLElement).isConnected || document.documentElement.classList.contains('reduce-motion')) return;
+  const r = el.getBoundingClientRect();
+  if (!r.width && !r.height) return;
+  const n = Math.min(12, o.n ?? 10);
+  const spread = o.spread ?? Math.max(36, Math.min(96, Math.max(r.width, r.height) * 0.6));
+  const box = h('div', { class: 'burst burst-' + (o.kind || 'gold'), 'aria-hidden': 'true', style: { left: r.left + r.width / 2 + 'px', top: r.top + r.height / 2 + 'px' } });
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + Math.random() * 0.6;
+    const d = spread * (0.55 + Math.random() * 0.55);
+    box.appendChild(h('span', { class: 'spark' + (i % 3 === 0 && o.kind !== 'dust' ? ' star' : ''), style: `--dx:${(Math.cos(a) * d).toFixed(1)}px;--dy:${(Math.sin(a) * d).toFixed(1)}px;animation-delay:${Math.round(Math.random() * 90)}ms` }));
+  }
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 900);
+}
+
+// ── the cast: every pose a character may take on this screen is drawn once, stacked; a reaction only changes which one
+// shows (no image is fetched at the moment of the reaction, so nothing blinks) ────────────────────────────────────────
+const CAST_POSES: Record<string, Pose[]> = { amin: ['idle', 'happy', 'think'], mishmish: ['idle', 'happy', 'basket', 'cloth', 'point'], laqlaq: ['idle', 'happy'] };
+function castChar(who: string, base: Pose, color?: string): HTMLElement {
+  const box = h('div', { class: 'cast cast-' + who, 'data-char': who, 'data-base': base });
+  const poses = CAST_POSES[who].includes(base) ? CAST_POSES[who] : [base, ...CAST_POSES[who]];
+  for (const p of poses) { const el = charArt(who, p, color); el.classList.add('pose', 'pose-' + p); if (p === base) el.classList.add('on'); box.appendChild(el); }
+  return box;
+}
+const castEl = (who: string) => [...document.querySelectorAll<HTMLElement>(`.castbar .cast[data-char="${who}"]`)].find((e) => e.isConnected && e.offsetParent !== null) || null;
+const poseTimers = new Map<string, number>();
+function showPose(box: HTMLElement, pose: string) {
+  const want = box.querySelector(`.pose-${pose}`) ? pose : box.dataset.base || 'idle';
+  box.querySelectorAll('.pose').forEach((e) => e.classList.toggle('on', e.classList.contains('pose-' + want)));
+}
+/** A short reaction of a character in the cast bar (Amin cheers on a right answer, thinks after a wrong tap…), back to
+ *  his base pose after `ms`. `hop` adds a little jump. */
+export function castReact(who: string, pose: Pose, ms = 1100, hop = false): void {
+  const box = castEl(who);
+  if (!box) return;
+  clearTimeout(poseTimers.get(who));
+  showPose(box, pose);
+  if (hop && !document.documentElement.classList.contains('reduce-motion')) {
+    box.classList.remove('hop'); void box.offsetWidth; box.classList.add('hop');
+    setTimeout(() => box.classList.remove('hop'), 560);   // or the hop would hold the talking animation off
+  }
+  poseTimers.set(who, window.setTimeout(() => { if (box.isConnected) showPose(box, box.dataset.base || 'idle'); }, ms / env.speed));
+}
+/** The pose a character keeps on this screen (Mishmish hides in his basket during a challenge, holds the cloth while
+ *  polishing). */
+export function castBase(who: string, pose: Pose): void {
+  const box = castEl(who);
+  if (!box) return;
+  if (!box.querySelector('.pose-' + pose)) { const el = charArt(who, pose); el.classList.add('pose', 'pose-' + pose); box.appendChild(el); }
+  box.dataset.base = pose;
+  clearTimeout(poseTimers.get(who));
+  showPose(box, pose);
+}
+
 /** The cast bar at the bottom of play screens: ear · Mishmish · caption bubble · Amin · help lantern. */
 export function castbar(o: { ear?: () => void; help?: () => void; mishmish?: boolean; amin?: boolean; laqlaq?: boolean } = {}): { el: HTMLElement; bubble: HTMLElement; ear: HTMLButtonElement | null; help: HTMLButtonElement | null } {
   const bubble = h('div', { class: 'bubble', 'data-testid': 'bubble', 'aria-live': 'polite', hidden: true });
@@ -96,10 +154,10 @@ export function castbar(o: { ear?: () => void; help?: () => void; mishmish?: boo
   const help = helpBtn && has('btn.help.label') ? h('div', { class: 'help-wrap' }, helpBtn, h('span', { class: 'help-label', 'aria-hidden': 'true' }, t('btn.help.label'))) : helpBtn;
   const el = h('div', { class: 'castbar' },
     ear,
-    o.mishmish !== false ? h('div', { class: 'cast cast-mishmish', 'data-char': 'mishmish' }, charArt('mishmish')) : null,
-    o.laqlaq ? h('div', { class: 'cast cast-laqlaq', 'data-char': 'laqlaq' }, charArt('laqlaq')) : null,
+    o.mishmish !== false ? castChar('mishmish', 'idle') : null,
+    o.laqlaq ? castChar('laqlaq', 'idle') : null,
     bubble,
-    o.amin !== false ? h('div', { class: 'cast cast-amin', 'data-char': 'amin' }, charArt('amin', 'idle', profile().lantern)) : null,
+    o.amin !== false ? castChar('amin', 'idle', profile().lantern) : null,
     help);
   setBubbleHost(bubble);
   return { el, bubble, ear, help: helpBtn };
@@ -110,12 +168,14 @@ export interface Frame {
   bubble: HTMLElement; ear: HTMLButtonElement; help: HTMLButtonElement;
   setBanner(titleKey: string, iconId: string, howKey?: string): void;
   setDots(step: number): void;
+  /** The district painting the cast stands on (bottom of the frame), and its sky. */
+  setPlace(skin: string | null, sky?: string): void;
   onEar: (() => void) | null; onHelp: (() => void) | null;
   reset(): void;
 }
 
 /** The shared frame of levels, challenges and polish (§8.1). */
-export function frame(poem: Poem, o: { back: () => void; dots?: boolean; title?: string; cls?: string; scenePlace?: string; sky?: string }): Frame {
+export function frame(poem: Poem, o: { back: () => void; dots?: boolean; title?: string; cls?: string; scenePlace?: string; sky?: string; place?: string }): Frame {
   const dots = h('div', { class: 'dots', role: 'img', 'aria-label': t('aria.steps', { n: 1, total: 5 }) }, ...['listen', 'meaning', 'play', 'recite', 'reward'].map((s) => h('span', { class: 'dot', 'data-step': s })));
   const top = h('header', { class: 'topbar' },
     iconBtn('back', 'aria.back', 'btn-back', o.back, 'back-btn'),
@@ -134,12 +194,20 @@ export function frame(poem: Poem, o: { back: () => void; dots?: boolean; title?:
       if (howKey) banner.append(h('button', { type: 'button', class: 'how-btn', 'data-testid': 'how', 'aria-label': t('aria.helpQ'), onclick: () => { sfx('tap'); void say(howKey); } }, '؟'));
       banner.classList.remove('flash'); void banner.offsetWidth; banner.classList.add('flash');
     },
+    setPlace(skin, sky) {
+      const file = skin ? artFile('district.' + skin) : null;
+      f.root.classList.toggle('banded', !!file);
+      // absolute: a url() inside a custom property resolves against the stylesheet that uses it (assets/), not the page
+      if (file) f.root.style.setProperty('--band', `url("${new URL(file, location.href).href}")`); else f.root.style.removeProperty('--band');
+      if (sky) f.root.dataset.sky = sky;
+    },
     setDots(step) { dots.setAttribute('aria-label', t('aria.steps', { n: Math.min(step + 1, 5), total: 5 })); dots.querySelectorAll('.dot').forEach((d, i) => { d.classList.toggle('done', i < step); d.classList.toggle('now', i === step); }); },
     reset() { clear(prompt); clear(play); f.onEar = null; f.onHelp = null; f.help.classList.remove('glow'); f.help.hidden = false; f.ear.hidden = false; },
   };
   const cb = castbar({ ear: () => f.onEar?.(), help: () => f.onHelp?.() });
   f.bubble = cb.bubble; f.ear = cb.ear!; f.help = cb.help!;
   f.root = h('div', { class: 'frame ' + (o.cls || ''), 'data-sky': o.sky || '' }, top, h('div', { class: 'stage' }, h('div', { class: 'play-pane' }, banner, prompt, play), side), cb.el);
+  if (o.place) f.setPlace(o.place);
   return f;
 }
 
@@ -178,8 +246,8 @@ export function sheet(content: Child, o: { testid?: string; onClose?: () => void
   return { el, close };
 }
 
-export function toast(text: string, ms = 2400) {
-  const el = h('div', { class: 'toast', role: 'status' }, text);
+export function toast(text: string, ms = 2400, cls = '') {
+  const el = h('div', { class: 'toast ' + cls, role: 'status' }, text);
   document.body.appendChild(el);
   setTimeout(() => el.remove(), ms / env.speed);
 }

@@ -10,7 +10,9 @@ import { sfx } from '../core/sfx';
 import { say, sayPick } from '../core/voice';
 import { adapt, learned, profile, save, settings, type Level } from '../core/store';
 import { env, emit, sleep } from '../core/env';
-import { play, hasAudio, type ClipKind } from '../core/audio';
+import { play, hasAudio, isPlaying, type ClipKind } from '../core/audio';
+import { burst, castReact } from '../core/ui';
+import { mulberry32, hash } from '../core/rng';
 
 export type Mode = 'learn' | 'replay' | 'boss' | 'polish';
 export interface Params { options: number; blanks: number; g6rung: number; echo: boolean; fall: number; hintAfter: number; howTimes: number; level: Level }
@@ -42,7 +44,25 @@ export class Round {
 // ── test hooks: the current item knows its right and a wrong target ──────────────────
 interface Active { right: () => Element | null; wrong: () => Element | null; label?: string }
 let active: Active | null = null;
-export function setActive(a: Active | null) { active = a; emit('kq:item', { label: a?.label || null }); }
+export function setActive(a: Active | null) { active = a; emit('kq:item', { label: a?.label || null }); armIdle(a); }
+
+// ── Mishmish's idle lines (copy `mishmish.idle.*`): after a long pause on a waiting game item, at most once every
+// three minutes, never over a voice or the reciter, never in capture mode (videos and tests stay deterministic) ──────
+const IDLE_ITEMS = new Set(['g1', 'g3', 'g4', 'g5a', 'g5b', 'g6', 'g8', 'order', 'radar', 's1', 's2']);
+let idleTimer = 0, idleLast = 0, idleN = 0;
+const IDLE_MS = 25000;
+function armIdle(a: Active | null) {
+  clearTimeout(idleTimer);
+  if (!a || env.capture || !IDLE_ITEMS.has(a.label || '')) return;
+  idleTimer = window.setTimeout(() => {
+    if (active !== a || isPlaying() || performance.now() - idleLast < 180000 || !document.querySelector('.castbar .cast-mishmish')) return;
+    idleLast = performance.now();
+    castReact('mishmish', 'happy', 2200, true);
+    void sayPick('mishmish.idle', mulberry32(hash(profile().seed, 'idle', ++idleN))).catch(() => {});
+  }, IDLE_MS);
+}
+// any touch or key restarts the wait
+for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, () => { if (idleTimer) armIdle(active); }, { passive: true });
 export const getActive = () => active;
 /** A key typed into a field (a name, the grown-ups' answer) is never a game key. */
 export const typing = (e: KeyboardEvent) => { const el = e.target as HTMLElement | null; return !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)); };
@@ -60,13 +80,20 @@ export function tapVisibly(el: Element | null): boolean {
 
 // ── feedback ─────────────────────────────────────────────────────────────────────────
 let praiseCount = 0, wrongCount = 0;
-export function praise(ctx: GameCtx) {
+/** A right answer: pop + sparkle (sound and, at `el`, a burst of sparkles), Amin cheers. `hard`: it took two or more
+ *  tries, so the voiced line is the encouraging `fb.keepGoing` rather than a praise word. */
+export function praise(ctx: GameCtx, el?: Element | null, hard = false) {
   sfx('pop'); sfx('sparkle');
+  burst(el);
+  castReact('amin', 'happy', 1100, true);
   praiseCount++;
-  if (praiseCount % 2 === 0) void sayPick('fb.right', ctx.rng);
+  if (hard) void say('fb.keepGoing', { signal: ctx.signal }).catch(() => {});
+  else if (praiseCount % 2 === 0) void sayPick('fb.right', ctx.rng);
 }
+/** A wrong tap: a soft thud, Amin thinks it over (never a verdict). */
 export function retry(ctx: GameCtx) {
   sfx('thud');
+  castReact('amin', 'think', 1300);
   wrongCount++;
   if (wrongCount % 3 === 1) void sayPick('fb.retry', ctx.rng);
 }
@@ -124,7 +151,7 @@ export function choose(ctx: GameCtx, into: HTMLElement, opts: Opt[], answer: str
           card.classList.add('right');
           els.forEach((e) => e !== card && e.classList.add('dim'));
           adapt(wrongHere === 0 && helpHere === 0);
-          praise(ctx);
+          praise(ctx, card, wrongHere >= 2);
           o.onRight?.(card);
           setActive(null);
           resolve(wrongHere === 0 && helpHere === 0);

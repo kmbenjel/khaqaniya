@@ -13,7 +13,8 @@ test('boots RTL, splash → intro → home, no errors, no other origin', async (
   await expect(page.getByTestId('intro')).toBeVisible();
   await page.waitForTimeout(400);
   await shot(page, info.project.name + '-02-intro');
-  await page.getByTestId('btn-skip').click();
+  // at test speed the three-panel first story (E1) may already be over: skip only if it is still on screen
+  await page.getByTestId('btn-skip').click({ timeout: 2000 }).catch(() => {});
   await expect(page.getByTestId('level')).toBeVisible();       // first launch: the story leads into verse 1 (§1.1)
   await kq(page, 'goto', 'home');
   await expect(page.getByTestId('home')).toBeVisible();

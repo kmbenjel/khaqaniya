@@ -3,13 +3,13 @@
 import { h, svg } from '../core/h';
 import { t } from '../core/copy';
 import { hash, mulberry32 } from '../core/rng';
-import { frame, btn } from '../core/ui';
+import { frame, btn, burst, castBase } from '../core/ui';
 import { pearlSvg } from '../art';
 import { sfx } from '../core/sfx';
 import { say } from '../core/voice';
 import { env, emit, isAbort, sleep } from '../core/env';
 import { profile, save, vs, polishResult, markDay, today } from '../core/store';
-import { P, dueVerses, checkStickers } from '../core/progress';
+import { P, dueVerses, checkStickers, districtOf } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
 import { Round, params, setActive, type GameCtx } from '../games/engine';
 import { g1, g3, g6, g7, g9 } from '../games/games';
@@ -40,6 +40,7 @@ async function run(f: ReturnType<typeof frame>, signal: AbortSignal) {
     f.play.replaceChildren(btn(t('btn.home'), { icon: 'home', primary: true, testid: 'btn-next', onClick: () => go('#/') }));
     return;
   }
+  castBase('mishmish', 'cloth');   // he holds the cloth («…but who polishes?»)
   await say('polish.start', { signal, who: 'laqlaq' });
   if (rng() < 0.5) void say('polish.mishmish', { signal }).catch(() => {});
   // one chain question when 3+ due verses are consecutive in the poem
@@ -57,6 +58,8 @@ async function run(f: ReturnType<typeof frame>, signal: AbortSignal) {
     emit('kq:step', { polish: n, i });
     tray.querySelector(`[data-n="${n}"]`)?.classList.add('now');
     f.reset();
+    const dd = districtOf(n);
+    f.setPlace(dd.skin, dd.sky);   // each pearl is polished in its own district, under its own sky
     const round = new Round();
     const gctx: GameCtx = { poem, verse: v, frame: f, rng, signal, mode: 'polish', p: params(n), round };
     const rung = vs(n)?.rung || 1;
@@ -72,9 +75,11 @@ async function run(f: ReturnType<typeof frame>, signal: AbortSignal) {
     polishResult(n, pass);
     const tp = tray.querySelector(`[data-n="${n}"]`);
     if (pass) {
-      sfx('sparkle');
+      sfx('sparkle'); sfx('swoosh');
+      burst(tp, { kind: 'dust', n: 10, spread: 46 });   // the dust flies off…
       tp?.replaceChildren(svg(pearlSvg(vs(n)!.stars >= 3 ? 's3' : vs(n)!.stars === 2 ? 's2' : 's1')));
       tp?.classList.add('shiny');
+      setTimeout(() => burst(tp, { n: 6, spread: 34 }), 180);   // …and the pearl shines
       await say('polish.shiny', { signal });
     } else {
       await play(v, 'verse', signal).catch(() => {});
@@ -89,13 +94,21 @@ async function run(f: ReturnType<typeof frame>, signal: AbortSignal) {
     await g9({ poem, verse: v, frame: f, rng, signal, mode: 'polish', p: params(v.n), round: new Round() }, run3.slice(0, 5).map((n) => poem.verses.find((x) => x.n === n)!));
   }
   pr.polish.sessions++; pr.polish.last = today();
+  const daysBefore = pr.days.length;
   markDay(); save();
   checkStickers();
   polishState = null;
   f.reset();
   f.ear.hidden = true; f.help.hidden = true;
-  f.prompt.replaceChildren(h('div', { class: 'polish-done', 'data-testid': 'polish-done' }, ...due.map((n) => h('span', { class: 'tray-pearl shiny' }, svg(pearlSvg(vs(n)!.stars >= 3 ? 's3' : vs(n)!.stars === 2 ? 's2' : 's1'))))));
+  f.setBanner('polish.title', 'star');   // the last game's banner stayed here before
+  // the polished pearls back together on a thread, in a soft glow (the same stage as a pearl's reward)
+  const done = h('div', { class: 'polish-done', 'data-testid': 'polish-done' }, ...due.map((n) => h('span', { class: 'tray-pearl shiny' }, svg(pearlSvg(vs(n)!.stars >= 3 ? 's3' : vs(n)!.stars === 2 ? 's2' : 's1')))));
+  f.prompt.replaceChildren(h('div', { class: 'polish-done-stage' }, h('div', { class: 'reward-rays', 'aria-hidden': 'true' }), done));
+  tray.hidden = true;   // the same pearls, now shining in the middle
+  requestAnimationFrame(() => burst(done, { n: 12, spread: 120 }));
+  castBase('mishmish', 'happy');
   await say('polish.done', { signal });
+  if (pr.days.length > daysBefore && daysBefore > 0) await say('days.lit', { signal });
   const more = dueVerses().length;
   const row = h('div', { class: 'reward-btns' });
   if (more) {

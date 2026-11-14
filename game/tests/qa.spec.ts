@@ -468,7 +468,8 @@ test('offline after «download everything»: every clip cached, late verses and 
   await page.waitForFunction(() => !!(window as any).__kq, null, { timeout: 30_000 });
   await expect(page.getByTestId('home')).toBeVisible();
   const failed: string[] = [];
-  page.on('requestfailed', (r) => failed.push(r.url()));
+  // a clip the game cuts on purpose (one owner of what plays: a new clip, «next», leaving) is an aborted load, not a miss
+  page.on('requestfailed', (r) => { const why = r.failure()?.errorText || ''; if (why !== 'net::ERR_ABORTED') failed.push(r.url() + ' ' + why); });
   await kq(page, 'learnUpTo', 47);
   await kq(page, 'goto', 'verse:48');
   await expect.poll(() => advancedClips(page), { timeout: 30_000 }).toContainEqual(expect.stringContaining('audio/v/048.mp3'));

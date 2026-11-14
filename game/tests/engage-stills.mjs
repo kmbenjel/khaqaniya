@@ -51,6 +51,19 @@ for (const [W, H] of SIZES) {
   await until((s) => s.screen === 'polish' && s.item && s.item !== 'next', []); await p.waitForTimeout(400); await shot('polish-task1');
   await until((s) => (s.polish?.i || 0) >= 2, []); await p.waitForTimeout(400); await shot('polish-task3');
   await until((s) => s.item === 'polish-done', ['polish-done']); await api('speed', 1); await p.waitForTimeout(1500); await shot('polish-done');
+  // LISTEN on a first verse (the invitation star), G4 lanes, the story going on before verse 2
+  await open('speed=1&recitation=1', '#/');
+  await api('goto', 'verse:1');
+  await until((s) => s.step === 'listen', ['next']);
+  await p.waitForSelector('.listen-card .w.lit', { timeout: 40000 }).catch(() => {}); await p.waitForTimeout(500); await shot('listen-invite');
+  await open('speed=25', '#/');
+  await api('learnUpTo', 2); await api('goto', 'verse:3');
+  await until((s) => s.step === 'playB' && s.item === 'g4', ['g4']); await api('speed', 1); await p.waitForTimeout(1600); await shot('g4-lanes');
+  await open('speed=1', '#/');
+  await api('learnUpTo', 1);
+  await p.evaluate(() => { const pr = window.__kq.state().profile; pr.seen.tips.push('story.short'); });
+  await api('goto', 'verse:2');
+  await p.waitForSelector('[data-testid=story-beat]', { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(1200); await shot('story-beat');
   // necklace, stickers
   await open('profile=demo:14'); await api('goto', 'necklace'); await p.waitForTimeout(1200); await shot('necklace-14');
   await api('goto', 'stickers'); await p.waitForTimeout(1000); await shot('stickers-14');

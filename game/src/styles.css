@@ -684,3 +684,151 @@ html.grownup .bubble { font-family: var(--ui); font-size: calc(17px * var(--k));
 .medal-line { max-width: 520px; text-align: center; font-family: var(--verse); font-size: var(--fs-kid); line-height: 1.9; margin: 0; }
 .gate-hint { color: var(--muted); }
 .map-scroll { padding-bottom: 90px; }
+
+/* ══ E1 engagement & beauty pass (2026-11-14) — one block, overrides earlier rules where noted ══════════════════════ */
+/* sparkle bursts (ui.ts burst): ≤ 12 small particles, transform/opacity only, 0.7 s */
+.burst { position: fixed; z-index: 70; width: 0; height: 0; pointer-events: none; }
+.burst .spark { position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 22%, #ffd977 30%, rgba(233,180,76,0) 72%); animation: spark .7s cubic-bezier(.2,.8,.2,1) both; }
+.burst .spark.star { left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 0; background: #ffd977;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.burst-dust .spark { left: -5px; top: -5px; width: 10px; height: 10px; background: radial-gradient(circle, #cdbb96 0 40%, rgba(185,169,138,0) 72%); }
+@keyframes spark { 0% { transform: translate(0, 0) scale(.4); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
+
+/* the cast: stacked poses, one shown (ui.ts castReact / castBase); a little hop on a right answer */
+.cast { position: relative; }
+.cast > .pose { position: absolute; inset: 0; opacity: 0; transition: opacity .12s; }
+.cast > .pose.on { opacity: 1; }
+.cast.hop, .home-amin.hop { animation: hop2 .5s ease-out; }
+@keyframes hop2 { 30% { transform: translateY(-10px) scale(1.06); } 60% { transform: none; } 80% { transform: translateY(-3px); } }
+/* tall phones have room: the cast grows from 56×60 */
+@media (max-width: 1023px) and (min-height: 800px) { .castbar .cast { width: 72px; height: 82px; } }
+
+/* the district's painting under the cast: the bottom of every play frame is its street (cards stay on top) */
+.frame.banded { position: relative; isolation: isolate; }
+.frame.banded::before { content: ''; position: absolute; inset: auto 0 0 0; height: 60%; z-index: -1; pointer-events: none;
+  background: var(--band) center bottom / cover no-repeat;
+  -webkit-mask-image: linear-gradient(transparent, rgba(0,0,0,.45) 30%, #000 68%); mask-image: linear-gradient(transparent, rgba(0,0,0,.45) 30%, #000 68%); }
+.frame.banded .castbar { background: linear-gradient(rgba(10,14,36,0), rgba(10,14,36,.45) 60%); }
+/* desktop: the painting fills the story pane (where the cast stands at full size); the play pane keeps the plain sky */
+@media (min-width: 1024px) {
+  .frame.banded::before { display: none; }
+  .frame.banded .castbar { background: linear-gradient(rgba(10,14,36,.1), rgba(10,14,36,.4)), var(--band) center 78% / cover no-repeat; }
+}
+
+/* LISTEN: until the first catch, a star bobs over the lit word */
+.hemi .w { position: relative; }
+.listen-card.invite .w.lit::after { content: ''; position: absolute; top: -.62em; left: 50%; width: 22px; height: 22px; margin-left: -11px; pointer-events: none;
+  background: var(--gold); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: bob .6s ease-in-out infinite alternate; }
+@keyframes bob { to { transform: translateY(-7px); } }
+
+/* MEANING: Laqlaq with his two small drawings; the hard words behind one chip */
+.meaning-stork { height: auto; width: 76px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.meaning-stork > .char-art { width: 72px; height: 104px; }
+.meaning-stork .pictos { flex-direction: column; gap: 2px; }
+.meaning-stork .picto { width: 44px; height: 44px; background: none; box-shadow: none; color: #3f7fb0; }
+.meaning-stork .picto svg { width: 32px; height: 32px; }
+.meaning-stork .picto-glyph { font-size: 18px; color: #3f7fb0; }
+.chip.chip-words { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; background: #fff8e4; border-color: #e9d9a8; font-family: var(--ui); font-weight: 800; }
+.chip.chip-words .icon { width: 22px; height: 22px; color: var(--brass); }
+
+/* REWARD: a stage with a soft turning glow, the cast cheering, the pearl; a copy travels to the strand */
+.frame.celebrating .castbar .cast { visibility: hidden; }
+.reward { gap: 6px; padding-top: 0; }
+.reward-stage { position: relative; width: 100%; height: 150px; display: grid; place-items: center; }
+@media (min-height: 800px) { .reward-stage { height: 184px; } }
+.reward-rays { position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(rgba(255,233,168,.38) 0 9deg, rgba(255,233,168,0) 9deg 30deg);
+  -webkit-mask-image: radial-gradient(circle, #000 22%, transparent 68%); mask-image: radial-gradient(circle, #000 22%, transparent 68%); animation: spin 16s linear infinite; }
+.golden .reward-rays { background: repeating-conic-gradient(rgba(255,214,110,.6) 0 10deg, rgba(255,214,110,0) 10deg 30deg); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.reward-stage .reward-pearl { position: relative; z-index: 1; width: 112px; height: 112px; }
+@media (min-height: 800px) { .reward-stage .reward-pearl { width: 132px; height: 132px; } }
+.reward-stage.golden .reward-pearl svg { filter: drop-shadow(0 0 26px rgba(255,214,110,.95)); }
+.reward-cast { position: absolute; bottom: 0; width: 84px; height: 124px; animation: hop2 .6s ease-out .2s both; }
+@media (min-height: 800px) { .reward-cast { width: 96px; height: 150px; } }
+.reward-cast > * { width: 100%; height: 100%; }
+.reward-amin { inset-inline-end: 4px; }
+.reward-amin .art-img { transform: scaleX(-1); }   /* at the left (RTL end) he turns toward the pearl */
+.reward-mishmish { inset-inline-start: 4px; height: 96px; }
+.pearl-flight { position: fixed; z-index: 45; pointer-events: none; transition: transform .7s cubic-bezier(.65,0,.35,1); }
+.pearl-flight svg { width: 100%; height: 100%; filter: drop-shadow(0 0 14px rgba(255,233,168,.9)); }
+.reward-strand { min-height: 0; padding: 6px; }   /* was 140 px tall */
+.strand-pearl.landing { opacity: .22; }
+.reward-btns-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.reward-btns-2 .btn { padding-inline: 10px; }
+
+/* CHALLENGE: glossy ink drops, the member flinches as a drop is washed, the correction in a glow */
+.drop { background: radial-gradient(circle at 35% 30%, #7468b8 0 14%, #2f2868 42%, #1f1b3f 100%); border: 0; box-shadow: 0 2px 4px rgba(0,0,0,.35); }
+.drop.washed { opacity: .16; transform: scale(.5); }
+.boss-blot.hit { animation: hit .45s; }
+@keyframes hit { 30% { transform: scale(.9, 1.08) rotate(-4deg); } 65% { transform: scale(1.05, .95) rotate(3deg); } }
+.boss-fixed-stage { position: relative; display: grid; place-items: center; min-height: 196px; }
+.boss-fixed-stage .reward-rays { width: 260px; height: 260px; margin: -130px 0 0 -130px; }
+.boss-fixed-stage .boss-fixed { position: relative; z-index: 1; }
+
+/* G4: the catcher is Mishmish in his basket */
+.basket { width: 26%; height: 66px; inset-inline-start: calc(var(--pos) * 33.33% + 3.6%); background: none; box-shadow: none; border-radius: 0; }
+.basket > * { width: 100%; height: 100%; }
+.basket > .art-img { object-fit: contain; object-position: bottom; }
+.fall.caught { bottom: 52px; }
+
+/* RECITE: «someone is listening» as a pill (the native box read as a broken picture) */
+.pill-toggle.on { background: linear-gradient(#ffd977, var(--gold)); }
+.pill-toggle.on .icon, .pill-toggle.on span { color: #3b2418; }
+
+/* HOME: Amin and Mishmish stand in the district they are at; the district's pearls lead to the gang member */
+.home-hero.banded { height: 178px; border-radius: 24px; overflow: hidden; align-items: flex-end;
+  background: var(--band) center 70% / cover no-repeat; box-shadow: 0 8px 24px rgba(10,14,40,.35), inset 0 0 0 2px rgba(255,255,255,.2); }
+.home-hero.banded::after { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(transparent, rgba(14,16,48,.3)); pointer-events: none; }
+.home-amin { position: relative; z-index: 1; align-self: flex-end; width: 104px; height: 156px; border: 0; background: none; padding: 0; cursor: pointer; }
+.home-hero .home-amin .char-amin { width: 100%; height: 100%; }
+.home-hero .home-mishmish { z-index: 1; }
+@media (max-height: 760px) {   /* 360×740: home still fits one screen with the painting */
+  .home-hero.banded { height: 140px; } .home-amin { width: 84px; height: 128px; } .home-hero .home-mishmish { width: 70px; height: 70px; }
+  .home-main { gap: 10px; } .goal { padding-block: 4px 6px; } .days { padding-block: 6px; gap: 4px; } .days-week:not(.hint) { display: none; }
+}
+@media (min-width: 1024px) { .home-hero.banded { height: 230px; } .home-amin { width: 130px; height: 200px; } }
+.goal { display: flex; flex-direction: column; gap: 2px; background: rgba(14,16,48,.26); border-radius: var(--r); padding: 6px 12px 8px; }
+.goal-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.goal-district { font-family: var(--verse); font-weight: 700; font-size: calc(20px * var(--k)); line-height: 1.8; }
+.goal-verse { font-weight: 800; font-size: var(--fs-hud); color: #ffe29a; text-shadow: 0 1px 2px rgba(10,14,40,.6); }
+.goal-strand { display: flex; align-items: center; gap: 4px; padding: 0 2px;
+  background: linear-gradient(transparent 47%, rgba(255,233,168,.6) 47%, rgba(255,233,168,.6) 53%, transparent 53%); }
+.goal-pearl { flex: 0 1 32px; min-width: 20px; aspect-ratio: 1; }
+.goal-pearl svg { width: 100%; height: 100%; }
+.goal-pearl.empty { opacity: .55; }
+.goal-pearl.next svg { animation: blink 1.4s ease-in-out infinite; filter: drop-shadow(0 0 8px #ffe9a8); }
+.goal-gate { margin-inline-start: auto; width: 46px; height: 46px; flex: none; filter: brightness(0) opacity(.45); }
+.goal-gate.open { filter: drop-shadow(0 0 8px rgba(255,233,168,.8)); animation: breathe 1.6s ease-in-out infinite; }
+.goal-gate > * { width: 100%; height: 100%; }
+.lamp.waiting { opacity: .85; animation: breathe 2.4s ease-in-out infinite; }
+.lamp.waiting svg { filter: drop-shadow(0 0 6px rgba(255,217,119,.75)); }
+.days-week { font-size: 16px; line-height: 1.7; opacity: .92; text-align: center; }
+
+/* STICKERS: each district its own round window; feats as badges; new ones shine once */
+.vignette { position: relative; display: block; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #e9b44c; }
+.vignette .vignette-art { width: 100%; height: 100%; object-fit: cover; }
+.vignette-lantern { position: absolute; bottom: 4%; inset-inline-end: 10%; width: 30%; height: 44%; filter: drop-shadow(0 0 6px #ffe29a); }
+.vignette-lantern svg { width: 100%; height: 100%; }
+.badge { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fffaf0, #f3e6c8);
+  box-shadow: inset 0 0 0 5px #e9b44c, inset 0 0 0 7px #fff3c4, 0 3px 6px rgba(0,0,0,.15); }
+.sticker-art .badge svg, .new-sticker-art .badge svg { width: 54%; height: 54%; color: var(--teal); }
+.sticker.locked .badge { box-shadow: inset 0 0 0 5px #c9c3b4; }
+.sticker.fresh { box-shadow: 0 0 0 3px #ffd977, 0 3px 0 #e4dccb; animation: pop .6s 2; }
+
+/* POLISH done: the shining pearls on a thread in the glow */
+.polish-done-stage { position: relative; display: grid; place-items: center; min-height: 220px; }
+.polish-done-stage .reward-rays { width: 300px; height: 300px; margin: -150px 0 0 -150px; }
+.polish-done-stage .polish-done { position: relative; z-index: 1; padding: 6px 10px; gap: 6px; border-radius: 40px;
+  background: linear-gradient(transparent 46%, rgba(255,233,168,.7) 46%, rgba(255,233,168,.7) 54%, transparent 54%); }
+.polish-done-stage .tray-pearl { width: 48px; height: 48px; }
+
+/* the story going on before verse 2 and 4 (first launch) */
+.story-beat { background: linear-gradient(#0b1130, #283464); color: #fff; z-index: 45; animation: fadeIn .4s; }
+.story-beat .intro-panel { width: min(100%, 560px); height: 54vh; }
+/* the story's footnote (intro.lahn) on a plaque, not on the painting */
+.intro-foot:not(:empty) { background: rgba(11,17,48,.75); border-radius: 12px; padding: 2px 14px; line-height: 1.8; }
+/* a child's line in a toast (the map has no cast bar): the bubble's face and size */
+.toast.kid { font-family: var(--verse); font-size: var(--fs-bubble); line-height: 1.8; background: #fff8ec; color: var(--ink); border-radius: 18px; box-shadow: var(--shadow); text-align: center; }
+/* ══ end of E1 block ═════════════════════════════════════════════════════════════════════════════════════════════ */
