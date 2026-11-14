@@ -1997,20 +1997,6 @@
     "aud": "child",
     "p": 2
   },
-  "fb.cheer.1": {
-    "text": "هِييييهْ!",
-    "voice": true,
-    "who": "narrator",
-    "aud": "child",
-    "p": 1,
-    "layer": [
-      "amin",
-      "mishmish",
-      "narrator",
-      "laqlaq"
-    ],
-    "note": "the cheer effect (§7.2): 3–4 takes layered with small offsets, 1.5 s; no clapping"
-  },
   "fb.cheer.2": {
     "text": "مَا شَاءَ اللَّهُ!",
     "say": "مَا شَاءَ اللَّهْ!",

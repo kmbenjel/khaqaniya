@@ -1,10 +1,10 @@
 {
  "ai.ask.outside": {
-  "dur": 6.82,
+  "dur": 6.58,
   "file": "audio/voice/ai.ask.outside.mp3"
  },
  "ai.recite.say.again": {
-  "dur": 3.72,
+  "dur": 4.1,
   "file": "audio/voice/ai.recite.say.again.mp3"
  },
  "ai.recite.say.almost": {
@@ -56,15 +56,15 @@
   "file": "audio/voice/boss.duhrouj.fixed.mp3"
  },
  "boss.duhrouj.gag": {
-  "dur": 3.36,
+  "dur": 4.01,
   "file": "audio/voice/boss.duhrouj.gag.mp3"
  },
  "boss.duhrouj.intro": {
-  "dur": 3.72,
+  "dur": 5.26,
   "file": "audio/voice/boss.duhrouj.intro.mp3"
  },
  "boss.duhrouj.lesson": {
-  "dur": 7.18,
+  "dur": 7.2,
   "file": "audio/voice/boss.duhrouj.lesson.mp3"
  },
  "boss.duhrouj.right.1": {
@@ -84,7 +84,7 @@
   "file": "audio/voice/boss.final.mp3"
  },
  "boss.fuwaq.fixed": {
-  "dur": 6.43,
+  "dur": 7.42,
   "file": "audio/voice/boss.fuwaq.fixed.mp3"
  },
  "boss.fuwaq.gag": {
@@ -112,7 +112,7 @@
   "file": "audio/voice/boss.fuwaq.wrong.mp3"
  },
  "boss.intro.amin": {
-  "dur": 4.56,
+  "dur": 4.85,
   "file": "audio/voice/boss.intro.amin.mp3"
  },
  "boss.kaslan.fixed": {
@@ -176,11 +176,11 @@
   "file": "audio/voice/boss.khallat.fixed.mp3"
  },
  "boss.khallat.gag": {
-  "dur": 5.83,
+  "dur": 7.13,
   "file": "audio/voice/boss.khallat.gag.mp3"
  },
  "boss.khallat.intro": {
-  "dur": 7.58,
+  "dur": 6.53,
   "file": "audio/voice/boss.khallat.intro.mp3"
  },
  "boss.khallat.lesson": {
@@ -192,7 +192,7 @@
   "file": "audio/voice/boss.khallat.right.1.mp3"
  },
  "boss.khallat.right.2": {
-  "dur": 4.34,
+  "dur": 3.58,
   "file": "audio/voice/boss.khallat.right.2.mp3"
  },
  "boss.khallat.wrong": {
@@ -204,7 +204,7 @@
   "file": "audio/voice/boss.manfoukh.fixed.mp3"
  },
  "boss.manfoukh.gag": {
-  "dur": 6.07,
+  "dur": 6.26,
   "file": "audio/voice/boss.manfoukh.gag.mp3"
  },
  "boss.manfoukh.intro": {
@@ -220,7 +220,7 @@
   "file": "audio/voice/boss.manfoukh.right.1.mp3"
  },
  "boss.manfoukh.right.2": {
-  "dur": 5.16,
+  "dur": 3.62,
   "file": "audio/voice/boss.manfoukh.right.2.mp3"
  },
  "boss.manfoukh.wrong": {
@@ -248,7 +248,7 @@
   "file": "audio/voice/boss.mattat.right.1.mp3"
  },
  "boss.mattat.right.2": {
-  "dur": 6.24,
+  "dur": 7.9,
   "file": "audio/voice/boss.mattat.right.2.mp3"
  },
  "boss.mattat.wrong": {
@@ -264,7 +264,7 @@
   "file": "audio/voice/boss.nasyan.gag.mp3"
  },
  "boss.nasyan.intro": {
-  "dur": 9.94,
+  "dur": 9.05,
   "file": "audio/voice/boss.nasyan.intro.mp3"
  },
  "boss.nasyan.lesson": {
@@ -280,7 +280,7 @@
   "file": "audio/voice/boss.nasyan.right.2.mp3"
  },
  "boss.nasyan.wrong": {
-  "dur": 8.06,
+  "dur": 8.83,
   "file": "audio/voice/boss.nasyan.wrong.mp3"
  },
  "boss.qallab.fixed": {
@@ -420,7 +420,7 @@
   "file": "audio/voice/district.hill.intro.mp3"
  },
  "district.lane.intro": {
-  "dur": 8.64,
+  "dur": 10.3,
   "file": "audio/voice/district.lane.intro.mp3"
  },
  "district.market.intro": {
@@ -432,11 +432,11 @@
   "file": "audio/voice/district.seven.intro.mp3"
  },
  "district.workshop.intro": {
-  "dur": 9.96,
+  "dur": 10.44,
   "file": "audio/voice/district.workshop.intro.mp3"
  },
  "fact.abuamr": {
-  "dur": 8.26,
+  "dur": 7.13,
   "file": "audio/voice/fact.abuamr.mp3"
  },
  "fact.asim": {
@@ -484,7 +484,7 @@
   "file": "audio/voice/fact.nafi.warsh.mp3"
  },
  "fact.poet": {
-  "dur": 12.17,
+  "dur": 10.8,
   "file": "audio/voice/fact.poet.mp3"
  },
  "fact.seven": {
@@ -494,10 +494,6 @@
  "fact.throat": {
   "dur": 11.54,
   "file": "audio/voice/fact.throat.mp3"
- },
- "fb.cheer.1": {
-  "dur": 1.42,
-  "file": "audio/voice/fb.cheer.1.mp3"
  },
  "fb.cheer.2": {
   "dur": 1.56,
@@ -528,7 +524,7 @@
   "file": "audio/voice/fb.retry.4.mp3"
  },
  "fb.retry.5": {
-  "dur": 2.9,
+  "dur": 2.62,
   "file": "audio/voice/fb.retry.5.mp3"
  },
  "fb.retry.6": {
@@ -704,7 +700,7 @@
   "file": "audio/voice/game.missingWord.mishmish.mp3"
  },
  "game.next.how": {
-  "dur": 3.38,
+  "dur": 3.65,
   "file": "audio/voice/game.next.how.mp3"
  },
  "game.next.thread": {
@@ -756,11 +752,11 @@
   "file": "audio/voice/game.rhymeRadar.done.mp3"
  },
  "game.rhymeRadar.how": {
-  "dur": 3.7,
+  "dur": 3.6,
   "file": "audio/voice/game.rhymeRadar.how.mp3"
  },
  "game.rhymeRadar.miss": {
-  "dur": 3.98,
+  "dur": 4.08,
   "file": "audio/voice/game.rhymeRadar.miss.mp3"
  },
  "game.rhymeRadar.sardine": {
@@ -844,7 +840,7 @@
   "file": "audio/voice/intro.5.mp3"
  },
  "intro.6": {
-  "dur": 5.69,
+  "dur": 5.66,
   "file": "audio/voice/intro.6.mp3"
  },
  "intro.lahn": {
@@ -852,7 +848,7 @@
   "file": "audio/voice/intro.lahn.mp3"
  },
  "joke.1": {
-  "dur": 7.97,
+  "dur": 6.77,
   "file": "audio/voice/joke.1.mp3"
  },
  "joke.10": {
@@ -864,7 +860,7 @@
   "file": "audio/voice/joke.11.mp3"
  },
  "joke.12": {
-  "dur": 4.7,
+  "dur": 4.3,
   "file": "audio/voice/joke.12.mp3"
  },
  "joke.13": {
@@ -880,7 +876,7 @@
   "file": "audio/voice/joke.15.mp3"
  },
  "joke.16": {
-  "dur": 4.92,
+  "dur": 4.56,
   "file": "audio/voice/joke.16.mp3"
  },
  "joke.17": {
@@ -900,7 +896,7 @@
   "file": "audio/voice/joke.2.mp3"
  },
  "joke.20": {
-  "dur": 5.78,
+  "dur": 6.48,
   "file": "audio/voice/joke.20.mp3"
  },
  "joke.21": {
@@ -924,7 +920,7 @@
   "file": "audio/voice/joke.23.mp3"
  },
  "joke.24": {
-  "dur": 5.45,
+  "dur": 4.75,
   "file": "audio/voice/joke.24.mp3"
  },
  "joke.3": {
@@ -960,7 +956,7 @@
   "file": "audio/voice/lahn.fix.mp3"
  },
  "lahn.kinds": {
-  "dur": 13.9,
+  "dur": 13.2,
   "file": "audio/voice/lahn.kinds.mp3"
  },
  "lahn.what": {
@@ -1028,7 +1024,7 @@
   "file": "audio/voice/map.pearl.locked.mp3"
  },
  "meaning.empty": {
-  "dur": 8.26,
+  "dur": 8.42,
   "file": "audio/voice/meaning.empty.mp3"
  },
  "meaning.intro.1": {
@@ -1048,7 +1044,7 @@
   "file": "audio/voice/mishmish.idle.1.mp3"
  },
  "mishmish.idle.2": {
-  "dur": 3.74,
+  "dur": 4.82,
   "file": "audio/voice/mishmish.idle.2.mp3"
  },
  "mishmish.tap.1": {
@@ -1056,7 +1052,7 @@
   "file": "audio/voice/mishmish.tap.1.mp3"
  },
  "mishmish.tap.2": {
-  "dur": 3.79,
+  "dur": 3.1,
   "file": "audio/voice/mishmish.tap.2.mp3"
  },
  "mishmish.tap.3": {
@@ -1076,7 +1072,7 @@
   "file": "audio/voice/mishmish.tap.6.mp3"
  },
  "mishmish.tap.7": {
-  "dur": 2.9,
+  "dur": 2.93,
   "file": "audio/voice/mishmish.tap.7.mp3"
  },
  "mishmish.tap.8": {
@@ -1096,7 +1092,7 @@
   "file": "audio/voice/polish.done.mp3"
  },
  "polish.later": {
-  "dur": 6.91,
+  "dur": 6.53,
   "file": "audio/voice/polish.later.mp3"
  },
  "polish.mishmish": {
@@ -1104,7 +1100,7 @@
   "file": "audio/voice/polish.mishmish.mp3"
  },
  "polish.moreAsk": {
-  "dur": 3.6,
+  "dur": 3.53,
   "file": "audio/voice/polish.moreAsk.mp3"
  },
  "polish.none": {
@@ -1120,7 +1116,7 @@
   "file": "audio/voice/polish.start.mp3"
  },
  "profile.askName": {
-  "dur": 2.95,
+  "dur": 2.93,
   "file": "audio/voice/profile.askName.mp3"
  },
  "profile.easter.amin": {
@@ -1168,7 +1164,7 @@
   "file": "audio/voice/reward.stars.1.mp3"
  },
  "reward.stars.2": {
-  "dur": 3.82,
+  "dur": 3.74,
   "file": "audio/voice/reward.stars.2.mp3"
  },
  "reward.stars.3": {

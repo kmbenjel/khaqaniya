@@ -20,9 +20,6 @@ const FINE: { rx: RegExp; why: string }[] = [
   // `cert.date` is vocalised («التَّارِيخُ: …»); the month names come from the browser's calendar (Intl), not from copy.
   // Vocalised month names would be new copy keys (offered to A1 in QA.md §7).
   { rx: /^التَّارِيخُ: .*هـ — .*\d{4}$/, why: 'certificate date: month names from Intl' },
-  // E1: the voiced cheer's caption (fb.cheer.1, design §7.2, A1-reviewed): a long «hee» drawn as a run of yāʾ, vocalised on
-  // its first and last letters; a letter-by-letter ratio cannot see that it is complete
-  { rx: /^هِ(ي)+هْ!$/, why: 'the cheer: a stretched «hee», vocalised at both ends (fb.cheer.1)' },
 ];
 /** Copy keys waiting for A1's tashkeel (G5 lists them; A1 vocalises, then the key leaves this list). */
 const PENDING_A1: string[] = [];
