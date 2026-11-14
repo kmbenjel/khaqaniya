@@ -352,6 +352,12 @@ New specs: `audio` (4), `tashkeel` (1, phone), `child` (10: mash at 3 sizes, bac
 polish + certificate), `install` (2: Android Chrome, iOS on WebKit; WebKit installed on the VM with
 `npx playwright install --with-deps webkit`).
 
+**Deploy** (2026-11-14 ~01:35 UTC): `scripts/publish.sh --push` from 08634e3 (public 6eef5af..2e7451d), Pages run green.
+Live check on the VM (Chrome, Pixel 7, a profile that had the previous build): the worker went from `f7db5cd90dfe` to
+`066795b47e36` (shell and data caches replaced, the unchanged media cache kept; the new worker takes a while to precache
+district 1 before it takes over), `build.json` a63ac01a33; verse 1 played to the pearl on the live URL with the reciter and
+voices on, 0 console errors; «ask the stork» shows no grown-up chips to a child; About opens on the gate.
+
 Left / not verifiable here:
 - **Real iOS**: WebKit on Linux does not enforce iOS's «a tap must start the media» rule; the first-tap priming follows
   the known pattern but needs a check on an iPhone (does verse 1 sound after the story?).

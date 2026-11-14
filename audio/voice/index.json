@@ -456,7 +456,7 @@
   "file": "audio/voice/fact.dani.mp3"
  },
  "fact.first": {
-  "dur": 8.52,
+  "dur": 6.65,
   "file": "audio/voice/fact.first.mp3"
  },
  "fact.haramayn": {
@@ -508,7 +508,7 @@
   "file": "audio/voice/fb.hint.glow.mp3"
  },
  "fb.keepGoing": {
-  "dur": 2.18,
+  "dur": 3.72,
   "file": "audio/voice/fb.keepGoing.mp3"
  },
  "fb.retry.1": {
@@ -828,7 +828,7 @@
   "file": "audio/voice/intro.1.mp3"
  },
  "intro.2": {
-  "dur": 8.66,
+  "dur": 9.17,
   "file": "audio/voice/intro.2.mp3"
  },
  "intro.3": {
@@ -836,11 +836,11 @@
   "file": "audio/voice/intro.3.mp3"
  },
  "intro.4": {
-  "dur": 7.03,
+  "dur": 6.17,
   "file": "audio/voice/intro.4.mp3"
  },
  "intro.5": {
-  "dur": 5.74,
+  "dur": 7.8,
   "file": "audio/voice/intro.5.mp3"
  },
  "intro.6": {
