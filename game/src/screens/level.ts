@@ -99,6 +99,7 @@ export async function listenStep(v: Verse, f: Frame, signal: AbortSignal, o: { o
   const grown = settings().grownupMode;
   if (o.onePass || grown) {
     const nextP = waitNext(f, signal);
+    nextP.catch(() => {});   // left mid-verse: whole() throws first, nextP's abort must not surface as unhandled (G5)
     if (!grown) await whole().catch((e) => { if (isAbort(e)) throw e; });
     else void whole().catch(() => {});
     if (!o.onePass) ctrl.appendChild(btn(t('listen.echo'), { icon: 'repeat', testid: 'btn-echo', small: true, onClick: () => void echo().catch(() => {}) }));
@@ -138,7 +139,7 @@ export async function meaningStep(v: Verse, f: Frame, signal: AbortSignal, rng?:
   if (!m) body.appendChild(h('p', { class: 'kid-meaning' }, t('meaning.empty')));
   else {
     if (grown && m.adult) body.appendChild(h('p', { class: 'adult-meaning', 'data-testid': 'adult-meaning' }, m.adult));
-    else body.appendChild(h('p', { class: 'kid-meaning', 'data-testid': 'kid-meaning' }, m.kid || m.adult || ''));
+    else body.appendChild(h('p', { class: 'kid-meaning', 'data-testid': 'kid-meaning' }, m.kid || t('meaning.empty')));   // never the adult text to a child
     if (v.pictos.length) body.appendChild(h('div', { class: 'pictos' }, ...v.pictos.slice(0, 2).map((id) => picto(id, P().verses.length))));
     const ws = m.words || [];
     if (ws.length) {

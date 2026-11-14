@@ -7,6 +7,7 @@ import { P } from '../core/progress';
 import { go, type ScreenCtx } from '../core/router';
 import { env } from '../core/env';
 import { sfx } from '../core/sfx';
+import { followSwitches } from '../core/audio';
 import { downloadAll } from '../sw-client';
 import { profileEditor } from './profiles';
 import { charArt } from '../art';
@@ -19,6 +20,7 @@ export function applySettings() {
   de.classList.toggle('reduce-motion', !!rm);
   de.classList.toggle('grownup', s.grownupMode);
   setNumerals(s.numerals);
+  followSwitches();   // a sound switched off mid-clip falls silent at once
 }
 
 let gateOpenUntil = 0, gateLockUntil = 0;
@@ -121,9 +123,10 @@ export function aboutScreen(_ctx: ScreenCtx): HTMLElement {
   const cites = [...new Set(poem.verses.flatMap((v) => v.meaning?.cite || []))].slice(0, 12);
   const fixture = poem.build.fixture.length ? h('p', { class: 'fixture-note', 'data-testid': 'fixture-note' }, 'DEV BUILD · ', poem.build.fixture.join(' · ')) : null;
   const P_ = (k: string, params?: Record<string, string | number>) => h('p', null, t(k, params));
-  return h('div', { class: 'page about', 'data-testid': 'about' },
-    h('header', { class: 'topbar' }, iconBtn('back', 'aria.back', 'btn-back', () => (history.length > 1 ? history.back() : go('#/')), 'back-btn'), h('div', { class: 'top-title' }, t('about.title'))),
-    h('div', { class: 'about-body' },
+  // About is written for grown-ups (copy `aud: adult`, sources, versions): behind the same gate as their corner (G5)
+  const page = h('div', { class: 'page about', 'data-testid': 'about' },
+    h('header', { class: 'topbar' }, iconBtn('back', 'aria.back', 'btn-back', () => (history.length > 1 ? history.back() : go('#/')), 'back-btn'), h('div', { class: 'top-title' }, t(gateOpen() ? 'about.title' : 'grown.title'))));
+  const body = () => h('div', { class: 'about-body' },
       h('div', { class: 'about-cast' }, charArt('laqlaq', 'happy')),
       h('h2', null, poem.fullTitle),
       P_('about.poem', { fullTitle: poem.fullTitle }),
@@ -141,7 +144,10 @@ export function aboutScreen(_ctx: ScreenCtx): HTMLElement {
       P_('about.license', { license: 'MIT' }),
       h('p', { class: 'dedication-line' }, t('about.dedication')),
       h('p', null, h('a', { href: './qasida/', 'data-testid': 'about-qasida' }, t('about.link.poem'))),
-      h('p', { class: 'version' }, t('about.version', { v: poem.build.version + ' · ' + poem.build.built })), fixture));
+      h('p', { class: 'version' }, t('about.version', { v: poem.build.version + ' · ' + poem.build.built })), fixture);
+  if (gateOpen()) page.appendChild(body());
+  else { const wrap = h('div', { class: 'grown-body' }, gate(() => { wrap.replaceWith(body()); page.querySelector('.top-title')!.textContent = t('about.title'); })); page.appendChild(wrap); }
+  return page;
 }
 
 const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);

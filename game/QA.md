@@ -266,3 +266,95 @@ Nine changed strings come in through the build. Four new keys wired: `game.order
 hemistichs show), `btn.help.label` (a one-word label under the help lantern; the button keeps its aria-label; the
 four-card fit still holds: 12–55 px to spare at 360×740), `error.storage.kid` / `app.install.ios` (above). Test:
 `qa` «copy round».
+
+## 7. G5 — debug and audio fix (2026-11-14)
+
+Agent «G5 game debug & audio fix (Opus high)», after the owner's report (2026-11-14): an explanation shown in the app was
+without tashkeel and written for grown-ups, with technical references; and once a verse's voice played in the background
+unexpectedly. Built and run on `khaqaniya-vm` (google-chrome, Playwright 1.65, WebKit 2388
+for iOS Safari).
+
+### 7.1 Audio playing in the background (tests/audio.spec.ts)
+
+Before the fix 3 of the 4 scenarios failed on the old build; all pass after 5337f2d. Every media element the game plays
+is recorded; at most one may ever be unpaused, none after leaving a screen.
+
+| bug | cause | fix | test (before → after) |
+|---|---|---|---|
+| A late clip plays over the next ones (up to **3 clips at once**) | the safety-net timer ended a clip with `done()` without pausing it; a clip that started late (slow network, cold worker) played on untracked and `pool.find(paused)` took another element | one owner of «what is playing» (`core/audio.ts`); whatever stops is paused **and detached** (src removed, `load()`); a clip not started in 8 s becomes a silent stand-in and can never start late; the safety net counts from the real start and follows buffering (`waiting`) and the rate | «slow network»: every reciter clip answered 16 s late through route interception — max unpaused 3 → 1, nothing after leaving |
+| Clips and sequences go on with the app in the background / screen locked | no `visibilitychange` / `pagehide` handling | hidden page → everything stops; `play()` waits for the page to come back (the level does not run on silently); effects' AudioContext suspended. Exception by design (GAME_DESIGN §4.10): the necklace's «listen to all» (`background: true`) keeps playing with the screen off | «hidden page»: verse clip still playing → silent at once, no clip while hidden, resumes when visible; listen-all goes on to the next verse while hidden |
+| **The owner's bug**: a verse resumes on another screen | Media Session handlers existed only on the necklace (cleared on leaving) and stopped elements kept their `src`: the browser's own «play» (lock screen, notification, headset) resumed the last stopped verse anywhere | handlers always set in `audio.ts`: «pause» holds the clip (playbackState `paused`, the level waits), «play» resumes it, or on the necklace starts listen-all; «stop» stops; with nothing playing «play» does nothing (and nothing has a src to resume) | «media session»: off the necklace the browser «play» resumed verse 2's clip on the stickers screen → nothing plays; on a level pause/resume hold and resume the same clip |
+| A tap on the ear while a character speaks plays the verse over the voice | the voice element was outside the clip pool's bookkeeping | voices go through the same owner (`playLine`), never over a clip; a clip cuts the line; one shared element (clips and voices never overlap) | «rapid navigation and taps»: a 13 s line + ear tap → one element; then 10 screen hops mid-clip, nothing after leaving |
+| Unhandled `AbortError` when leaving a replayed verse mid-LISTEN | `waitNext()`'s promise was awaited only after `whole()`, which rethrew the abort first | the promise is marked handled | seen as a page error in «media session» |
+| Verse sheet closed during listen-all stopped it; a sheet clip was overwritten by the next listen-all verse | `onClose` called the global `stop()`; listen-all went on after being cut | the sheet aborts only its own clip; listen-all ends when something else cuts its clip | (necklace scenarios above) |
+| iOS: the first verse may play silent | iOS lets a script start a media element only after a tap started it; the first verse comes after the story, from a timer | the shared element plays 50 ms of silence inside the first tap (`unlockMedia`) | WebKit run (§7.3); real iOS not available here |
+
+### 7.2 Unvocalised and grown-up text shown to children (tests/tashkeel.spec.ts)
+
+Rule: a child never sees unvocalised or technical text. `tashkeel.spec.ts` (phone project) plays the real game (no capture
+mode, grown-up mode off, the real gate): splash, the six story panels, verse 1 as a first launch (word chips, «ask the
+stork» and each of its answers, the name sheet), the pause menu, verses 2–6, 11 (caravan), 31 (hats), 41 and a replay of
+verse 1 (levels easy/mid/strong: G1–G8, the radar, both specials), the gate challenge (منفوخ) and the last one (نسيان),
+polish (and «nothing to polish»), map with a free and a locked pearl, necklace with two pearl sheets and listen-all,
+stickers (every tab, a sticker sheet), heroes, home (Mishmish's tap), players, the gate via the corner and via About,
+dedication, finale, prayer, medal, certificate, share. Every visible text node, `title` and `placeholder` and every
+caption the game showed (`__kq.captions()`) is measured: harakat (U+064B–0652, 0670) per Arabic letter below **0.5** is
+a finding, traced back to its copy key or data file. Last run: **604 Arabic lines, 0 findings** (one judged fine, below).
+For scale: the kid meanings are 0.78–1.0, the adult explanations 0.05.
+
+| what a child saw | source | fix |
+|---|---|---|
+| The long explanation (`meanings.adult`, ~5 % marks, scholarly) and the raw sources (`cite`: «2/9–14، ف4–5», YouTube ids) behind two chips of «ask the stork» | code: `screens/ask.ts` showed all five chips to everyone | **gated**: the two chips show only in grown-up mode, in their own row labelled `home.grownups` «لِلْكِبَارِ», answers prefixed with `meaning.adult` / `meaning.cite`, in the grown-up type size. Test: `ask-grown` absent for a child |
+| The meaning step fell back to `meanings.adult` when a verse had no kid meaning | code: `level.ts` `m.kid \|\| m.adult` | `meaning.empty` instead (every verse has a kid meaning today: a guard) |
+| About (`about.*`, all `aud: adult`, unvocalised; sources, version) one tap from home | code: no gate on `#/about` | behind the grown-ups' gate (the gate itself is vocalised child copy; the top title says `grown.title` until it opens). Test: `.about-body` absent |
+| Icon tooltips: «رجوع», «كتم الصوت», «إعادة سماع المقطع»… (`aria.*`, unvocalised by design for screen readers) on every icon button, on hover | code: `iconBtn` set `title` = the aria label | `title` dropped (the `aria-label` stays) |
+
+Judged fine (listed in the test's `FINE`): the certificate date «التَّارِيخُ: 4 جمادى الآخرة 1448 هـ — 14 نوفمبر 2026»:
+the label is vocalised copy, the month names come from the browser's calendar (`Intl`). Vocalised month names would be
+new copy keys (24 names) — an option for A1, not needed. Outside the page: the installed app's name under the home-screen
+icon is `app.manifest.name` «رحلة أمين في مدينة القراء» (a system label, like the tab title).
+
+**Copy keys for A1: none needed.** Every child-facing key the walk met is vocalised (`cert.print.hint`, flagged by Q1, was
+fixed by A1 since). No data file needs changes; the adult fields stay as they are, for grown-ups.
+
+### 7.3 Bug hunt: played like a curious 8-year-old (tests/child.spec.ts, tests/install.spec.ts)
+
+| scenario | how | result |
+|---|---|---|
+| Mash and double-tap | verses 1–2 at 360×740, 390×844 (phone) and 1280×800: every third item a double-tap on the right answer plus four other play-area buttons, sheets a mash opens closed again | pass: no error, no stuck item, no horizontal scroll (a mash on «next» simply moves on, by design) |
+| Back mid-animation | browser back/forward during the district title card, LISTEN (reciter + voices on), a game, the flying pearl | pass: map shown, nothing sounding after back, pearl 1 kept, never two elements unpaused |
+| Rotate the phone | at every fourth item of verses 4–5: 844×390 → 740×360 → 390×844; horizontal scroll and «is the right target on top and tappable» | pass: 0 findings |
+| Offline mid-level | worker in control, offline from LISTEN of verse 1 to its pearl, then verse 8 (clip not cached), killed and opened again offline | pass: silent stand-ins, 8 pearls kept, one element at most |
+| Kill and reload | the app opened again on the reward screen (pearl saved before the reward plays) and mid-game of verse 2 | pass: pearl 1 kept, verse 2 starts cleanly and ends |
+| Sound switches mid-clip | pause menu: reciter off mid-verse; slow mode on mid-verse; the quick mute twice | **2 bugs** (below), pass after |
+| Slow mode | turned on mid-verse: the clip slows to 0.8 and plays to its `ended` (not cut by the safety net) | pass (the safety net follows `ratechange`) |
+| Replay a finished district | verses 3 and 7 again with a wrong tap every other item, the gate challenge twice | pass: stars never go down, 7 pearls, challenge kept |
+| Daily polish | left after two pearls, back, finished; the next day; «nothing to polish» | pass |
+| Certificate and share | name typed, print view (`print()` called), share card saved as `khaqaniya.png` (no Web Share in the test browser) | pass, no horizontal scroll |
+| Install, Android Chrome | Pixel 7 profile in a real Chrome profile: `Page.getInstallabilityErrors`, manifest, worker in control, offline reload | pass: 0 installability errors, standalone, ar/rtl, 4 icons |
+| Install, iOS Safari | WebKit 2388 with the iPhone 13 profile: splash → story skipped → verse 1 to the pearl by taps, apple-touch-icon 200, manifest 200, the «add to home screen» line in the corner | pass, 0 console errors |
+| Console | errors: every spec fails on one; warnings: the tashkeel walk (nearly every screen) asserts none | clean |
+
+Bugs found and fixed in the hunt:
+
+| bug | cause | fix | test |
+|---|---|---|---|
+| The top-bar quick mute muted but could **never unmute** while the reciter was on, and a line already speaking went on | its state (`recitation \|\| voices \|\| sfx`) included the reciter, its action switched only voices and effects | all three off at once and back as they were (`aria.mute` / `aria.unmute`, `aria-pressed`) | «sound switches…» |
+| Switching the reciter (or voices) off in the pause menu let the clip play to its end | settings were read only when the next clip started | `followSwitches()` from `applySettings()`: what a switch covers becomes a silent stand-in at once (the screen keeps its rhythm) | «sound switches…»: on the old build «the reciter went on after its switch went off» |
+| Slow mode turned on mid-clip did not slow the clip | the rate was applied only at the next clip | `setSlow()` updates the clip playing; the safety net re-arms on `ratechange` | «sound switches…» |
+| A level could freeze if a browser misreported the page as hidden (seen once in a loaded WebKit run: LISTEN stopped at «دَوْرِي!»; not reproduced since) | the hidden-page wait listened to `visibilitychange` only | a tap or a key also releases the wait | iOS run |
+| Test-helper and test bugs met on the way | the poem audit counted the hats game's mark names as verse text | hats options skipped | `poem` |
+
+### 7.4 Suite and what is left
+
+Full suite on the VM after G5: **69 passed, 0 failed** (47 skips are the one-project tests), 5.3 min with 16 workers.
+New specs: `audio` (4), `tashkeel` (1, phone), `child` (10: mash at 3 sizes, back, rotate, offline, reload, switches, replay,
+polish + certificate), `install` (2: Android Chrome, iOS on WebKit; WebKit installed on the VM with
+`npx playwright install --with-deps webkit`).
+
+Left / not verifiable here:
+- **Real iOS**: WebKit on Linux does not enforce iOS's «a tap must start the media» rule; the first-tap priming follows
+  the known pattern but needs a check on an iPhone (does verse 1 sound after the story?).
+- Real lock-screen / Bluetooth buttons: emulated (the handlers are called as the browser calls them); a check on the
+  family's Android phone would close it (listen-all → lock the phone → pause / play).
+- Optional for A1: vocalised month names for the certificate date (now from `Intl`, judged fine).

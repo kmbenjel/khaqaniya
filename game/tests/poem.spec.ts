@@ -5,7 +5,8 @@ import { open, kq, state, shot, expect, sourcePoem } from './helpers';
 async function auditScreen(page: Page, hemis: Set<string>, tokens: Set<string>, bad: string[]) {
   const r = await page.evaluate(() => {
     const lines = [...document.querySelectorAll('.verse-card .hemi:not(.hemi-blank)')].map((e) => ({ t: e.textContent || '', blank: !!e.querySelector('.blank,.hidden-w') }));
-    const hemiOpts = [...document.querySelectorAll('.opt:not(.word):not(.meaning-opt) .opt-label, .piece .opt-label, .slot-text')].map((e) => e.textContent || '');
+    // (the hats game's options are mark names «◌َفَتْحَةٌ», not verse text)
+    const hemiOpts = [...document.querySelectorAll('.opt:not(.word):not(.meaning-opt) .opt-label, .piece .opt-label, .slot-text')].filter((e) => !e.querySelector('.hat')).map((e) => e.textContent || '');
     const words = [...document.querySelectorAll('.opt.word .opt-label, .tile, .pearl-word, .bead.filled, .blank.filled')].map((e) => e.textContent || '');
     return { lines, hemiOpts, words };
   });

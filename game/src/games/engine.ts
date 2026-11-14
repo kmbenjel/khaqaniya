@@ -81,7 +81,7 @@ export async function how(ctx: GameCtx, gameKey: string, howKey: string) {
 export async function playClip(ctx: GameCtx, v: Verse, kind: ClipKind) { await play(v, kind, ctx.signal); }
 
 // ── choosing among options ─────────────────────────────────────────────────────────
-export interface Opt { label: Node | string; value: string; audio?: () => Promise<void>; cls?: string; sub?: Node | string }
+export interface Opt { label: Node | string; value: string; audio?: () => Promise<unknown>; cls?: string; sub?: Node | string }
 /**
  * Renders options into `into`; resolves when the right one (value === answer) is tapped. A wrong tap wobbles, thuds,
  * replays the prompt; after `hintAfter` wrong taps the right one glows. Help: 1st press replays, 2nd removes a wrong one.

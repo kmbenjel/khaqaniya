@@ -2,7 +2,7 @@
 import './styles.css';
 import { loadAll } from './core/data';
 import { loadCopy, t } from './core/copy';
-import { initAudio } from './core/audio';
+import { initAudio, unlockMedia } from './core/audio';
 import { initVoice } from './core/voice';
 import { initProgress } from './core/progress';
 import { setArtManifest } from './art';
@@ -83,7 +83,7 @@ async function boot() {
     session.set('kq.after', hash === '#/' || hash === '' ? '' : hash);
     return '#/splash';
   });
-  const unlock = () => { unlockAudio(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
+  const unlock = () => { unlockAudio(); unlockMedia(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
   window.addEventListener('pointerdown', unlock); window.addEventListener('keydown', unlock);
   if (env.capture) session.set('kq.started', '1');
   startRouter(app);

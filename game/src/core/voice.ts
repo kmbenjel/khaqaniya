@@ -3,7 +3,7 @@
 import { entry, family, speakerOf, t, tPick } from './copy';
 import type { Poem } from './data';
 import { env, emit } from './env';
-import { isPlaying } from './audio';
+import { playLine, stopLine } from './audio';
 import { profile, save, settings } from './store';
 import type { Rng } from './rng';
 import { setDuck } from './sfx';
@@ -11,7 +11,6 @@ import { charArt, blotArt } from '../art';
 import { h } from './h';
 
 let poem: Poem;
-const el = new Audio();
 let host: HTMLElement | null = null;
 let hideTimer = 0;
 export const captions: { key: string; who: string; text: string }[] = [];
@@ -42,7 +41,7 @@ export function show(key: string, opts: SayOpts = {}): { text: string; who: stri
   return { text, who };
 }
 
-/** Shows a line (caption) and plays its voice if any. Resolves when the line is over. */
+/** Shows a line (caption) and plays its voice if any. Resolves when the line is over (or cut by a clip / stopVoice). */
 export function say(key: string, opts: SayOpts = {}): Promise<void> {
   if (opts.signal?.aborted) return Promise.reject(new DOMException('aborted', 'AbortError'));
   const { text } = show(key, opts);
@@ -54,19 +53,21 @@ export function say(key: string, opts: SayOpts = {}): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     let done = false;
     const end = () => { if (done) return; done = true; setDuck(false); emit('kq:say-end', { key }); resolve(); };
-    opts.signal?.addEventListener('abort', () => { el.pause(); setDuck(false); if (!done) { done = true; reject(new DOMException('aborted', 'AbortError')); } }, { once: true });
-    if (v && settings().voices && (opts.force || (e?.voice ?? true)) && !isPlaying()) {
-      el.src = './' + v.file;
-      el.onended = end; el.onerror = () => setTimeout(end, capMs / env.speed);
+    const abort = () => { if (done) return; done = true; setDuck(false); reject(new DOMException('aborted', 'AbortError')); };
+    // the voice never sounds over the reciter nor with the page hidden: then the caption alone (playLine → null)
+    const voiced = v && settings().voices && (opts.force || (e?.voice ?? true)) ? playLine(v.file, capMs / env.speed, opts.signal) : null;
+    if (voiced) {
       setDuck(true);
-      emit('kq:audio', { kind: 'voice', id: key, startedAt: performance.now(), dur: v.dur || capMs / 1000 });
-      el.play().catch(() => setTimeout(end, capMs / env.speed));
-      setTimeout(end, ((v.dur || capMs / 1000) + 2) * 1000);
-    } else setTimeout(end, (opts.wait === false ? 0 : capMs) / env.speed);
+      emit('kq:audio', { kind: 'voice', id: key, startedAt: performance.now(), dur: v!.dur || capMs / 1000 });
+      voiced.then(end, abort);
+      return;
+    }
+    const tid = setTimeout(end, (opts.wait === false ? 0 : capMs) / env.speed);
+    opts.signal?.addEventListener('abort', () => { clearTimeout(tid); abort(); }, { once: true });
   });
 }
 /** Stops the character voice (route change, intro tap); effects are no longer ducked under it. */
-export function stopVoice() { el.pause(); setDuck(false); }
+export function stopVoice() { stopLine(); setDuck(false); }
 
 /** Say a line of a rotating family, never the same one twice until all were heard (jokes, praise). */
 export function sayPick(prefix: string, rng: Rng, opts: SayOpts = {}, exclude: string[] = []): Promise<string> {

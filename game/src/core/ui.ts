@@ -3,6 +3,7 @@ import { h, svg, clear, type Child } from './h';
 import { t, num, has } from './copy';
 import { iconEl, charArt, lanternArt } from '../art';
 import { sfx } from './sfx';
+import { followSwitches } from './audio';
 import { setBubbleHost, say } from './voice';
 import type { Token, Verse, Poem } from './data';
 import { learnedCount, profile, settings, save } from './store';
@@ -19,7 +20,8 @@ export function btn(label: Child, o: { icon?: string; testid?: string; primary?:
   return b;
 }
 export function iconBtn(id: string, ariaKey: string, testid: string, onClick: () => void, cls = ''): HTMLButtonElement {
-  const b = h('button', { type: 'button', class: 'icon-btn ' + cls, 'aria-label': t(ariaKey), title: t(ariaKey), 'data-testid': testid }, iconEl(id));
+  // no `title`: the aria.* labels are unvocalised (for screen readers); as a hover tooltip a child would read them (G5)
+  const b = h('button', { type: 'button', class: 'icon-btn ' + cls, 'aria-label': t(ariaKey), 'data-testid': testid }, iconEl(id));
   b.addEventListener('click', () => { sfx('tap'); onClick(); });
   return b;
 }
@@ -68,14 +70,20 @@ export function necklaceCounter(poem: Poem): HTMLElement {
   return h('button', { type: 'button', class: 'hud-necklace', 'data-testid': 'hud-necklace', 'aria-label': t('aria.necklace', { n: learnedCount(), total: poem.verses.length }), onclick: () => go('#/necklace') },
     iconEl('necklace'), h('span', { class: 'hud-n' }, num(learnedCount()), ' / ', num(poem.verses.length)));
 }
+/** The quick mute of the top bar: everything off at once (what plays falls silent now), and back as it was. */
+let beforeMute: { recitation: boolean; voices: boolean; sfx: boolean } | null = null;
 export function muteBtn(): HTMLButtonElement {
   const st = settings();
-  const all = () => st.recitation || st.voices || st.sfx;
-  const b = iconBtn(all() ? 'speaker' : 'mute', 'aria.mute', 'btn-mute', () => {
-    const on = !all();
-    st.voices = on; st.sfx = on; save();
-    b.replaceChildren(iconEl(on ? 'speaker' : 'mute'));
+  const loud = () => st.recitation || st.voices || st.sfx;
+  const paint = () => { b.replaceChildren(iconEl(loud() ? 'speaker' : 'mute')); b.setAttribute('aria-label', t(loud() ? 'aria.mute' : 'aria.unmute')); b.setAttribute('aria-pressed', String(!loud())); };
+  // (G5) it used to switch only voices and effects while its icon followed the reciter too: with the reciter on it could
+  // mute but never unmute, and a line already speaking went on
+  const b = iconBtn('speaker', 'aria.mute', 'btn-mute', () => {
+    if (loud()) { beforeMute = { recitation: st.recitation, voices: st.voices, sfx: st.sfx }; st.recitation = st.voices = st.sfx = false; }
+    else { Object.assign(st, beforeMute || { recitation: true, voices: true, sfx: true }); beforeMute = null; }
+    save(); followSwitches(); paint();
   });
+  paint();
   return b;
 }
 

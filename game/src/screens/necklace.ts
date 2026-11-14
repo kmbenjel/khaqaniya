@@ -7,7 +7,7 @@ import { pearlSvg } from '../art';
 import { btn, iconBtn, sheet, verseCard, stars } from '../core/ui';
 import { learned, vs, isDue, learnedCount, award, profile, save } from '../core/store';
 import { P, verseUnlocked, versesOf } from '../core/progress';
-import { play, stop } from '../core/audio';
+import { play, stop, setMediaControls } from '../core/audio';
 import { go, type ScreenCtx } from '../core/router';
 import { sfx } from '../core/sfx';
 import { isAbort } from '../core/env';
@@ -30,7 +30,9 @@ export function necklaceScreen(ctx: ScreenCtx): HTMLElement {
   const ctl = new AbortController();
   ctx.signal.addEventListener('abort', () => { ctl.abort(); clearTimeout(sleepTimer); }, { once: true });
   let runId = 0;
-  const stopAll = () => { runId++; playing = false; stop(); playBtn.querySelector('.btn-label')!.textContent = t('necklace.playAll'); document.querySelectorAll('.pearl-btn.playing').forEach((e) => e.classList.remove('playing')); nowText.textContent = ''; };
+  // the run is over (the UI only): the clip that cut it, if any, goes on
+  const ended = () => { runId++; playing = false; playBtn.querySelector('.btn-label')!.textContent = t('necklace.playAll'); document.querySelectorAll('.pearl-btn.playing').forEach((e) => e.classList.remove('playing')); nowText.textContent = ''; };
+  const stopAll = () => { ended(); stop(); };
   async function playAll(from = 0) {
     const list = poem.verses.filter((v) => learned(v.n));
     if (!list.length) { nowText.textContent = t('necklace.empty'); return; }
@@ -47,8 +49,11 @@ export function necklaceScreen(ctx: ScreenCtx): HTMLElement {
         el?.classList.add('playing');
         el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
         nowText.replaceChildren(verseCard(v, { cls: 'now-card' }));
-        try { await play(v, 'verse', ctl.signal); } catch (e) { if (isAbort(e)) return; }
+        // background: the one clip that keeps playing with the screen off (§4.10); cut by anything else → the run ends
+        let whole = true;
+        try { whole = await play(v, 'verse', ctl.signal, { background: true }); } catch (e) { if (isAbort(e)) return; }
         if (my !== runId) return;
+        if (!whole) { ended(); return; }
         heard++;
         if (heard >= poem.verses.length) { if (award('wholeListen')) { sfx('sparkle'); void say('necklace.listenDone'); } }
       }
@@ -56,15 +61,10 @@ export function necklaceScreen(ctx: ScreenCtx): HTMLElement {
     } while (loop && my === runId);
     if (my === runId) stopAll();
   }
-  if ('mediaSession' in navigator) {
-    try {
-      navigator.mediaSession.setActionHandler('play', () => void playAll());
-      navigator.mediaSession.setActionHandler('pause', stopAll);
-      navigator.mediaSession.setActionHandler('stop', stopAll);
-    } catch { /* unsupported action */ }
-    // leaving the necklace: the lock-screen buttons no longer hold this screen
-    ctx.signal.addEventListener('abort', () => { for (const a of ['play', 'pause', 'stop'] as MediaSessionAction[]) { try { navigator.mediaSession.setActionHandler(a, null); } catch { /* */ } } }, { once: true });
-  }
+  // the lock screen's / headset's «play» with nothing paused starts listening (audio.ts owns the Media Session handlers:
+  // «pause» holds the verse, «play» goes on, «stop» stops); leaving the necklace, it does nothing again
+  setMediaControls({ play: () => { if (!playing) void playAll(); } });
+  ctx.signal.addEventListener('abort', () => setMediaControls(null), { once: true });
   const thread = h('div', { class: 'necklace-thread', 'data-testid': 'necklace-thread' });
   for (const d of poem.districts) {
     const group = h('div', { class: 'pearl-group' }, h('h3', null, t('district.' + d.skin + '.name')));
@@ -101,5 +101,6 @@ export function verseSheet(v: Verse) {
       unlocked || st ? btn(t('necklace.sheet.play'), { icon: 'ear', testid: 'sheet-play', onClick: () => void play(v, 'verse', ctl.signal).catch(() => {}) }) : null,
       unlocked ? btn(t('necklace.sheet.replay'), { icon: 'pearl', primary: true, testid: 'sheet-level', onClick: () => { s.close(); go('#/verse/' + v.n); } }) : null,
       h('a', { class: 'btn btn-small', href: './qasida/#b' + v.n, 'data-testid': 'sheet-read' }, t('necklace.read'))));
-  const s = sheet(body, { testid: 'verse-sheet', title: t('necklace.sheet.verse', { n: v.n }), onClose: () => { ctl.abort(); stop(); } });
+  // closing stops this sheet's own clip only (not «listen to all»)
+  const s = sheet(body, { testid: 'verse-sheet', title: t('necklace.sheet.verse', { n: v.n }), onClose: () => ctl.abort() });
 }

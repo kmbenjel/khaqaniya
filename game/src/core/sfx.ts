@@ -16,6 +16,9 @@ export function unlockAudio(): void {
   const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   if (!AC) return;
   ctx = new AC();
+  // effects fall silent with the page in the background (a level never runs on aloud there; G5)
+  const c = ctx;
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') void c.suspend().catch(() => {}); else void c.resume().catch(() => {}); });
   master = ctx.createGain();
   master.gain.value = 0.9;
   master.connect(ctx.destination);
