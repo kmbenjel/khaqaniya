@@ -20,7 +20,11 @@ export function route(pattern: string, name: string, screen: Screen) {
   routes.push({ re, screen, name });
 }
 export function setGuard(g: (hash: string) => string | null) { guard = g; }
+/** Asked before a screen renders: true = reload the page into it instead (a new version is waiting, G6). */
+let reloadInto: ((name: string) => boolean) | null = null;
+export function setReloadCheck(f: (name: string) => boolean) { reloadInto = f; }
 let rendering = '';
+let rendered = 0;
 export function go(hash: string, replace = false, force = false) {
   if (location.hash === hash) { if (force || rendering !== hash) void render(); return; }
   if (replace) { history.replaceState(null, '', hash); void render(); }
@@ -36,6 +40,7 @@ export async function render(): Promise<void> {
   for (const r of routes) {
     const m = path.match(r.re);
     if (!m) continue;
+    if (reloadInto?.(r.name)) { ctl?.abort(); stop(); stopVoice(); location.reload(); return; }
     ctl?.abort();
     stop();
     stopVoice();   // a character line never runs on into the next screen
@@ -51,6 +56,7 @@ export async function render(): Promise<void> {
     if (c.signal.aborted) return;
     clear(app);
     el.classList.add('screen', 'screen-' + r.name);
+    if (rendered++) el.classList.add('enter');   // a short fade from the second screen on (the first paints at once)
     app.appendChild(el);
     app.dataset.screen = r.name;
     window.scrollTo(0, 0);

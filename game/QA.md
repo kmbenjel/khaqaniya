@@ -364,3 +364,85 @@ Left / not verifiable here:
 - Real lock-screen / Bluetooth buttons: emulated (the handlers are called as the browser calls them); a check on the
   family's Android phone would close it (listen-all → lock the phone → pause / play).
 - Optional for A1: vocalised month names for the certificate date (now from `Intl`, judged fine).
+
+## 8. G6 polish pass (2026-11-21)
+
+Agent «G6 polish pass (Opus high)», branch `g6-polish`, after the owner's «auto fixes and enhancements before I review».
+Built and run on `khaqaniya-vm` (`~/kq/g6`, port 4378; Chrome 157 and WebKit 2388 through Playwright 1.65, Lighthouse
+13.6). Baseline before the pass: 73 passed, 51 skipped (one run under load: 72 + the iOS test, see 8.1).
+
+### 8.1 How the hunt was run
+- `tests/g6-explore.mjs` (`scripts/g6-explore.sh OUT`): Chrome **and** WebKit at 360×740, 390×844, 412×915, a tablet
+  upright 820×1180 and on its side 1180×820; the first run from a clean profile (splash, story), home, map, necklace,
+  stickers (3 tabs), heroes, grown-ups, about, dedication, polish, verses 1, 2 (with the «see you tomorrow» card), 11
+  (caravan), 31 (hats) step by step, Manfoukh's challenge, finale, prayer, medal, certificate. It records every console
+  error and warning and page error, and audits what the layout audit (`qa.spec`) does not: harakat cut by an
+  **ancestor** that clips (not only by the element itself), a label wider than its button, text off screen, targets
+  under 44 px. Result before the fixes: **0 console messages** in both browsers at all sizes, 0 clipped harakat
+  outside scrolling stages, 1 real layout bug (8.2 #4) and 2 visual bugs (#5, #6).
+- New tests in `tests/g6.spec.ts` (18, phone project), each failing on the old build (run on a copy of a4b8857's game
+  source, `~/kq/g6base`: 8 failed; the four added after review R1 (Opus high) on 595526d's code: 4 failed) and passing after. The layout audit (`qa.spec`) now also runs at **412×915** and
+  **820×1180**.
+
+### 8.2 Findings and fixes
+
+| # | finding | cause | fix | test |
+|---|---|---|---|---|
+| 1 | **Corrupted or hand-edited progress crashed the game or wiped it.** A verse entry `null`, a profile whose `days` is a string or whose `verses` is `null`: home never appeared (boot error). An unparsable store (cut by a full disk): silently replaced by a fresh one, the child's pearls lost. `[]` as a store: saved back without `v` | `migrate()` merged whatever was stored over the defaults (`Object.assign`); `load()` fell back to a fresh store on any error | the store is cleaned **field by field** (`core/store.ts`): what has the expected type is kept, the rest is the default (settings enums and ranges, dates, stars 0–3, boxes, weak words, stickers, bosses, the active player); one bad field never costs the whole progress; an unreadable store is kept aside in `kq.v1.unreadable` before a fresh one starts (if even that copy cannot be written, the session plays from memory and never writes over the old store; a reset removes the aside copy — review R1); an import from the grown-ups' corner goes through the same cleaning | «corrupted progress» × 10 (not JSON, null, a number, an array, profiles null, a null profile, wrong types in a profile, a broken verse state, wrong settings, an unknown active player): boots, plays verse 1, saves a clean store, keeps what was good. Before: 4 of 10 failed. «unreadable progress that cannot even be set aside»: the old store untouched, a reset clears the copy |
+| 2 | **A new version never reached an open app**; after an update the old page wrote clips into a media cache the new worker no longer reads | the worker takes over at once (skipWaiting + claim), but the page kept running the old code until a manual reload: its `mediaCache()` name came from the old build | `sw-client.ts`: a change of controlling worker (not the first install) marks the update; the router reloads into the next **calm** screen (home, map, necklace, stickers, heroes, players, dedication), never mid-level and never into the grown-ups' gate; the reload goes **through the splash** (its tap unlocks audio on iOS; the screen asked for is kept in `kq.after`) and never happens while progress is held in memory only (storage failing) — review R1; an app left open for days asks for an update when it comes back to the front (at most hourly) | «update»: a copy of the build is deployed again with a new bundle mid-level: the level goes on, the map is the new version behind the splash, offline reload boots it; «update with progress held in memory only»: no reload, the pearl kept |
+| 3 | **A mistyped link could replace the offline game with a 404 page**; on a stalled network («lie-fi») the game hung on the boot lantern; (review R1) a newer page could land in an older version's shell and boot offline to a blank screen | the navigation handler wrote **any** navigation response into the current version's shell cache (404s included, and a v2 page arriving while v1 was in control); network-first had no time limit | the shell is only ever the page **precached with the version's own files** at install (no write at navigation time; a failed install drops its half-filled caches); with that shell cached the network gets 3 s, then the cached game opens; a 5xx falls back to the shell | «offline shell»: 404 then offline → the game boots; a proxy that holds the page 20 s → the game opens in ~3.1 s. «lie-fi during a broken deploy»: v1 in control, v2's page arrives late and its worker cannot install, offline reload boots v1 |
+| 4 | **360×740: the first reward hid «التَّالِي»** below the stage, under the caption (two sticker banners push the buttons down; the stage scrolls, the child does not know it) | the end-of-screen buttons come last on a scrolling stage | `reveal()` (`core/ui.ts`) brings the button row into view (smooth, instant under reduced motion) on the reward, the challenge's end and polish done | «360×740: the first reward…»: «next» fully inside the stage and above the cast bar |
+| 5 | **Necklace: the thread ran between two lines of pearls** on phones (7–8 pearl districts wrap at 360–412 px) | one gradient band across the whole row box | a repeating band, through the middle of every 64 px line | «necklace on phones»: each pearl line's middle is on the thread at 360, 390, 412 |
+| 6 | The necklace's «read the poem» link (`necklace.read`) was a 22 px tap target | plain text link | 56 px high | same test |
+| 7 | WebKit (iOS) test froze at LISTEN under load (half of 14 parallel runs; the baseline run lost it once) | **test race**, not the game: at test speed the three-panel story ends by itself; `tap()` on a «skip» that is gone waits forever while the game runs on to verse 1's «next» | the tap has a 5 s limit (`install.spec.ts`, and the same guard in `g6.spec`) | 14/14 parallel runs pass |
+| 8 | Day boundaries: a session across midnight | checked, no bug | — | «midnight»: verse 1 at 23:50, verse 2 at 00:05 is the new day's first pearl (no card), verse 3 meets the suggestion (card, 3 pearls for tomorrow), lamps and `days` follow, home next morning |
+
+Lighthouse findings (8.3) fixed on the way: character pictures were offered as 1×/2× (`768 px` files for a 40 px face on
+every phone): now with their widths and `sizes="auto"` (lazy images) so the browser takes the file that fits — the
+1× is also the one district 1 precaches, so the first offline run on a real phone shows them; the map's painting of the
+current district and its neighbours is eager with `fetchpriority=high` (the largest paint was a lazy picture); home
+fetches its painting first; the data files no longer wait for `build.json`.
+
+### 8.3 Lighthouse (mobile, Lighthouse 13.6 on the VM)
+The test server sends everything uncompressed; GitHub Pages gzips text. Runs are on `scripts/g6-lhserve.mjs` (gzip,
+`max-age=600`, same layout), `scripts/g6-lighthouse.sh TAG`. Lighthouse 12+ has no PWA category: installability is
+`install.spec` (0 installability errors) and the offline tests.
+
+| page | before (a4b8857) | after (G6) |
+|---|---|---|
+| game splash `/` | 100 · 100 · 100 · 100 (LCP 1.23 s, 3 runs) | 100 · 100 · 100 · 100 (LCP 1.38 s, 3 runs) |
+| home (demo player) | 87 · 100 · 100 · 100 (LCP 4.1 s) | 89 · 100 · 100 · 100 (LCP 3.8 s) |
+| map | 75 · 100 · 100 · 100 (LCP 14.3 s) | 83 · 100 · 100 · 100 (LCP 4.7 s) |
+| a verse | 78 · 100 · 100 · 100 (LCP 5.9 s) | 81 · 100 · 100 · 100 (LCP 5.1 s) |
+| grown-ups' corner | 99 · 100 · 100 · 100 | 100 · 100 · 100 · 100 |
+| poem site `/qasida/` | 100 · 100 · 100 · 100 | 100 · 100 · 100 · 100 |
+
+(performance · accessibility · best practices · SEO). The splash's simulated LCP moved 1.23 → 1.38 s with the score
+at 100; bisected on the VM: neither the data-loading change nor the new styles cause it (each reverted alone: 1.38 s).
+Left: «label-content-name-mismatch» on the top-bar counter (weight 0; copy proposal 2), the inner screens' paintings are
+large on a slow-4G profile (the art is the game).
+
+### 8.4 Visual polish (no new art, no new copy; one block at the end of `styles.css`)
+- Focus ring: gold outline with a night ring in the gap, visible on gold buttons and white cards (gold alone vanished).
+- A press you can feel on options, tiles, doors, chips, tabs and ordering cards (buttons had it); round icons shrink a
+  little; desktop hover lightens what can be clicked.
+- Screens fade in (0.18 s) from the second one on; instant under reduced motion; the prayer stays still.
+- Titles and short lines wrap evenly (`text-wrap: balance`), bubbles and meanings avoid a lone last word (`pretty`).
+- Tablets upright (≥ 700 px, phone layout): the cast in its bar 104×118 instead of 72×82; home sits in the middle of the
+  screen instead of a band of empty sky above its icons.
+- Necklace thread and «read the poem» link (8.2 #5, #6).
+Before/after stills: `docs/shots/g6/before/`, `docs/shots/g6/after/` (`tests/g6-shots.mjs`).
+
+### 8.5 Suite and what is left
+Full suite on the VM (`npm ci && npm run build && KQ_PORT=4378 npx playwright test`, 8 workers) at 1b8243c (after review
+R1's four fixes): **93 passed, 0 failed**, 71 skipped (the one-project tests), 8.1 min. New since the baseline (73):
+`g6.spec` 18, the layout audit at 412×915 and 820×1180 (0 findings each). The explorer after the fixes: 0 console
+messages in Chrome and WebKit at the five sizes.
+
+Left open:
+- Challenge questions with long hemistich options (G1-type, q3/q5) and the four-row word tiles (q8) need a short scroll
+  inside the stage at 360×740 (the last card shows half, which says «more below»); a compact variant for small phones
+  would avoid it.
+- WebKit's service worker offline path is not exercised (Playwright WebKit on Linux); Chrome's is (offline, update,
+  stalled network). The real iPhone checks stay with the owner (§7.4).
+- Copy proposals (no copy shipped): `docs/G6_COPY_PROPOSALS.md`.

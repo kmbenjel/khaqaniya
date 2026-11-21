@@ -23,7 +23,10 @@ self.addEventListener('install', (e) => {
       try { const r = await fetch(url, { cache: 'reload' }); if (r.ok) await cache.put(url, r); else if (!isMedia) missing.push(p); }
       catch (_) { if (!isMedia) missing.push(p); }   // a clip can come later; the shell and the data cannot
     }
-    if (missing.length) throw new Error('precache incomplete: ' + missing.join(' '));   // install fails, the old worker stays
+    if (missing.length) {   // install fails, the old worker stays; this version's half-filled caches go (R1/G6)
+      await caches.delete(SHELL); await caches.delete(DATA);
+      throw new Error('precache incomplete: ' + missing.join(' '));
+    }
     await self.skipWaiting();
   })());
 });
@@ -59,9 +62,20 @@ self.addEventListener('fetch', (e) => {
   if (!inScope(url) || isPoemSite(url)) return;                 // the poem site's own worker answers there
   if (url.pathname.startsWith(scope.pathname + 'video/')) return;   // capture-only files (reader timings): always the network
   if (req.mode === 'navigate') {
+    // network first, so a new version shows at once; a slow network (lie-fi) never holds the child on the boot lantern:
+    // this worker's own shell after 3 s. The shell in the cache is only ever the page precached with this version's
+    // files (install): a page from the network is never written into it — a newer page in an older version's cache
+    // would boot offline to a blank screen, and a 404 for a mistyped link would replace the game (G6, R1)
+    const shellKey = new URL('./', scope).href;
+    const isShell = url.pathname === scope.pathname || url.pathname === scope.pathname + 'index.html';
+    const own = async () => { try { return (await (await caches.open(SHELL)).match(shellKey)) || null; } catch (_) { return null; } };
+    const net = fetch(req);
+    net.catch(() => null);
     e.respondWith((async () => {
-      try { const r = await fetch(req); const c = await caches.open(SHELL); c.put(new URL('./', scope).href, r.clone()); return r; }
-      catch (_) { return (await caches.match(new URL('./', scope).href)) || (await caches.match(new URL('./index.html', scope).href)) || Response.error(); }
+      const cached = isShell ? await own() : null;
+      if (!cached) { try { return await net; } catch (_) { return (await own()) || Response.error(); } }
+      const late = new Promise((res) => setTimeout(() => res(cached), 3000));
+      try { return await Promise.race([net.then((r) => (r.ok ? r : cached)), late]); } catch (_) { return cached; }   // a 5xx: the shell too
     })());
     return;
   }

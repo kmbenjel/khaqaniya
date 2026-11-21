@@ -69,6 +69,8 @@ export function homeScreen(ctx: ScreenCtx): HTMLElement {
   });
   const band = tg.kind === 'verse' ? districtOf(tg.n) : tg.kind === 'boss' ? tg.d : null;
   const bandFile = band ? artFile('district.' + band.skin) : artFile('district.hill');
+  // the painting is the largest thing on home: fetched at once with a high priority, before the style asks for it (G6)
+  if (bandFile) { const pre = new Image(); pre.fetchPriority = 'high'; pre.src = bandFile; }
   const hero = h('div', { class: 'home-hero' + (bandFile ? ' banded' : ''), style: bandFile ? `--band:url("${new URL(bandFile, location.href).href}")` : '' }, amin, mish);
   const cb = castbar({ mishmish: false, amin: false });   // Amin and Mishmish are already big on the home screen
   const root = h('div', { class: 'home', 'data-testid': 'home' },

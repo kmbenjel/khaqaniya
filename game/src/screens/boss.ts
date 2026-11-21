@@ -5,7 +5,7 @@ import { h } from '../core/h';
 import { t, has } from '../core/copy';
 import type { District, Verse } from '../core/data';
 import { hash, mulberry32, shuffle, pick } from '../core/rng';
-import { frame, btn, burst, castBase, castReact, type Frame } from '../core/ui';
+import { frame, btn, burst, castBase, castReact, reveal, type Frame } from '../core/ui';
 import { blotArt, charArt, iconEl } from '../art';
 import { sfx, type Sfx } from '../core/sfx';
 import { say, show, sayPick } from '../core/voice';
@@ -191,6 +191,7 @@ async function runBoss(d: District, f: Frame, signal: AbortSignal) {
     btn(t('btn.share'), { icon: 'share', testid: 'btn-share', onClick: () => void shareCard('district', d) }),
     btn(t('btn.map'), { icon: 'map', testid: 'btn-map', onClick: () => go('#/map') }));
   f.play.replaceChildren(row);
+  reveal(row);
   setActive({ right: () => row.firstElementChild, wrong: () => null, label: 'boss-done' });
   bossState = null;
 }

@@ -3,7 +3,7 @@ import { h } from '../core/h';
 import { t, tt, has, num } from '../core/copy';
 import type { Verse } from '../core/data';
 import { hash, mulberry32 } from '../core/rng';
-import { frame, verseCard, btn, sweepLight, stars as starsEl, burst, type Frame } from '../core/ui';
+import { frame, verseCard, btn, sweepLight, stars as starsEl, burst, reveal, type Frame } from '../core/ui';
 import { charArt, picto, iconEl } from '../art';
 import { pearlSvg } from '../art';
 import { sfx } from '../core/sfx';
@@ -431,6 +431,7 @@ async function reward(v: Verse, f: Frame, signal: AbortSignal, score: number, rn
     h('div', { class: 'reward-btns-2' },
       btn(t('btn.replay'), { icon: 'again', testid: 'btn-replay', onClick: () => go('#/verse/' + v.n + '?r=' + Date.now()) }),
       btn(t('btn.map'), { icon: 'map', testid: 'btn-map', onClick: () => go('#/map') })));
+  reveal(row);
   setActive({ right: () => row.querySelector('[data-testid=btn-next]'), wrong: () => null, label: 'reward' });
   if (closing) (row.querySelector('[data-testid=btn-next]') as HTMLElement | null)?.focus({ preventScroll: true });   // the card's focus comes back here
 }

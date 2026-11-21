@@ -40,6 +40,8 @@ export interface Poem {
   credits: { reciterLine: string };
   faceless: boolean;
   artX2?: Record<string, string>;
+  /** the 1× width (px) of the pictures that have an @2x */
+  artW?: Record<string, number>;
   build: Build;
   warnings: string[];
 }
@@ -61,20 +63,27 @@ async function getJSON<T>(name: string, optional = false): Promise<T | null> {
 }
 
 export async function loadAll(): Promise<{ poem: Poem; copy: Record<string, unknown> }> {
-  const build = await getJSON<Build & { files?: string[] }>('build.json', true);
-  const present = (f: string) => !build?.files || build.files.includes(f);
-  let [raw, meanings, timings, copy, world, extras, art, credits, mAudio, voice] = await Promise.all([
+  // the files every build has start at once with build.json (it only tells which optional files exist): one round trip
+  // less before the first screen on a slow phone network (G6)
+  const buildP = getJSON<Build & { files?: string[] }>('build.json', true);
+  const always = Promise.all([
     getJSON<{ title: string; fullTitle?: string; author: string; authorDeath?: string; metre?: string; basis?: string; sections: Section[]; verses: RawVerse[] }>('poem.json'),
     getJSON<{ verses: Meaning[] }>('meanings.json', true),
-    present('timings.json') ? getJSON<{ source?: Poem['timingsSource']; verses: Timing[] }>('timings.json', true) : null,
     getJSON<Record<string, unknown>>('copy.json', true),
     getJSON<{ districts: WorldD[] }>('world.json'),
     getJSON<{ verses: Record<string, Extra> }>('extras.json', true),
-    getJSON<{ files: Record<string, string | null>; faceless?: boolean; x2?: Record<string, string> }>('art.json', true),
+    getJSON<{ files: Record<string, string | null>; faceless?: boolean; x2?: Record<string, string>; w?: Record<string, number> }>('art.json', true),
     getJSON<{ reciterLine: string }>('credits.json', true),
+  ]);
+  always.catch(() => { /* awaited below */ });
+  const build = await buildP;
+  const present = (f: string) => !build?.files || build.files.includes(f);
+  let [timings, mAudio, voice] = await Promise.all([
+    present('timings.json') ? getJSON<{ source?: Poem['timingsSource']; verses: Timing[] }>('timings.json', true) : null,
     present('meanings-audio.json') ? getJSON<{ verses: { n: number; file: string; dur?: number }[] }>('meanings-audio.json', true) : null,
     present('voice.json') ? getJSON<Record<string, { file: string; dur?: number }>>('voice.json', true) : null,
   ]);
+  let [raw, meanings, copy, world, extras, art, credits] = await always;
   if (!raw || !world || !Array.isArray(raw.verses) || !Array.isArray(world.districts)) throw new Error('data');
   // optional files of the wrong shape count as absent (a warning, never a crash at boot)
   const okList = <T,>(x: T | null, name: string): T | null => { if (x && !Array.isArray((x as { verses?: unknown }).verses)) { console.warn('[kq] ignored malformed', name); return null; } return x; };
@@ -85,6 +94,7 @@ export async function loadAll(): Promise<{ poem: Poem; copy: Record<string, unkn
   if (env.capture && env.timings) poem.timingsOverride = await overrideTimings(poem, env.timings);
   poem.art = art?.files || {};
   poem.artX2 = art?.x2 || {};
+  poem.artW = art?.w || {};
   poem.faceless = art?.faceless === true;   // faces on by default (owner 2026-11-13, DECISIONS 1)
   poem.credits = { reciterLine: credits?.reciterLine || '{reciter}' };
   poem.build = build || { version: 'dev', fixture: [], binding: 'world', base: '', built: '' };

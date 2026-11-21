@@ -8,9 +8,10 @@ import { icon, hasIcon } from './icons';
 
 let manifest: Record<string, string | null> = {};
 let x2: Record<string, string> = {};
+let w1: Record<string, number> = {};
 let facelessOn = false;
 const faceless = () => facelessOn;
-export function setArtManifest(m: Record<string, string | null>, faceless = false, retina: Record<string, string> = {}) { manifest = m || {}; x2 = retina || {}; facelessOn = faceless; setFaceless(faceless); }
+export function setArtManifest(m: Record<string, string | null>, faceless = false, retina: Record<string, string> = {}, widths: Record<string, number> = {}) { manifest = m || {}; x2 = retina || {}; w1 = widths || {}; facelessOn = faceless; setFaceless(faceless); }
 
 /** The generated picture of an id (with its @2x in srcset), or null when the manifest has none. A file that fails to
  *  load is replaced by `fallback()` (the SVG), so a missing asset never leaves a hole. */
@@ -19,7 +20,10 @@ export function artImg(id: string, cls: string, fallback?: () => Element, eager 
   const f = manifest[key];
   if (!f) return null;
   const img = h('img', { src: './' + f, alt: '', class: cls + ' art-img', loading: eager ? 'eager' : 'lazy', decoding: 'async', draggable: false }) as HTMLImageElement;
-  if (x2[key]) img.srcset = `./${f} 1x, ./${x2[key]} 2x`;
+  // with the 1× width known, width descriptors and `sizes="auto"` (lazy images): the browser takes the file that fits the
+  // size the picture is drawn at (a 40 px bubble face loads the 1×); browsers without `auto` read the 160 px fallback
+  if (x2[key] && w1[key] && !eager) { img.sizes = 'auto, 160px'; img.srcset = `./${f} ${w1[key]}w, ./${x2[key]} ${w1[key] * 2}w`; }
+  else if (x2[key]) img.srcset = `./${f} 1x, ./${x2[key]} 2x`;
   if (fallback) img.addEventListener('error', () => { if (img.isConnected) img.replaceWith(fallback()); }, { once: true });
   return img;
 }

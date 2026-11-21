@@ -112,6 +112,18 @@ for (const [id, f] of Object.entries(art.files || {})) {
 for (const [id, f] of Object.entries(art.x2 || {})) {
   if ((id.includes('.faceless') && !art.faceless) || !art.files[id] || !artCopy(f)) delete art.x2[id];
 }
+// the 1× width of every picture that has an @2x (WebP header): the game offers both with width descriptors, so a
+// character drawn 40 px wide in a bubble loads the 1× file, not the 768 px one (G6, Lighthouse «image delivery»)
+const webpWidth = (p) => {
+  const b = readFileSync(p).subarray(0, 30);
+  const kind = b.toString('latin1', 12, 16);
+  if (kind === 'VP8X') return 1 + b.readUIntLE(24, 3);
+  if (kind === 'VP8 ') return b.readUInt16LE(26) & 0x3fff;
+  if (kind === 'VP8L') return (b.readUInt32LE(21) & 0x3fff) + 1;
+  return 0;
+};
+art.w = {};
+for (const id of Object.keys(art.x2 || {})) { const f = art.files[id]; const w = f && f.endsWith('.webp') ? webpWidth(path.join(GAME, f)) : 0; if (w) art.w[id] = w; }
 console.log(`art: ${Object.values(art.files).filter(Boolean).length} files + ${Object.keys(art.x2 || {}).length} @2x, ${(artBytes / 1e6).toFixed(2)} MB`);
 if (artBytes > 3e6) warn.push(`art over the 3 MB budget: ${(artBytes / 1e6).toFixed(2)} MB`);
 const ds = world.districts;

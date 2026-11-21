@@ -6,12 +6,12 @@ import { initAudio, unlockMedia } from './core/audio';
 import { initVoice } from './core/voice';
 import { initProgress } from './core/progress';
 import { setArtManifest } from './art';
-import { route, startRouter, setGuard, go } from './core/router';
+import { route, startRouter, setGuard, setReloadCheck, go } from './core/router';
 import { env } from './core/env';
-import { settings, save, resetAll, setClockOffset, profile, setMemoryOnly, session } from './core/store';
+import { settings, save, resetAll, setClockOffset, profile, setMemoryOnly, session, storageOk } from './core/store';
 import { unlockAudio } from './core/sfx';
 import { h } from './core/h';
-import { registerSW } from './sw-client';
+import { registerSW, updateReady } from './sw-client';
 import { installTestApi, gotoTarget, demoProfile } from './test-api';
 import { applySettings, grownupsScreen, aboutScreen } from './screens/grownups';
 import { splashScreen, introScreen, afterSplash } from './screens/splash';
@@ -51,7 +51,7 @@ async function boot() {
   }
   loadCopy(data.copy);
   const { poem } = data;
-  initProgress(poem); initAudio(poem); initVoice(poem); setArtManifest(poem.art, poem.faceless, poem.artX2);
+  initProgress(poem); initAudio(poem); initVoice(poem); setArtManifest(poem.art, poem.faceless, poem.artX2, poem.artW);
   document.title = t('app.title');
   for (const w of poem.warnings) console.warn('[kq]', w);
   if (poem.build.fixture.length) document.documentElement.classList.add('fixture-build');
@@ -82,6 +82,16 @@ async function boot() {
     if (hash.startsWith('#/splash')) return null;
     session.set('kq.after', hash === '#/' || hash === '' ? '' : hash);
     return '#/splash';
+  });
+  // a new version took over while the app was open: it is loaded on the way to a calm screen, never mid-level, and not
+  // where a reload would close the grown-ups' gate again
+  const CALM = new Set(['home', 'map', 'necklace', 'stickers', 'heroes', 'profiles', 'dedication']);
+  // the reload goes through the splash (R1): its tap unlocks audio on iOS, and the screen asked for is kept in kq.after
+  // by the guard; never when progress lives in memory only (storage failed): a reload would lose it
+  setReloadCheck((name) => {
+    if (!updateReady() || !storageOk() || !CALM.has(name) || env.capture) return false;
+    session.del('kq.started');
+    return true;
   });
   const unlock = () => { unlockAudio(); unlockMedia(); window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); };
   window.addEventListener('pointerdown', unlock); window.addEventListener('keydown', unlock);

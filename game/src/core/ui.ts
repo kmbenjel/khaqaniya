@@ -246,6 +246,15 @@ export function sheet(content: Child, o: { testid?: string; onClose?: () => void
   return { el, close };
 }
 
+/** The buttons that end a screen (reward, challenge won, polish done) come last on a stage that scrolls: on a small
+ *  phone with sticker banners they fell below the fold, «next» hidden under the caption (G6). Brought into view. */
+export function reveal(el: Element): void {
+  requestAnimationFrame(() => {
+    if (!el.isConnected) return;
+    const reduce = document.documentElement.classList.contains('reduce-motion');
+    el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  });
+}
 export function toast(text: string, ms = 2400, cls = '') {
   const el = h('div', { class: 'toast ' + cls, role: 'status' }, text);
   document.body.appendChild(el);

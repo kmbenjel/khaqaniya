@@ -31,6 +31,11 @@ export function mapScreen(ctx: ScreenCtx): HTMLElement {
     if (sec.current) currentEl = sec.current;
     scroller.appendChild(sec.el);
   }
+  // the map opens on the current district: its painting and its neighbours' fill the screen, so they load first and not
+  // lazily (Lighthouse: the largest paint was a lazy picture); the other districts stay lazy (G6)
+  const at = sections.findIndex((s) => currentEl && s.contains(currentEl));
+  const near = at < 0 ? [sections.length - 1] : [at - 1, at, at + 1];
+  for (const i of near) { const bg = sections[i]?.querySelector<HTMLImageElement>('.district-bg img'); if (bg) { bg.loading = 'eager'; bg.fetchPriority = 'high'; } }
   poem.districts.forEach((d, i) => {
     const b = h('button', { type: 'button', class: 'rail-dot' + (districtUnlocked(d) ? ' open' : '') + (bossBeaten(d) ? ' done' : ''), 'data-testid': 'rail-' + d.id, 'aria-label': t('aria.rail.item', { n: i + 1, district: t('district.' + d.skin + '.name') }) }, num(i + 1));
     b.addEventListener('click', () => { sfx('tap'); document.getElementById('d-' + d.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' }); });

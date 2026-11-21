@@ -402,12 +402,14 @@ html.amin-glow .lantern-art, html.amin-glow .home-hero .char-amin { filter: drop
 .now-playing .now-card { margin-block: 6px; }
 .necklace-thread { display: flex; flex-direction: column; gap: 14px; }
 .pearl-group h3 { margin: 4px 0; font-family: var(--verse); font-size: calc(20px * var(--k)); line-height: 1.8; }
-.pearl-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; border-radius: 30px; background: linear-gradient(transparent 46%, #d8c9a5 46%, #d8c9a5 54%, transparent 54%); }
+/* the thread runs through the middle of every line of pearls (56 px pearls, 8 px gaps): a district of 7–8 pearls wraps on
+   phones, and one band across the whole row ran between the two lines (G6) */
+.pearl-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; border-radius: 30px; background: repeating-linear-gradient(transparent 0 33px, #d8c9a5 33px 39px, transparent 39px 64px); }
 .pearl-btn { position: relative; width: 56px; height: 56px; border: 0; background: none; padding: 0; cursor: pointer; }
 .pearl-btn svg { width: 100%; height: 100%; }
 .pearl-btn .node-n { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 18px; }
 .pearl-btn.playing { transform: scale(1.25); filter: drop-shadow(0 0 10px var(--gold)); }
-.read-link { display: block; text-align: center; margin-block: 18px; font-weight: 700; font-size: 18px; }
+.read-link { display: flex; align-items: center; justify-content: center; min-height: 56px; text-align: center; margin-block: 10px; font-weight: 700; font-size: 18px; }   /* a child's target: 56 px (G6; it was 22) */
 .tabs { display: flex; gap: 6px; justify-content: center; margin-block: 12px; flex-wrap: wrap; }
 .tab { min-height: 48px; border: 0; border-radius: 999px; padding: 6px 16px; background: #fff; font-weight: 700; font-size: calc(17px * var(--k)); cursor: pointer; }
 .tab[aria-selected='true'] { background: #17706f; color: #fff; }
@@ -903,3 +905,32 @@ html.grownup .bubble { font-family: var(--ui); font-size: calc(17px * var(--k));
 }
 @media (min-width: 1024px) { .tomorrow-stage { height: 200px; } .tomorrow-amin { width: 130px; height: 195px; margin-left: -65px; } .tomorrow-mishmish { left: calc(50% + 56px); width: 86px; height: 86px; } .tomorrow-laqlaq { width: 96px; height: 144px; } }
 /* ══ end of E2 block ═════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ══ G6 polish pass (small and safe: no new art, no new copy) ════════════════════════════════════════════════════════ */
+/* a focus ring that shows on every background: gold outside, a night ring in the gap (gold alone was lost on the gold
+   buttons and on white cards) */
+:focus-visible { outline: 4px solid var(--gold); outline-offset: 3px; }
+.btn:focus-visible, .chip:focus-visible, .tile:focus-visible, .opt:focus-visible, .icon-btn:focus-visible, .door:focus-visible,
+.tab:focus-visible, .piece:focus-visible, .pearl-btn:focus-visible, .home-amin:focus-visible, .heart-lantern:focus-visible,
+.read-link:focus-visible { box-shadow: 0 0 0 3px var(--night); }
+.screen:focus-visible { outline: none; box-shadow: none; }
+/* a press you can feel on every big target (the buttons already had it) */
+.opt:active:not(:disabled), .tile:active:not(:disabled), .door:active, .chip:active, .tab:active, .piece:active { transform: translateY(2px); }
+.icon-btn:active, .heart-lantern:active, .pearl-btn:active { transform: scale(.94); }
+@media (hover: hover) and (pointer: fine) {   /* desktop: what can be clicked lights up a little */
+  .btn:hover:not(:disabled), .door:hover, .chip:hover, .tab:hover, .opt:hover:not(:disabled), .tile:hover:not(:disabled) { filter: brightness(1.05); }
+  .icon-btn:hover { background: rgba(255,255,255,.24); }
+}
+/* screens arrive with a short fade instead of a hard cut, from the second one on (the first paints at once: no later
+   largest paint); the prayer stays still; reduced motion: instant */
+.screen.enter { animation: fadeIn .18s ease-out; }
+/* titles and short lines wrap evenly (no single word left alone on the last line) */
+h1, h2, h3, .banner-title, .top-title, .district-card-line, .entrance-line, .tomorrow-title, .medal-line, .goal-district { text-wrap: balance; }
+.bubble-text, .kid-meaning, .lesson, .ask-answer, .finale-caption, .tomorrow-line { text-wrap: pretty; }
+/* tablets held upright (phone layout, ≥ 700 px wide): the cast stands taller in its bar, the home screen sits in the
+   middle of the screen instead of a band of empty sky above its four icons */
+@media (min-width: 700px) and (max-width: 1023px) and (min-height: 900px) {
+  .castbar .cast { width: 104px; height: 118px; }
+  .home-main { justify-content: center; }
+  .home-small { margin-top: 12px; }
+}

@@ -157,7 +157,8 @@ async function auditLayout(page: Page, screen: string): Promise<Finding[]> {
   }, screen);
 }
 
-const SIZES = [{ w: 360, h: 740 }, { w: 390, h: 844 }, { w: 1280, h: 720 }, { w: 1280, h: 800 }];
+// G6: also 412×915 (large Android) and 820×1180 (a tablet held upright, phone layout)
+const SIZES = [{ w: 360, h: 740 }, { w: 390, h: 844 }, { w: 412, h: 915 }, { w: 820, h: 1180 }, { w: 1280, h: 720 }, { w: 1280, h: 800 }];
 for (const vp of SIZES) {
   test(`layout audit ${vp.w}×${vp.h}: §6 sizes, harakat line-height, no horizontal scroll`, async ({ page }, info) => {
     desktopOnly(info.project.name);

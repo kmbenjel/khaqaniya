@@ -1,5 +1,6 @@
 // Test and capture hooks (GAME_DESIGN §12): window.kq = { state, solve, fail, next, goto } and window.__kq (more).
 import { env, setSpeedForTests } from './core/env';
+import { updateReady } from './sw-client';
 import { getActive, tapVisibly } from './games/engine';
 import { getLevelState } from './screens/level';
 import { getBossState } from './screens/boss';
@@ -83,7 +84,7 @@ let floatTimer = 0;
 export function installTestApi() {
   const api = {
     env,
-    state: () => ({ screen: currentRoute(), hash: location.hash, level: getLevelState(), boss: getBossState(), polish: getPolishState(), item: getActive()?.label || null, learned: learnedCount(), today: today(), clock: getClockOffset(), profile: profile(), settings: settings() }),
+    state: () => ({ screen: currentRoute(), hash: location.hash, level: getLevelState(), boss: getBossState(), polish: getPolishState(), item: getActive()?.label || null, learned: learnedCount(), today: today(), clock: getClockOffset(), profile: profile(), settings: settings(), updateReady: updateReady() }),
     /** Performs the right action for the current item with a visible tap (waits up to 15 s for one). */
     /** `skip`: item labels to leave alone (returns 'skipped'); 'name-sheet' leaves the name sheet open for the caller. */
     solve: async (skip: string[] = []) => {

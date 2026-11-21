@@ -3,7 +3,7 @@
 import { h, svg } from '../core/h';
 import { t } from '../core/copy';
 import { hash, mulberry32 } from '../core/rng';
-import { frame, btn, burst, castBase } from '../core/ui';
+import { frame, btn, burst, castBase, reveal } from '../core/ui';
 import { pearlSvg } from '../art';
 import { sfx } from '../core/sfx';
 import { say } from '../core/voice';
@@ -116,5 +116,6 @@ async function run(f: ReturnType<typeof frame>, signal: AbortSignal) {
     row.append(btn(t('polish.more'), { icon: 'cloth', primary: true, testid: 'btn-polish-more', onClick: () => go('#/polish?r=' + Date.now()) }), btn(t('polish.enough'), { icon: 'home', testid: 'btn-next', onClick: () => go('#/') }));
   } else row.append(btn(t('btn.home'), { icon: 'home', primary: true, testid: 'btn-next', onClick: () => go('#/') }));
   f.play.replaceChildren(row);
+  reveal(row);
   setActive({ right: () => row.querySelector('[data-testid=btn-next]'), wrong: () => null, label: 'polish-done' });
 }

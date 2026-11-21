@@ -55,7 +55,9 @@ test('iOS Safari (WebKit, iPhone): boots, verse 1 to the pearl, home-screen icon
     await expect(p.getByTestId('splash')).toBeVisible();
     console.log('ios: visibilityState', await p.evaluate(() => document.visibilityState));
     await p.getByTestId('btn-start').tap();
-    await p.getByTestId('btn-skip').tap();
+    // at test speed the three-panel story may end by itself before the tap lands: a tap on a button that is gone would
+    // wait forever while the game runs on to verse 1 (G6: this was the «LISTEN freeze» of loaded WebKit runs)
+    await p.getByTestId('btn-skip').tap({ timeout: 5000 }).catch(() => {});
     await p.waitForFunction(() => (window as any).__kq?.state().screen === 'verse', null, { timeout: 30_000 });
     for (let i = 0; i < 1500; i++) {
       const s = await p.evaluate(() => (window as any).__kq.state());
